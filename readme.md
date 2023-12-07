@@ -7,7 +7,7 @@
 ## Modules
 ### Modules that work
 - [x] Withdraw OKX
-
+- [x] Woofi swap
 
 ### Modules to add
 - [ ] Transfers
@@ -27,7 +27,7 @@
 - [ ] Rhino
 - [ ] Holograph
 - [ ] 0x_swap
-- [ ] Woofi swap
+
 - [ ] Woofi bridge
 - [ ] Collector to Token
 - [ ] Check count transaction
