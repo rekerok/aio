@@ -16,12 +16,12 @@ class Web3Swapper:
 
     def __init__(
         self,
+        private_key: str,
+        network: dict,
         type_transfer: TYPE_OF_TRANSACTION,
         value: tuple[Union[int, float]],
         min_balance: float,
         slippage: float,
-        private_key: str,
-        network: dict,
     ) -> None:
         self.network = network
         self.acc = Account(private_key=private_key, network=self.network)

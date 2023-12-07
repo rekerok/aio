@@ -8,6 +8,7 @@
 ### Modules that work
 - [x] Withdraw OKX
 - [x] Woofi swap
+- [x] SushiSwap
 
 ### Modules to add
 - [ ] Transfers
@@ -18,7 +19,7 @@
 - [ ] Merkly
 - [ ] Bungee refuel
 - [ ] Xy.Finance
-- [ ] SushiSwap
+
 - [ ] Uniswap
 - [ ] PancakeSwap
 - [ ] 1inch
@@ -27,7 +28,6 @@
 - [ ] Rhino
 - [ ] Holograph
 - [ ] 0x_swap
-
 - [ ] Woofi bridge
 - [ ] Collector to Token
 - [ ] Check count transaction

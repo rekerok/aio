@@ -61,3 +61,9 @@ async def woofi_swap():
     await Web3Swapper.swap_use_database(
         settings=SWAP_SETTINGS, dex_class=modules.WoofiSwap
     )
+
+
+async def sushi_swap():
+    await Web3Swapper.swap_use_database(
+        settings=SWAP_SETTINGS, dex_class=modules.SushiSwap
+    )

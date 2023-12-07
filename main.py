@@ -10,6 +10,7 @@ def get_module():
         choices=[
             Choice("1) Withdraw from OKX", okx_withdrawer),
             Choice("2) Woofi swap", woofi_swap),
+            Choice("3) SushiSwap", sushi_swap),
         ],
         qmark="⚙️ ",
         pointer="✅ ",
