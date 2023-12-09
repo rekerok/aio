@@ -136,6 +136,7 @@ class Transfers:
                 type_transfer=data.get("type_transfer"),
                 to_address=data.get("recipient"),
                 token_address=data.get("token_address"),
+                value=data.get("value"),
                 min_balance=data.get("min_balance"),
             )
             await tranfer.make_transfer()

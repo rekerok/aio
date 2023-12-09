@@ -148,9 +148,9 @@ class Account:
         self, to_address: str, amount: Token_Amount, token_address: str = None
     ):
         logger.info("START TRANSFER MODULE")
-        logger.info(f"WILL SEND {amount} to {to_address}")
+        logger.info(f"WILL SEND {amount.ETHER} to {to_address}")
         if token_address is None or token_address == "":
-            await self.send_transaction(to_address=to_address, value=amount.WEI)
+            await self.send_transaction(to_address=to_address, value=amount)
         else:
             contract = self.w3.eth.contract(
                 address=self.w3.to_checksum_address(token_address),
