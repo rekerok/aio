@@ -1,3 +1,4 @@
+from networks import Networks
 import utils
 import config
 import random
@@ -180,7 +181,14 @@ class Account:
     ):
         allow_transaction = True
         if self.network.get("check_gas"):
-            allow_transaction = await utils.time.wait_gas(self.w3)
+            allow_transaction = await utils.time.wait_gas(
+                AsyncWeb3(
+                    AsyncHTTPProvider(
+                        endpoint_uri=random.choice(Networks.ethereum.get("rpc")),
+                        request_kwargs=self.request_kwargs,
+                    )
+                )
+            )
 
         if allow_transaction:
             try:
