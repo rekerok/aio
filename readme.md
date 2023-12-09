@@ -9,17 +9,15 @@
 - [x] Withdraw OKX
 - [x] Woofi swap
 - [x] SushiSwap
+- [x] Transfers
 
 ### Modules to add
-- [ ] Transfers
-
 - [ ] Deploy contracts
 - [ ] Checker balances
 - [ ] Stargate
 - [ ] Merkly
 - [ ] Bungee refuel
 - [ ] Xy.Finance
-
 - [ ] Uniswap
 - [ ] PancakeSwap
 - [ ] 1inch

@@ -32,6 +32,19 @@ class OKX_settings:
     ]
 
 
+class TRANSFERS_SETTINGS:
+    params = [
+        {
+            "network": Networks.linea,
+            "token": "",
+            "type_transfer": TYPE_OF_TRANSACTION.PERCENT,
+            "value": (90, 95),
+            "min_balance": 0.00075,
+        },
+    ]
+    SLEEP = (100, 300)
+
+
 class SWAP_SETTINGS:
     params = [
         {
@@ -55,6 +68,10 @@ class SWAP_SETTINGS:
 ### NOT CHANGE ###
 async def okx_withdrawer():
     await modules.OKX.withdraw_use_database(OKX_settings)
+
+
+async def transfers():
+    await modules.Transfers.transfer_use_database(TRANSFERS_SETTINGS)
 
 
 async def woofi_swap():

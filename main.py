@@ -9,8 +9,9 @@ def get_module():
         "Select a method to get started",
         choices=[
             Choice("1) Withdraw from OKX", okx_withdrawer),
-            Choice("2) Woofi swap", woofi_swap),
-            Choice("3) SushiSwap", sushi_swap),
+            Choice("2) Transfers module", transfers),
+            Choice("3) Woofi swap", woofi_swap),
+            Choice("4) SushiSwap", sushi_swap),
         ],
         qmark="⚙️ ",
         pointer="✅ ",
