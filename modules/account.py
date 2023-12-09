@@ -145,24 +145,19 @@ class Account:
             await utils.time.sleep_view((30, 60))
 
     async def transfer(
-        self, to_address: str, amount: Union[int, float], token_address: str = None
+        self, to_address: str, amount: Token_Amount, token_address: str = None
     ):
         logger.info("START TRANSFER MODULE")
         logger.info(f"WILL SEND {amount} to {to_address}")
         if token_address is None or token_address == "":
-            value = Token_Amount(amount=amount)
-            await self.send_transaction(to_address=to_address, value=value)
+            await self.send_transaction(to_address=to_address, value=amount.WEI)
         else:
             contract = self.w3.eth.contract(
                 address=self.w3.to_checksum_address(token_address),
                 abi=config.ERC20_ABI,
             )
-            amount: Token_Amount = Token_Amount(
-                amount=amount,
-                decimals=await contract.functions.decimals().call(),
-            )
             await self.approve(
-                token_address=token_address, spender=to_address, amount=amount
+                token_address=token_address, spender=to_address, amount=amount.WEI
             )
             data = contract.encodeABI(
                 "transfer", args=(self.w3.to_checksum_address(to_address), amount.WEI)
