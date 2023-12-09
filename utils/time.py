@@ -1,12 +1,11 @@
 import asyncio
-from logging import config
 import random
 import time
 import tqdm
+import eth_utils
 from loguru import logger
 from web3 import AsyncHTTPProvider, AsyncWeb3
 from web3.middleware import async_geth_poa_middleware
-from networks import Networks
 from settings import *
 
 
@@ -29,11 +28,31 @@ async def get_gas(network: dict) -> int:
         return None
 
 
-async def wait_gas():
-    gas_now = await get_gas(network=Networks.ethereum)
+# async def wait_gas():
+#     gas_now = await get_gas(network=Networks.ethereum)
+#     if CHECK_GWEI:
+#         for i in range(COUNT_CHECK_GAS):
+#             gas_now = await get_gas(network=Networks.ethereum)
+#             if not gas_now:
+#                 logger.error(f"Gas Receiving Error")
+#                 continue
+#             if gas_now > LIMIT_GWEI:
+#                 logger.info(f"Check GAS Try {i+1}/{COUNT_CHECK_GAS}")
+#                 logger.info(f"GAS NOW {gas_now} > {LIMIT_GWEI}")
+#                 sleep_time = round(random.uniform(30, 60), 3)
+#                 logger.info(f"SLEEP {sleep_time} sec")
+#                 await asyncio.sleep(random.uniform(30, 60))
+#             else:
+#                 logger.success(f"GAS NOW {gas_now} < {LIMIT_GWEI}")
+#                 break
+#     else:
+#         logger.info(f"GAS NOW {gas_now}")
+
+
+async def wait_gas(w3):
     if CHECK_GWEI:
         for i in range(COUNT_CHECK_GAS):
-            gas_now = await get_gas(network=Networks.ethereum)
+            gas_now = w3.from_wei(await w3.eth.gas_price, "gwei")
             if not gas_now:
                 logger.error(f"Gas Receiving Error")
                 continue
@@ -45,6 +64,7 @@ async def wait_gas():
                 await asyncio.sleep(random.uniform(30, 60))
             else:
                 logger.success(f"GAS NOW {gas_now} < {LIMIT_GWEI}")
-                break
+                return True
+        return False
     else:
-        logger.info(f"GAS NOW {gas_now}")
+        return True

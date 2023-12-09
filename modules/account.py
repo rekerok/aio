@@ -85,7 +85,7 @@ class Account:
 
     async def verifi_tx(self, tx_hash):
         try:
-            data = await self.w3.eth.wait_for_transaction_receipt(tx_hash, timeout=180)
+            data = await self.w3.eth.wait_for_transaction_receipt(tx_hash, timeout=400)
             if "status" in data and data["status"] == 1:
                 return True
             else:
@@ -172,48 +172,52 @@ class Account:
     async def deploy_contract(self, bytecode: str):
         await self.send_transaction(data=bytecode)
 
-    @check_gas
     async def send_transaction(
         self,
         to_address: str = None,
         data: str = None,
         value: Token_Amount = None,
     ):
-        try:
-            logger.info("Begin transactction")
-            tx_params = {
-                "from": self.address,
-                "chainId": await self.w3.eth.chain_id,
-                "nonce": await self.w3.eth.get_transaction_count(self.address),
-            }
+        allow_transaction = True
+        if self.network.get("check_gas"):
+            allow_transaction = await utils.time.wait_gas(self.w3)
 
-            if to_address:
-                tx_params["to"] = self.w3.to_checksum_address(to_address)
-            if data:
-                tx_params["data"] = data
+        if allow_transaction:
+            try:
+                logger.info("Begin transactction")
+                tx_params = {
+                    "from": self.address,
+                    "chainId": await self.w3.eth.chain_id,
+                    "nonce": await self.w3.eth.get_transaction_count(self.address),
+                }
 
-            if value is None or value == 0:
-                tx_params["value"] = 0
-            else:
-                tx_params["value"] = value.WEI
+                if to_address:
+                    tx_params["to"] = self.w3.to_checksum_address(to_address)
+                if data:
+                    tx_params["data"] = data
 
-            if self.network["eip1559"]:
-                tx_params = await self.get_eip1559_tx(tx_params=tx_params)
-            else:
-                tx_params["gasPrice"] = await self.w3.eth.gas_price
+                if value is None or value == 0:
+                    tx_params["value"] = 0
+                else:
+                    tx_params["value"] = value.WEI
 
-            tx_params["gas"] = int(
-                await self.w3.eth.estimate_gas(tx_params) * GAS_MULTIPLAY
-            )
+                if self.network["eip1559"]:
+                    tx_params = await self.get_eip1559_tx(tx_params=tx_params)
+                else:
+                    tx_params["gasPrice"] = await self.w3.eth.gas_price
 
-            tx_hash = await self.sign_transaction(tx=tx_params)
-            verify = await self.verifi_tx(tx_hash=tx_hash)
-            if verify:
-                logger.success(f"LINK {self.network['scan']}tx/{tx_hash}")
-            else:
-                logger.error(f"LINK {self.network['scan']['scan']}tx/{tx_hash}")
-        except Exception as error:
-            logger.error(error)
+                tx_params["gas"] = int(
+                    await self.w3.eth.estimate_gas(tx_params) * GAS_MULTIPLAY
+                )
+
+                tx_hash = await self.sign_transaction(tx=tx_params)
+                verify = await self.verifi_tx(tx_hash=tx_hash)
+                if verify:
+                    logger.success(f"LINK {self.network['scan']}tx/{tx_hash}")
+                else:
+                    logger.error(f"LINK {self.network['scan']['scan']}tx/{tx_hash}")
+            except Exception as error:
+                logger.error(error)
 
     async def sign_transaction(self, tx: dict):
         signed_tx = self.w3.eth.account.sign_transaction(tx, self.private_key)

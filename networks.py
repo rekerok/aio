@@ -9,6 +9,7 @@ class Networks:
         "scan": "https://etherscan.io/",
         "eip1559": True,
         "token": "ETH",
+        "check_gas": True,
     }
 
     arbitrum = {
@@ -21,6 +22,7 @@ class Networks:
         "scan": "https://arbiscan.io/",
         "eip1559": True,
         "token": "ETH",
+        "check_gas": True,
     }
 
     optimism = {
@@ -33,6 +35,7 @@ class Networks:
         "scan": "https://optimistic.etherscan.io/",
         "eip1559": True,
         "token": "ETH",
+        "check_gas": False,
     }
 
     base = {
@@ -41,6 +44,7 @@ class Networks:
         "scan": "https://basescan.org/",
         "eip1559": True,
         "token": "ETH",
+        "check_gas": False,
     }
 
     avalanche = {
@@ -53,6 +57,7 @@ class Networks:
         "scan": "https://snowtrace.io/",
         "eip1559": True,
         "token": "AVAX",
+        "check_gas": False,
     }
 
     polygon = {
@@ -64,6 +69,7 @@ class Networks:
         "scan": "https://polygonscan.com/",
         "eip1559": True,
         "token": "MATIC",
+        "check_gas": False,
     }
 
     scroll = {
@@ -76,6 +82,7 @@ class Networks:
         "scan": "https://scrollscan.com/",
         "eip1559": False,
         "token": "ETH",
+        "check_gas": False,
     }
 
     linea = {
@@ -87,4 +94,5 @@ class Networks:
         "scan": "https://lineascan.build/",
         "eip1559": False,
         "token": "ETH",
+        "check_gas": True,
     }
