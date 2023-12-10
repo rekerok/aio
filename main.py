@@ -12,6 +12,7 @@ def get_module():
             Choice("2) Transfers module", transfers),
             Choice("3) Woofi swap", woofi_swap),
             Choice("4) SushiSwap", sushi_swap),
+            Choice("5) 1InchSwap", inch_swap),
         ],
         qmark="⚙️ ",
         pointer="✅ ",

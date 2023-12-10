@@ -10,7 +10,7 @@
 - [x] Woofi swap
 - [x] SushiSwap
 - [x] Transfers
-
+- [x] 1inch
 ### Modules to add
 - [ ] Deploy contracts
 - [ ] Checker balances
@@ -20,7 +20,6 @@
 - [ ] Xy.Finance
 - [ ] Uniswap
 - [ ] PancakeSwap
-- [ ] 1inch
 - [ ] Odos
 - [ ] Orbiter finance
 - [ ] Rhino

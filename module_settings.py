@@ -84,3 +84,9 @@ async def sushi_swap():
     await Web3Swapper.swap_use_database(
         settings=SWAP_SETTINGS, dex_class=modules.SushiSwap
     )
+
+
+async def inch_swap():
+    await Web3Swapper.swap_use_database(
+        settings=SWAP_SETTINGS, dex_class=modules.InchSwap
+    )
