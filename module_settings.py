@@ -1,5 +1,6 @@
 import modules
 from helpers.enums import TYPE_OF_TRANSACTION
+from modules.check_nft import Check_NFT
 from networks import Networks
 from helpers.web3Swapper import Web3Swapper
 
@@ -65,6 +66,69 @@ class SWAP_SETTINGS:
     SLEEP = (10, 50)
 
 
+class CHECK_NFT_SETTINGS:
+    params = [
+        {
+            "network": Networks.polygon,
+            "nfts": [
+                {
+                    "address": "0x6D6768A0b24299bEdE0492A4571D79F535c330D8",
+                    "name": "How Far We've Come",
+                },
+                {
+                    "address": "0xB6432d111bc2A022048b9aEA7C11b2d627184bdD",
+                    "name": "azure",
+                },
+                {
+                    "address": "0xe5325804D68033eDF65a86403B2592a99E1f06de",
+                    "name": "fs",
+                },
+                {
+                    "address": "0x8C531f965C05Fab8135d951e2aD0ad75CF3405A2",
+                    "name": "Building",
+                },
+                {
+                    "address": "0x61B2d56645d697Ac3a27c2fa1e5B26B45429d1A9",
+                    "name": "Kauai Walmart",
+                },
+                {
+                    "address": "0xd4Feff615c0E90f06340Be95d30e1f397779A184",
+                    "name": "Cosmic flower",
+                },
+            ],
+        },
+        {
+            "network": Networks.avalanche,
+            "nfts": [
+                {
+                    "address": "0x6D6768A0b24299bEdE0492A4571D79F535c330D8",
+                    "name": "How Far We've Come",
+                },
+                {
+                    "address": "0xB6432d111bc2A022048b9aEA7C11b2d627184bdD",
+                    "name": "azure",
+                },
+                {
+                    "address": "0xe5325804D68033eDF65a86403B2592a99E1f06de",
+                    "name": "fs",
+                },
+                {
+                    "address": "0x8C531f965C05Fab8135d951e2aD0ad75CF3405A2",
+                    "name": "Building",
+                },
+                {
+                    "address": "0x61B2d56645d697Ac3a27c2fa1e5B26B45429d1A9",
+                    "name": "Kauai Walmart",
+                },
+                {
+                    "address": "0xd4Feff615c0E90f06340Be95d30e1f397779A184",
+                    "name": "Cosmic flower",
+                },
+            ],
+        },
+    ]
+
+
 ### NOT CHANGE ###
 async def okx_withdrawer():
     await modules.OKX.withdraw_use_database(OKX_settings)
@@ -72,6 +136,10 @@ async def okx_withdrawer():
 
 async def transfers():
     await modules.Transfers.transfer_use_database(TRANSFERS_SETTINGS)
+
+
+async def check_nft():
+    await Check_NFT.check_nft(settings=CHECK_NFT_SETTINGS)
 
 
 async def woofi_swap():

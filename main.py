@@ -10,9 +10,10 @@ def get_module():
         choices=[
             Choice("1) Withdraw from OKX", okx_withdrawer),
             Choice("2) Transfers module", transfers),
-            Choice("3) Woofi swap", woofi_swap),
-            Choice("4) SushiSwap", sushi_swap),
-            Choice("5) 1InchSwap", inch_swap),
+            Choice("3) Check NFT", check_nft),
+            Choice("4) Woofi swap", woofi_swap),
+            Choice("5) SushiSwap", sushi_swap),
+            Choice("6) 1InchSwap", inch_swap),
         ],
         qmark="⚙️ ",
         pointer="✅ ",
