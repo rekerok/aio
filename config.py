@@ -11,3 +11,4 @@ PRICES_TOKENS = asyncio.run(
 ERC20_ABI: dict = asyncio.run(files.load_json("files/abis/erc20.json"))
 SUSHI_ABI: dict = asyncio.run(files.load_json("files/abis/sushiswap.json"))
 WOOFI_ABI: dict = asyncio.run(files.load_json("files/abis/woofiswap.json"))
+ODOS_ABI: dict = asyncio.run(files.load_json("files/abis/odosswap.json"))

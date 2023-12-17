@@ -11,6 +11,7 @@
 - [x] SushiSwap
 - [x] Transfers
 - [x] 1inch
+- [x] Odos
 ### Modules to add
 - [ ] Deploy contracts
 - [ ] Checker balances
@@ -20,7 +21,6 @@
 - [ ] Xy.Finance
 - [ ] Uniswap
 - [ ] PancakeSwap
-- [ ] Odos
 - [ ] Orbiter finance
 - [ ] Rhino
 - [ ] Holograph

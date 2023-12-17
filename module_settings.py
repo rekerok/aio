@@ -158,3 +158,9 @@ async def inch_swap():
     await Web3Swapper.swap_use_database(
         settings=SWAP_SETTINGS, dex_class=modules.InchSwap
     )
+
+
+async def odos_swap():
+    await Web3Swapper.swap_use_database(
+        settings=SWAP_SETTINGS, dex_class=modules.OdosSwap
+    )
