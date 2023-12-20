@@ -7,7 +7,6 @@ from web3 import AsyncWeb3, AsyncHTTPProvider
 from helpers import Token_Amount
 from loguru import logger
 from web3.middleware import async_geth_poa_middleware
-from helpers.decorators import check_gas
 from settings import GAS_MULTIPLAY
 
 

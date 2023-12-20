@@ -2,7 +2,6 @@ import asyncio
 import questionary
 from questionary import Choice
 from module_settings import *
-from modules import OdosSwap
 
 
 def get_module():

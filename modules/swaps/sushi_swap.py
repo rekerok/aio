@@ -5,7 +5,8 @@ from loguru import logger
 from helpers import contracts
 from helpers import Web3Swapper
 from helpers import TYPE_OF_TRANSACTION
-from helpers import Token_Amount, Token_Info
+from helpers import Token_Amount
+from helpers import Token_Info
 
 
 class SushiSwap(Web3Swapper):

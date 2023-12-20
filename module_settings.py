@@ -1,6 +1,5 @@
 import modules
 from helpers.enums import TYPE_OF_TRANSACTION
-from modules.check_nft import Check_NFT
 from networks import Networks
 from helpers.web3Swapper import Web3Swapper
 
@@ -139,7 +138,7 @@ async def transfers():
 
 
 async def check_nft():
-    await Check_NFT.check_nft(settings=CHECK_NFT_SETTINGS)
+    await modules.Check_NFT.check_nft(settings=CHECK_NFT_SETTINGS)
 
 
 async def woofi_swap():
