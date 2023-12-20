@@ -43,6 +43,22 @@ ODOS_SWAP = {
     "zkera": "0x4bBa932E9792A2b917D47830C93a9BC79320E4f7",
 }
 
+# https://syncswap.gitbook.io/syncswap/smart-contracts/smart-contracts
+SYNCSWAP = {
+    "zkera": {
+        "pool_factory": "0xf2DAd89f2788a8CD54625C60b55cD3d2D0ACa7Cb",
+        "router": "0x2da10A1e27bF85cEdD8FFb1AbBe97e53391C0295",
+    },
+    "linea": {
+        "pool_factory": "0x37BAc764494c8db4e54BDE72f6965beA9fa0AC2d",
+        "router": "0x80e38291e06339d10AAB483C65695D004dBD5C69",
+    },
+    "scroll": {
+        "pool_factory": "0x37BAc764494c8db4e54BDE72f6965beA9fa0AC2d",
+        "router": "0x80e38291e06339d10AAB483C65695D004dBD5C69",
+    },
+}
+
 # https://minter.merkly.com/why
 MERKLY = {
     "zkera": "0x5673B6e6e51dE3479B8deB22dF46B12308db5E1e",

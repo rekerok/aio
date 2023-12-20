@@ -2,6 +2,7 @@ import asyncio
 import questionary
 from questionary import Choice
 from module_settings import *
+from modules import SyncSwap
 
 
 def get_module():
@@ -14,7 +15,8 @@ def get_module():
             Choice("4) Woofi swap", woofi_swap),
             Choice("5) SushiSwap", sushi_swap),
             Choice("6) 1InchSwap", inch_swap),
-            Choice("6) OdosSwap", odos_swap),
+            Choice("7) OdosSwap", odos_swap),
+            Choice("8) SyncSwap", sync_swap),
         ],
         qmark="⚙️ ",
         pointer="✅ ",

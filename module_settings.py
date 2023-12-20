@@ -163,3 +163,9 @@ async def odos_swap():
     await Web3Swapper.swap_use_database(
         settings=SWAP_SETTINGS, dex_class=modules.OdosSwap
     )
+
+
+async def sync_swap():
+    await Web3Swapper.swap_use_database(
+        settings=SWAP_SETTINGS, dex_class=modules.SyncSwap
+    )
