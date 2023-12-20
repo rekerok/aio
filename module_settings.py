@@ -128,6 +128,29 @@ class CHECK_NFT_SETTINGS:
     ]
 
 
+class WARMUPSWAPS_SETTINGS:
+    params = {
+        modules.InchSwap: [
+            {
+                "network": Networks.polygon,
+                "tokens": [
+                    {
+                        "address": "",
+                        "min_balance": 0,
+                    },
+                    {
+                        "address": "0x2791bca1f2de4661ed88a30c99a7a9449aa84174",
+                        "min_balance": 0,
+                    },
+                ],
+                "count_swaps": (1, 2),
+                "percent_swap": (10, 20),
+            },
+        ]
+    }
+    SLEEP = (1000, 2000)
+
+
 ### NOT CHANGE ###
 async def okx_withdrawer():
     await modules.OKX.withdraw_use_database(OKX_settings)
@@ -169,3 +192,7 @@ async def sync_swap():
     await Web3Swapper.swap_use_database(
         settings=SWAP_SETTINGS, dex_class=modules.SyncSwap
     )
+
+
+async def warm_up_swaps():
+    await modules.WarmUPSwaps.warmup(settings=WARMUPSWAPS_SETTINGS)

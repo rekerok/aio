@@ -17,6 +17,7 @@ def get_module():
             Choice("6) 1InchSwap", inch_swap),
             Choice("7) OdosSwap", odos_swap),
             Choice("8) SyncSwap", sync_swap),
+            Choice("9) WarnUP Swaps", warm_up_swaps),
         ],
         qmark="⚙️ ",
         pointer="✅ ",

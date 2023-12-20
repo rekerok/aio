@@ -7,3 +7,4 @@ from .swaps.sync_swap import SyncSwap
 from .merkly import Merkly
 from .transfers import Transfers
 from .check_nft import Check_NFT
+from .swaps.warmup_swaps import WarmUPSwaps
