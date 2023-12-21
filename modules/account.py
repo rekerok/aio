@@ -2,6 +2,7 @@ from networks import Networks
 import utils
 import config
 import random
+import eth_utils
 from typing import Union
 from web3 import AsyncWeb3, AsyncHTTPProvider
 from helpers import Token_Amount
@@ -40,8 +41,8 @@ class Account:
             self.private_key = private_key
             self.acc = self.w3.eth.account.from_key(self.private_key)
             self.address = self.acc.address
-        else:
-            self.address = address
+        elif address:
+            self.address = eth_utils.address.to_checksum_address(address)
 
     async def get_balance(self, token_address: str = None) -> Token_Amount:
         try:
@@ -59,7 +60,8 @@ class Account:
                     decimals=await contract_token.functions.decimals().call(),
                     wei=True,
                 )
-        except:
+        except Exception as e:
+            print(e)
             return None
 
     async def change_connection(self, change_proxy=True, change_rpc=True):
