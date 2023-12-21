@@ -19,4 +19,3 @@ SYNCSWAP_ABI: dict = {
     ),
     "pool": asyncio.run(files.load_json("files/abis/syncswap_pool.json")),
 }
-MERKLY_ABI: dict = asyncio.run(files.load_json("files/abis/merkly.json"))

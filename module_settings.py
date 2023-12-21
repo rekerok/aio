@@ -48,17 +48,22 @@ class TRANSFERS_SETTINGS:
 class SWAP_SETTINGS:
     params = [
         {
-            "network": Networks.linea,
+            "network": Networks.polygon,
+            "dexs": [modules.OdosSwap, modules.SushiSwap],
             "type_swap": TYPE_OF_TRANSACTION.PERCENT,
-            "value": (80, 90),
-            "count_swaps": (2, 2),
-            "tokens": [
-                {"address": "", "min_balance": 0},  # ETH
-                {
-                    "address": "0xb5bedd42000b71fdde22d3ee8a79bd49a568fc8f",
-                    "min_balance": 0,
-                },  # wstETH
-            ],
+            "value": (90, 100),
+            "from_token": "0x2791bca1f2de4661ed88a30c99a7a9449aa84174",
+            "min_balance": 0,
+            "to_token": "",
+        },
+        {
+            "network": Networks.polygon,
+            "dexs": [modules.SushiSwap, modules.OdosSwap],
+            "type_swap": TYPE_OF_TRANSACTION.PERCENT,
+            "value": (100, 100),
+            "from_token": "0x3c499c542cef5e3811e1192ce70d8cc03d5c3359",
+            "min_balance": 0,
+            "to_token": "",
         },
     ]
     SLIPPAGE = 5
@@ -146,7 +151,7 @@ class WARMUPSWAPS_SETTINGS:
                 "count_swaps": (1, 2),
                 "percent_swap": (10, 20),
             },
-        ]
+        ],
     }
     SLEEP = (1000, 2000)
 
@@ -164,33 +169,9 @@ async def check_nft():
     await modules.Check_NFT.check_nft(settings=CHECK_NFT_SETTINGS)
 
 
-async def woofi_swap():
+async def swaps():
     await Web3Swapper.swap_use_database(
-        settings=SWAP_SETTINGS, dex_class=modules.WoofiSwap
-    )
-
-
-async def sushi_swap():
-    await Web3Swapper.swap_use_database(
-        settings=SWAP_SETTINGS, dex_class=modules.SushiSwap
-    )
-
-
-async def inch_swap():
-    await Web3Swapper.swap_use_database(
-        settings=SWAP_SETTINGS, dex_class=modules.InchSwap
-    )
-
-
-async def odos_swap():
-    await Web3Swapper.swap_use_database(
-        settings=SWAP_SETTINGS, dex_class=modules.OdosSwap
-    )
-
-
-async def sync_swap():
-    await Web3Swapper.swap_use_database(
-        settings=SWAP_SETTINGS, dex_class=modules.SyncSwap
+        settings=SWAP_SETTINGS
     )
 
 

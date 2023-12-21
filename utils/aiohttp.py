@@ -7,13 +7,17 @@ async def get_json_aiohttp(
     params=None,
     headers={"Content-Type": "application/json"},
 ) -> dict:
-    async with aiohttp.ClientSession() as session:
-        async with session.get(url=url, headers=headers, params=params) as response:
-            if response.status == 200:
-                return await response.json()
-            else:
-                print(await response.json())
-                return None
+    try:
+        async with aiohttp.ClientSession() as session:
+            async with session.get(url=url, headers=headers, params=params) as response:
+                if response.status == 200:
+                    return await response.json()
+                else:
+                    print(f"HTTP request failed with status code {response.status}")
+                    return None
+    except Exception as e:
+        print(f"An error occurred during the HTTP request: {str(e)}")
+        return None
 
 
 async def post_request(

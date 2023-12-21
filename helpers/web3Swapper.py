@@ -164,15 +164,21 @@ class Web3Swapper:
 
         if self.type_transfer == TYPE_OF_TRANSACTION.PERCENT:
             await self._make_swap_percent(
-                from_token=from_token_address, to_token=to_token_address, balance=balance
+                from_token=from_token_address,
+                to_token=to_token_address,
+                balance=balance,
             )
         elif self.type_transfer == TYPE_OF_TRANSACTION.ALL_BALANCE:
             await self._make_swap_all_balance(
-                from_token=from_token_address, to_token=to_token_address, balance=balance
+                from_token=from_token_address,
+                to_token=to_token_address,
+                balance=balance,
             )
         else:
             await self._make_swap_amount(
-                from_token=from_token_address, to_token=to_token_address, balance=balance
+                from_token=from_token_address,
+                to_token=to_token_address,
+                balance=balance,
             )
 
     @staticmethod
@@ -191,51 +197,50 @@ class Web3Swapper:
         return from_token, to_token
 
     @staticmethod
-    async def _create_database(wallets: list[str], settings):
+    async def _create_database(wallets: list[str], params):
         database = list()
         for wallet in wallets:
-            for param in settings.params:
-                count_swaps = random.randint(*param.get("count_swaps"))
-                # print(count_swaps)
-                for _ in range(count_swaps):
-                    from_token, to_token = await Web3Swapper._get_random_pair_for_swap(
-                        param.get("tokens")
-                    )
-                    database.append(
-                        {
-                            "private_key": wallet,
-                            "network": param.get("network"),
-                            "type_swap": param.get("type_swap"),
-                            "value": param.get("value"),
-                            "from_token": from_token,
-                            "to_token": to_token,
-                        }
-                    )
+            for param in params:
+                # print(param)
+                database.append(
+                    {
+                        "private_key": wallet,
+                        "network": param.get("network"),
+                        "dex": random.choice(param.get("dexs")),
+                        "type_swap": param.get("type_swap"),
+                        "value": param.get("value"),
+                        "from_token": param.get("from_token"),
+                        "min_balance": param.get("min_balance"),
+                        "to_token": param.get("to_token"),
+                    }
+                )
         return database
 
     @staticmethod
-    async def swap_use_database(settings, dex_class):
+    async def swap_use_database(settings):
         wallets = await utils.files.read_file_lines(
             path="files/wallets.txt",
         )
 
         database = await Web3Swapper._create_database(
-            wallets=wallets, settings=settings
+            wallets=wallets, params=settings.params
         )
+        print(database)
         random.shuffle(database)
         counter = 1
         for data in database:
             logger.info(f"SWAP {counter}/{len(database)}")
+            dex_class = data.get("dex")
             dex = dex_class(
                 private_key=data.get("private_key"),
                 network=data.get("network"),
                 type_transfer=data.get("type_swap"),
                 value=data.get("value"),
-                from_token_address=data.get("from_token").get("address"),
-                to_token_address=data.get("to_token").get("address"),
-                min_balance=data.get("from_token").get("min_balance"),
-                slippage=settings.SLIPPAGE,
+                min_balance=data.get("min_balance"),
             )
-            await dex.swap()
+            await dex.swap(
+                from_token_address=data.get("from_token"),
+                to_token_address=data.get("to_token"),
+            )
             await utils.time.sleep_view(settings.SLEEP)
             counter += 1
