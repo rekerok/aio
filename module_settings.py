@@ -1,4 +1,4 @@
-import modules
+from modules import *
 from helpers.enums import TYPE_OF_TRANSACTION
 from networks import Networks
 from helpers.web3Swapper import Web3Swapper
@@ -45,25 +45,32 @@ class TRANSFERS_SETTINGS:
     SLEEP = (100, 300)
 
 
+# SushiSwap
+# WoofiSwap
+# InchSwap
+# OdosSwap
+# SyncSwap
 class SWAP_SETTINGS:
     params = [
         {
             "network": Networks.polygon,
-            "dexs": [modules.OdosSwap, modules.SushiSwap],
+            "dexs": [OdosSwap, SushiSwap, InchSwap],
             "type_swap": TYPE_OF_TRANSACTION.PERCENT,
             "value": (90, 100),
             "from_token": "0x2791bca1f2de4661ed88a30c99a7a9449aa84174",
             "min_balance": 0,
             "to_token": "",
+            "wallets_file": "files/poly.txt",
         },
         {
-            "network": Networks.polygon,
-            "dexs": [modules.SushiSwap, modules.OdosSwap],
+            "network": Networks.avalanche,
+            "dexs": [SushiSwap, OdosSwap],
             "type_swap": TYPE_OF_TRANSACTION.PERCENT,
             "value": (100, 100),
             "from_token": "0x3c499c542cef5e3811e1192ce70d8cc03d5c3359",
             "min_balance": 0,
             "to_token": "",
+            "wallets_file": "files/avax.txt",
         },
     ]
     SLIPPAGE = 5
@@ -135,7 +142,7 @@ class CHECK_NFT_SETTINGS:
 
 class WARMUPSWAPS_SETTINGS:
     params = {
-        modules.InchSwap: [
+        InchSwap: [
             {
                 "network": Networks.polygon,
                 "tokens": [
@@ -158,22 +165,20 @@ class WARMUPSWAPS_SETTINGS:
 
 ### NOT CHANGE ###
 async def okx_withdrawer():
-    await modules.OKX.withdraw_use_database(OKX_settings)
+    await OKX.withdraw_use_database(OKX_settings)
 
 
 async def transfers():
-    await modules.Transfers.transfer_use_database(TRANSFERS_SETTINGS)
+    await Transfers.transfer_use_database(TRANSFERS_SETTINGS)
 
 
 async def check_nft():
-    await modules.Check_NFT.check_nft(settings=CHECK_NFT_SETTINGS)
+    await Check_NFT.check_nft(settings=CHECK_NFT_SETTINGS)
 
 
 async def swaps():
-    await Web3Swapper.swap_use_database(
-        settings=SWAP_SETTINGS
-    )
+    await Web3Swapper.swap_use_database(settings=SWAP_SETTINGS)
 
 
 async def warm_up_swaps():
-    await modules.WarmUPSwaps.warmup(settings=WARMUPSWAPS_SETTINGS)
+    await WarmUPSwaps.warmup(settings=WARMUPSWAPS_SETTINGS)

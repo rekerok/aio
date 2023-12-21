@@ -1,3 +1,4 @@
+import pprint
 import random
 from typing import Union
 from loguru import logger
@@ -199,8 +200,12 @@ class Web3Swapper:
     @staticmethod
     async def _create_database(wallets: list[str], params):
         database = list()
-        for wallet in wallets:
-            for param in params:
+        for param in params:
+            for wallet in (
+                wallets
+                if param["wallets_file"] == ""
+                else await utils.files.read_file_lines(param["wallets_file"])
+            ):
                 # print(param)
                 database.append(
                     {
@@ -225,7 +230,7 @@ class Web3Swapper:
         database = await Web3Swapper._create_database(
             wallets=wallets, params=settings.params
         )
-        print(database)
+        pprint.pprint(database)
         random.shuffle(database)
         counter = 1
         for data in database:
@@ -238,9 +243,9 @@ class Web3Swapper:
                 value=data.get("value"),
                 min_balance=data.get("min_balance"),
             )
-            await dex.swap(
-                from_token_address=data.get("from_token"),
-                to_token_address=data.get("to_token"),
-            )
-            await utils.time.sleep_view(settings.SLEEP)
+            # await dex.swap(
+            #     from_token_address=data.get("from_token"),
+            #     to_token_address=data.get("to_token"),
+            # )
+            # await utils.time.sleep_view(settings.SLEEP)
             counter += 1
