@@ -12,6 +12,7 @@
 - [x] Transfers
 - [x] 1inch
 - [x] Odos
+- [x] SyncSwap
 ### Modules to add
 - [ ] Deploy contracts
 - [ ] Checker balances
@@ -28,7 +29,7 @@
 - [ ] Woofi bridge
 - [ ] Collector to Token
 - [ ] Check count transaction
-- [ ] SyncSwap
+
 - [ ] ZkSwap
 - [ ] Dmail
 - [ ] SyncSwap
