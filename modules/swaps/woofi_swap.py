@@ -2,10 +2,7 @@ from typing import Union
 import config
 from helpers import contracts
 from loguru import logger
-from helpers import Web3Swapper
-from helpers.enums import TYPE_OF_TRANSACTION
-from helpers.token_amount import Token_Amount
-from helpers.token_info import Token_Info
+from helpers import Web3Swapper, Token_Info, TYPE_OF_TRANSACTION, Token_Amount
 
 
 class WoofiSwap(Web3Swapper):

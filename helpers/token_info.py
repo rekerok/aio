@@ -13,7 +13,7 @@ class Token_Info:
         self.decimals: int = decimals
 
     @staticmethod
-    async def get_info_token(acc: "Account", token_address: str = None):
+    async def get_info_token(acc: Account, token_address: str = None):
         if not token_address or token_address == "":
             name: str = acc.network["token"]
             return Token_Info(address="", symbol=name.upper(), decimals=18)

@@ -1,8 +1,8 @@
 import csv
 import pprint
 import utils
-from loguru import logger
 from modules.account import Account
+from loguru import logger
 
 
 class Check_NFT:

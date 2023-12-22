@@ -3,7 +3,6 @@ import utils
 import config
 import random
 import eth_utils
-from typing import Union
 from web3 import AsyncWeb3, AsyncHTTPProvider
 from helpers import Token_Amount
 from loguru import logger

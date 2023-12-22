@@ -2,12 +2,9 @@ import time
 import config
 import eth_abi
 from loguru import logger
-from helpers import contracts
 from typing import Union
-from helpers import Web3Swapper
-from helpers.enums import TYPE_OF_TRANSACTION
-from helpers.token_amount import Token_Amount
-from helpers.token_info import Token_Info
+from helpers import contracts
+from helpers import Web3Swapper, Token_Amount, TYPE_OF_TRANSACTION, Token_Info
 
 
 class SyncSwap(Web3Swapper):

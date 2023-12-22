@@ -3,10 +3,7 @@ import config
 from typing import Union
 from loguru import logger
 from helpers import contracts
-from helpers import Web3Swapper
-from helpers import TYPE_OF_TRANSACTION
-from helpers import Token_Amount
-from helpers import Token_Info
+from helpers import Web3Swapper, TYPE_OF_TRANSACTION, Token_Amount, Token_Info
 
 
 class SushiSwap(Web3Swapper):
