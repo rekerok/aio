@@ -1,4 +1,6 @@
+import eth_utils
 import config
+from helpers import contracts
 from modules.account import Account
 
 
@@ -26,3 +28,29 @@ class Token_Info:
             symbol=symbol.upper(),
             decimals=await contract.functions.decimals().call(),
         )
+
+    @staticmethod
+    async def to_wrapped_token(
+        from_token: "Token_Info", to_token: "Token_Info", name_network: str
+    ):
+        if from_token.address == "":
+            from_token.address = eth_utils.address.to_checksum_address(
+                contracts.WETH_CONTRACTS.get(name_network)
+            )
+        if to_token.address == "":
+            to_token.address = eth_utils.address.to_checksum_address(
+                contracts.WETH_CONTRACTS.get(name_network)
+            )
+        return from_token, to_token
+
+    @staticmethod
+    async def to_native_token(from_token: "Token_Info", to_token: "Token_Info"):
+        if from_token.address == "":
+            from_token.address = eth_utils.address.to_checksum_address(
+                contracts.NATIVE_TOKEN
+            )
+        if to_token.address == "":
+            to_token.address = eth_utils.address.to_checksum_address(
+                contracts.NATIVE_TOKEN
+            )
+        return from_token, to_token

@@ -2,7 +2,8 @@ import random
 import utils
 from typing import Union
 from loguru import logger
-from helpers import Token_Amount, Token_Info, Token_Info, TYPE_OF_TRANSACTION
+from helpers import Token_Amount, Token_Info, Token_Info
+from utils import TYPE_OF_TRANSACTION
 from modules.account import Account
 
 

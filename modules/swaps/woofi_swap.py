@@ -49,9 +49,11 @@ class WoofiSwap(Web3Swapper):
         from_token: Token_Info,
         to_token: Token_Info,
     ):
-        from_token, to_token = await self._to_native_token(
-            from_token=from_token, to_token=to_token
+        from_token, to_token = await Token_Info.to_native_token(
+            from_token=from_token,
+            to_token=to_token,
         )
+
         amount_in = await self._query_swap(
             fromToken=from_token, toToken=to_token, fromAmount=amount_to_send
         )

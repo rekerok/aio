@@ -74,8 +74,9 @@ class InchSwap(Web3Swapper):
         contract_address = eth_utils.address.to_checksum_address(
             await self._get_contract_address()
         )
-        from_token, to_token = await self._to_native_token(
-            from_token=from_token, to_token=to_token
+        from_token, to_token = await Token_Info.to_native_token(
+            from_token=from_token,
+            to_token=to_token,
         )
 
         if from_token.symbol != self.acc.network.get("token"):

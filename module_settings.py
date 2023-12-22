@@ -54,23 +54,13 @@ class SWAP_SETTINGS:
     params = [
         {
             "network": Networks.polygon,
-            "dexs": [OdosSwap, SushiSwap, InchSwap],
+            "dexs": [SushiSwap],
             "type_swap": TYPE_OF_TRANSACTION.PERCENT,
             "value": (90, 100),
             "from_token": "0x2791bca1f2de4661ed88a30c99a7a9449aa84174",
             "min_balance": 0,
             "to_token": "",
-            "wallets_file": "files/poly.txt",
-        },
-        {
-            "network": Networks.avalanche,
-            "dexs": [SushiSwap, OdosSwap],
-            "type_swap": TYPE_OF_TRANSACTION.PERCENT,
-            "value": (100, 100),
-            "from_token": "0x3c499c542cef5e3811e1192ce70d8cc03d5c3359",
-            "min_balance": 0,
-            "to_token": "",
-            "wallets_file": "files/avax.txt",
+            "wallets_file": "",
         },
     ]
     SLIPPAGE = 5

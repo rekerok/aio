@@ -124,24 +124,6 @@ class Web3Swapper:
             to_address=to_address, data=data, value=value
         )
 
-    async def _to_wrapped_token(self, from_token: Token_Info, to_token: Token_Info):
-        if from_token.address == "":
-            from_token.address = self.acc.w3.to_checksum_address(
-                contracts.WETH_CONTRACTS.get(self.acc.network.get("name"))
-            )
-        if to_token.address == "":
-            to_token.address = self.acc.w3.to_checksum_address(
-                contracts.WETH_CONTRACTS.get(self.acc.network.get("name"))
-            )
-        return from_token, to_token
-
-    async def _to_native_token(self, from_token: Token_Info, to_token: Token_Info):
-        if from_token.address == "":
-            from_token.address = self.acc.w3.to_checksum_address(contracts.NATIVE_TOKEN)
-        if to_token.address == "":
-            to_token.address = self.acc.w3.to_checksum_address(contracts.NATIVE_TOKEN)
-        return from_token, to_token
-
     async def swap(self, from_token_address: str = None, to_token_address: str = None):
         from_token_address: Token_Info = await Token_Info.get_info_token(
             acc=self.acc, token_address=from_token_address
@@ -230,7 +212,10 @@ class Web3Swapper:
         database = await Web3Swapper._create_database(
             wallets=wallets, params=settings.params
         )
-        pprint.pprint(database)
+        # pprint.pprint(database)
+        random.shuffle(database)
+        random.shuffle(database)
+        random.shuffle(database)
         random.shuffle(database)
         counter = 1
         for data in database:
@@ -243,9 +228,9 @@ class Web3Swapper:
                 value=data.get("value"),
                 min_balance=data.get("min_balance"),
             )
-            # await dex.swap(
-            #     from_token_address=data.get("from_token"),
-            #     to_token_address=data.get("to_token"),
-            # )
-            # await utils.time.sleep_view(settings.SLEEP)
+            await dex.swap(
+                from_token_address=data.get("from_token"),
+                to_token_address=data.get("to_token"),
+            )
+            await utils.time.sleep_view(settings.SLEEP)
             counter += 1
