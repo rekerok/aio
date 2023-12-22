@@ -4,7 +4,8 @@ import eth_abi
 from loguru import logger
 from typing import Union
 from helpers import contracts
-from helpers import Web3Swapper, Token_Amount, TYPE_OF_TRANSACTION, Token_Info
+from helpers import Web3Swapper, Token_Amount, Token_Info
+from utils import TYPE_OF_TRANSACTION
 
 
 class SyncSwap(Web3Swapper):

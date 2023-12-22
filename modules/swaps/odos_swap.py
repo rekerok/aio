@@ -4,7 +4,8 @@ import config
 from utils import aiohttp
 from helpers import contracts
 from typing import Union
-from helpers import TYPE_OF_TRANSACTION, Web3Swapper, Token_Amount, Token_Info
+from helpers import Web3Swapper, Token_Amount, Token_Info
+from utils import TYPE_OF_TRANSACTION
 
 
 class OdosSwap(Web3Swapper):

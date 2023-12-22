@@ -4,7 +4,7 @@ from typing import Union
 from loguru import logger
 from modules.account import Account
 from helpers import contracts
-from helpers.enums import TYPE_OF_TRANSACTION
+from utils import TYPE_OF_TRANSACTION
 from helpers.token_amount import Token_Amount
 from helpers.token_info import Token_Info
 from abc import abstractmethod

@@ -3,7 +3,8 @@ import eth_utils
 import settings
 import utils
 from typing import Union
-from helpers import Token_Info, Token_Amount, TYPE_OF_TRANSACTION, Web3Swapper
+from helpers import Token_Info, Token_Amount, Web3Swapper
+from utils import TYPE_OF_TRANSACTION
 
 
 class InchSwap(Web3Swapper):

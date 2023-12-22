@@ -1,8 +1,8 @@
 import random
-import utils
+from utils import *
 from typing import Union
 from loguru import logger
-from helpers import Token_Amount, Token_Info, Token_Info, TYPE_OF_TRANSACTION
+from helpers import Token_Amount, Token_Info, Token_Info
 from .account import Account
 
 
@@ -123,7 +123,7 @@ class Transfers:
 
     @staticmethod
     async def transfer_use_database(settings):
-        wallets = await utils.files.get_wallets_recipients(
+        wallets = await files.get_wallets_recipients(
             wallets_path="files/wallets.txt", recipients_path="files/recipients.txt"
         )
         database = await Transfers.create_database(wallets=wallets, settings=settings)
@@ -140,4 +140,4 @@ class Transfers:
                 min_balance=data.get("min_balance"),
             )
             await tranfer.make_transfer()
-            await utils.time.sleep_view(settings.SLEEP)
+            await time.sleep_view(settings.SLEEP)

@@ -1,5 +1,5 @@
 from modules import *
-from helpers.enums import TYPE_OF_TRANSACTION
+from utils import TYPE_OF_TRANSACTION
 from networks import Networks
 from helpers.web3Swapper import Web3Swapper
 
