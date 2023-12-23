@@ -50,6 +50,7 @@ class TRANSFERS_SETTINGS:
 # InchSwap
 # OdosSwap
 # SyncSwap
+# IzumiSwap
 class SWAP_SETTINGS:
     params = [
         {

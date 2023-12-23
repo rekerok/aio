@@ -1,10 +1,9 @@
 import pprint
 import random
-
-from loguru import logger
-from helpers.enums import TYPE_OF_TRANSACTION
-from helpers.web3Swapper import Web3Swapper
 import utils
+from loguru import logger
+from helpers import Web3Swapper
+from utils import TYPE_OF_TRANSACTION
 
 
 class WarmUPSwaps:

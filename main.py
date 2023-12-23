@@ -12,7 +12,6 @@ def get_module():
             Choice("2) Transfers module", transfers),
             Choice("3) Check NFT", check_nft),
             Choice("4) Swap", swaps),
-            Choice("5) WarnUP Swaps", warm_up_swaps),
         ],
         qmark="⚙️ ",
         pointer="✅ ",
