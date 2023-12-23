@@ -59,6 +59,16 @@ SYNCSWAP = {
     },
 }
 
+IZUMI_SWAP = {
+    "bsc": "0xedf2021f41AbCfE2dEA4427E1B61f4d0AA5aA4b8",
+    "arbitrum": "0x01fDea353849cA29F778B2663BcaCA1D191bED0e",
+    "polygon": "0x032b241De86a8660f1Ae0691a4760B426EA246d7",
+    "zkera": "0x943ac2310D9BC703d6AB5e5e76876e212100f894",
+    "linea": "0x032b241De86a8660f1Ae0691a4760B426EA246d7",
+    "base": "0x02F55D53DcE23B4AA962CC68b0f685f26143Bdb2",
+    "scroll": "0x2db0AFD0045F3518c77eC6591a542e326Befd3D7",
+}
+
 # https://minter.merkly.com/why
 MERKLY = {
     "zkera": "0x5673B6e6e51dE3479B8deB22dF46B12308db5E1e",

@@ -31,16 +31,20 @@ class Token_Info:
 
     @staticmethod
     async def to_wrapped_token(
-        from_token: "Token_Info", to_token: "Token_Info", name_network: str
+        name_network: str,
+        from_token: "Token_Info" = None,
+        to_token: "Token_Info" = None,
     ):
-        if from_token.address == "":
-            from_token.address = eth_utils.address.to_checksum_address(
-                contracts.WETH_CONTRACTS.get(name_network)
-            )
-        if to_token.address == "":
-            to_token.address = eth_utils.address.to_checksum_address(
-                contracts.WETH_CONTRACTS.get(name_network)
-            )
+        if from_token:
+            if from_token.address == "":
+                from_token.address = eth_utils.address.to_checksum_address(
+                    contracts.WETH_CONTRACTS.get(name_network)
+                )
+        if to_token:
+            if to_token.address == "":
+                to_token.address = eth_utils.address.to_checksum_address(
+                    contracts.WETH_CONTRACTS.get(name_network)
+                )
         return from_token, to_token
 
     @staticmethod

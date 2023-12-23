@@ -18,7 +18,7 @@ class IzumiSwap(Web3Swapper):
         type_transfer: TYPE_OF_TRANSACTION = None,
         value: tuple[Union[int, float]] = None,
         min_balance: float = 0,
-        slippage: float = 5.0,
+        slippage: float = 1.0,
     ) -> None:
         super().__init__(
             private_key=private_key,
