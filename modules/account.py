@@ -157,7 +157,7 @@ class Account:
                 abi=config.ERC20_ABI,
             )
             await self.approve(
-                token_address=token_address, spender=to_address, amount=amount.WEI
+                token_address=token_address, spender=to_address, amount=amount
             )
             data = contract.encodeABI(
                 "transfer", args=(self.w3.to_checksum_address(to_address), amount.WEI)
