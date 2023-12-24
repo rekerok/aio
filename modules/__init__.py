@@ -4,6 +4,7 @@ from .swaps.inch_swap import InchSwap
 from .swaps.odos_swap import OdosSwap
 from .swaps.sync_swap import SyncSwap
 from .swaps.izumi_swap import IzumiSwap
+from .bridges.merkly import Merkly
 from .others.transfers import Transfers
 from .others.check_nft import Check_NFT
 from .others.okx import OKX

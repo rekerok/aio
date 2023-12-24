@@ -1,5 +1,6 @@
 import asyncio
 import questionary
+import os
 from questionary import Choice
 from module_settings import *
 
@@ -9,9 +10,11 @@ def get_module():
         "Select a method to get started",
         choices=[
             Choice("1) Withdraw from OKX", okx_withdrawer),
-            Choice("2) Transfers module", transfers),
+            Choice("2) Transfers", transfers),
             Choice("3) Check NFT", check_nft),
             Choice("4) Swap", swaps),
+            Choice("5) Merkly", merkly),
+            Choice("6) Merkly get fees", merkly_check_comission),
         ],
         qmark="⚙️ ",
         pointer="✅ ",

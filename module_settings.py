@@ -64,7 +64,7 @@ class SWAP_SETTINGS:
             "wallets_file": "",
         },
     ]
-    SLIPPAGE = 5
+    SLIPPAGE = 1
     SLEEP = (10, 50)
 
 
@@ -151,7 +151,26 @@ class WARMUPSWAPS_SETTINGS:
             },
         ],
     }
+    SLIPPAGE = 1
     SLEEP = (1000, 2000)
+
+
+class MERKLY_SETTINGS:
+    CHECK_COMISSION_NETWORKS = [Networks.polygon, Networks.base]
+    params = [
+        {
+            "network": Networks.polygon,
+            "to_chains": [
+                {
+                    "name": "beam",
+                    "amount": (3.23, 3.23),
+                }
+            ],
+            "count_transaction": (2, 2),
+            "wallets_file": "",
+        }
+    ]
+    SLEEP = (100, 150)
 
 
 ### NOT CHANGE ###
@@ -173,3 +192,11 @@ async def swaps():
 
 async def warm_up_swaps():
     await WarmUPSwaps.warmup(settings=WARMUPSWAPS_SETTINGS)
+
+
+async def merkly():
+    await Merkly.swap_use_database(settings=MERKLY_SETTINGS)
+
+
+async def merkly_check_comission():
+    await Merkly.get_fees(from_chains=MERKLY_SETTINGS.CHECK_COMISSION_NETWORKS)
