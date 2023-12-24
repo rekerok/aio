@@ -40,12 +40,11 @@ class WarmUPSwaps:
         database = await WarmUPSwaps._create_database(
             wallets=wallets, params=settings.params
         )
-        pprint.pprint(database)
+        # pprint.pprint(database)
         random.shuffle(database)
         random.shuffle(database)
         random.shuffle(database)
         random.shuffle(database)
-
         counter = 1
         for data in database:
             dex: Web3Swapper = data["dex"](
