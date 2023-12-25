@@ -152,7 +152,7 @@ class SyncSwap(Web3Swapper):
             )
             else amount_to_send
         )
-        await self._send_swap_transaction(
+        return await self._send_swap_transaction(
             data=data,
             from_token=from_token,
             to_address=self.contract_router.address,

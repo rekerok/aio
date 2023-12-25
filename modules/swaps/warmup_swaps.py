@@ -4,6 +4,7 @@ import utils
 from loguru import logger
 from helpers import Web3Swapper
 from utils import TYPE_OF_TRANSACTION
+from utils.enums import RESULT_TRANSACTION
 
 
 class WarmUPSwaps:
@@ -57,10 +58,12 @@ class WarmUPSwaps:
             )
             logger.info("------------------------")
             logger.info(f"OPERATION {counter}/{len(database)}")
-            await dex.swap(
+            result = await dex.swap(
                 from_token_address=data["from_token_address"],
                 to_token_address=data["to_token_address"],
             )
+            if result == RESULT_TRANSACTION.SUCCESS:
+                await utils.time.sleep_view(settings.SLEEP)
+            await utils.time.sleep_view((10, 15))
             counter += 1
-            await utils.time.sleep_view(settings.SLEEP)
             logger.info("------------------------")

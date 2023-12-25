@@ -161,7 +161,7 @@ class IzumiSwap(Web3Swapper):
             if from_token.symbol == self.acc.network.get("token").upper()
             else amount_to_send
         )
-        await self._send_swap_transaction(
+        return await self._send_swap_transaction(
             data=data_multicall,
             from_token=from_token,
             to_address=self.contract.address,

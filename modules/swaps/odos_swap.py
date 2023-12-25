@@ -91,7 +91,7 @@ class OdosSwap(Web3Swapper):
             else None
         )
 
-        await self._send_swap_transaction(
+        return await self._send_swap_transaction(
             data=assemble["transaction"]["data"],
             from_token=from_token,
             to_address=self.contract.address,

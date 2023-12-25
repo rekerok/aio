@@ -95,7 +95,7 @@ class InchSwap(Web3Swapper):
             if from_token.symbol == self.acc.network.get("token")
             else None
         )
-        await self._send_swap_transaction(
+        return await self._send_swap_transaction(
             data=data,
             from_token=from_token,
             to_address=contract_address,

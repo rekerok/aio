@@ -5,6 +5,7 @@ from loguru import logger
 from helpers import contracts
 from helpers import Web3Swapper, Token_Amount, Token_Info
 from utils import TYPE_OF_TRANSACTION
+from utils.enums import RESULT_TRANSACTION
 
 
 class SushiSwap(Web3Swapper):
@@ -66,7 +67,7 @@ class SushiSwap(Web3Swapper):
         )
 
         if amount_out_in is None:
-            return
+            return RESULT_TRANSACTION.FAIL
 
         amount_out = Token_Amount(
             amount=amount_out_in[0], decimals=from_token.decimals, wei=True
@@ -91,7 +92,7 @@ class SushiSwap(Web3Swapper):
         if from_token.address == self.acc.w3.to_checksum_address(
             contracts.WETH_CONTRACTS.get(self.acc.network.get("name"))
         ):
-            await self._send_swap_transaction(
+            return await self._send_swap_transaction(
                 data=data,
                 to_address=self.contract.address,
                 from_token=from_token,
@@ -101,7 +102,7 @@ class SushiSwap(Web3Swapper):
         elif to_token.address == self.acc.w3.to_checksum_address(
             contracts.WETH_CONTRACTS.get(self.acc.network.get("name"))
         ):
-            await self._send_swap_transaction(
+            return await self._send_swap_transaction(
                 data=await self._get_data(
                     contract=self.contract,
                     function_of_contract="swapExactTokensForETH",
@@ -112,7 +113,7 @@ class SushiSwap(Web3Swapper):
                 value_approove=amount_out,
             )
         else:
-            await self._send_swap_transaction(
+            return await self._send_swap_transaction(
                 data=await self._get_data(
                     contract=self.contract,
                     function_of_contract="swapExactTokensForTokens",

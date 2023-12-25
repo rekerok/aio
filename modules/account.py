@@ -8,6 +8,7 @@ from helpers import Token_Amount
 from loguru import logger
 from web3.middleware import async_geth_poa_middleware
 from settings import GAS_MULTIPLAY
+from utils.enums import RESULT_TRANSACTION
 
 
 class Account:
@@ -162,7 +163,7 @@ class Account:
             data = contract.encodeABI(
                 "transfer", args=(self.w3.to_checksum_address(to_address), amount.WEI)
             )
-            await self.send_transaction(data=data, to_address=token_address, value=0)
+            return await self.send_transaction(data=data, to_address=token_address, value=0)
 
     # @check_gas
     async def deploy_contract(self, bytecode: str):
@@ -217,10 +218,15 @@ class Account:
                 verify = await self.verifi_tx(tx_hash=tx_hash)
                 if verify:
                     logger.success(f"LINK {self.network['scan']}tx/{tx_hash}")
+                    return RESULT_TRANSACTION.SUCCESS
                 else:
                     logger.error(f"LINK {self.network['scan']['scan']}tx/{tx_hash}")
+                    return RESULT_TRANSACTION.FAIL
             except Exception as error:
                 logger.error(error)
+                return RESULT_TRANSACTION.FAIL
+        else:
+            return RESULT_TRANSACTION.FAIL
 
     async def sign_transaction(self, tx: dict):
         signed_tx = self.w3.eth.account.sign_transaction(tx, self.private_key)

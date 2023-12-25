@@ -7,6 +7,6 @@ class TYPE_OF_TRANSACTION(Enum):
     PERCENT = auto()
     AMOUNT = auto()
 
-class STATUS(Enum):
-    OK = auto()
+class RESULT_TRANSACTION(Enum):
+    SUCCESS = auto()
     FAIL = auto()

@@ -9,6 +9,7 @@ from modules.account import Account
 from eth_abi.packed import encode_packed
 
 import utils
+from utils.enums import RESULT_TRANSACTION
 
 
 class Merkly:
@@ -53,7 +54,7 @@ class Merkly:
             to_chain_id, "0x", adapter_params
         ).call()
         value = Token_Amount(amount=estimate_send_fee[0] * 1.01, wei=True)
-        await self.acc.send_transaction(
+        return await self.acc.send_transaction(
             to_address=self.contract.address,
             data=data,
             value=value,
@@ -161,9 +162,12 @@ class Merkly:
                 private_key=data["wallet"],
                 network=data["network"],
             )
-            await merkly.bridge(
+            result = await merkly.bridge(
                 amount_to_get=random.uniform(*data.get("amount_to_get")),
                 to_chain_id=data.get("to_chain_id"),
             )
+            if result == RESULT_TRANSACTION.SUCCESS:
+                await utils.time.sleep_view(settings.SLEEP)
+            await utils.time.sleep_view((10, 15))
             logger.info("------------------------------------")
             counter += 1

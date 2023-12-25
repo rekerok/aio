@@ -5,6 +5,7 @@ from loguru import logger
 from helpers import Token_Amount, Token_Info, Token_Info
 from utils import TYPE_OF_TRANSACTION
 from modules.account import Account
+from utils.enums import RESULT_TRANSACTION
 
 
 class Transfers:
@@ -39,7 +40,8 @@ class Transfers:
         logger.info(
             f"Remainder {balance.ETHER-amount_to_send.ETHER} {token_info.symbol}"
         )
-        await self.acc.transfer(
+
+        return await self.acc.transfer(
             to_address=self.to_address,
             amount=amount_to_send,
             token_address=self.token_adress,
@@ -56,11 +58,11 @@ class Transfers:
         logger.info(f"Remainder {kepp_amount} {token_info.symbol}")
         if kepp_amount > balance.ETHER:
             logger.info(f"Keep amount {kepp_amount} > {balance.ETHER}")
-            return
+            return RESULT_TRANSACTION.FAIL
 
         amount_to_send = balance.ETHER - kepp_amount
         logger.info(f"Will send {amount_to_send} {token_info.symbol}")
-        await self.acc.transfer(
+        return await self.acc.transfer(
             to_address=self.to_address,
             amount=amount_to_send,
             token_address=self.token_adress,
@@ -73,11 +75,11 @@ class Transfers:
         logger.info(f"Balance {balance.ETHER} {token_info.symbol}")
         if amount_to_send > balance.ETHER:
             logger.error(f"Balance {balance.ETHER} < {amount_to_send}")
-            return
+            return RESULT_TRANSACTION.FAIL
 
         logger.info(f"Будет отправлено {amount_to_send} {token_info.symbol}")
         logger.info(f"Remainder {balance.ETHER - amount_to_send} {token_info.symbol}")
-        await self.acc.transfer(
+        return await self.acc.transfer(
             to_address=self.to_address,
             amount=amount_to_send,
             token_address=self.token_adress,
@@ -98,11 +100,15 @@ class Transfers:
             return
 
         if self.type_transfer == TYPE_OF_TRANSACTION.PERCENT:
-            await self._make_tranfer_percent(balance=balance, token_info=token_info)
+            return await self._make_tranfer_percent(
+                balance=balance, token_info=token_info
+            )
         elif self.type_transfer == TYPE_OF_TRANSACTION.AMOUNT:
-            await self._make_tranfer_all_amount(balance=balance, token_info=token_info)
+            return await self._make_tranfer_all_amount(
+                balance=balance, token_info=token_info
+            )
         else:
-            await self._transfer_amount(balance=balance, token_info=token_info)
+            return await self._transfer_amount(balance=balance, token_info=token_info)
 
     @staticmethod
     async def create_database(wallets: list[tuple], settings):
@@ -140,5 +146,8 @@ class Transfers:
                 value=data.get("value"),
                 min_balance=data.get("min_balance"),
             )
-            await tranfer.make_transfer()
-            await utils.time.sleep_view(settings.SLEEP)
+            result = await tranfer.make_transfer()
+            if result == RESULT_TRANSACTION.SUCCESS:
+                await utils.time.sleep_view(settings.SLEEP)
+            await utils.time.sleep_view((10, 15))
+            counter += 1

@@ -4,7 +4,7 @@ from typing import Union
 from loguru import logger
 from modules.account import Account
 from helpers import contracts
-from utils import TYPE_OF_TRANSACTION
+from utils import TYPE_OF_TRANSACTION, RESULT_TRANSACTION
 from helpers.token_amount import Token_Amount
 from helpers.token_info import Token_Info
 from abc import abstractmethod
@@ -46,7 +46,7 @@ class Web3Swapper:
             f"Remainder {balance.ETHER-amount_to_send.ETHER} {from_token.symbol}"
         )
 
-        await self._perform_swap(
+        return await self._perform_swap(
             amount_to_send=amount_to_send, from_token=from_token, to_token=to_token
         )
 
@@ -63,13 +63,13 @@ class Web3Swapper:
 
         if keep_amount.ETHER > balance.ETHER:
             logger.error(f"KEEP AMOUNT  {keep_amount.ETHER} > {balance.ETHER} BALANCE")
-            return
+            return RESULT_TRANSACTION.FAIL
 
         logger.info(f"Balance {balance.ETHER} {from_token.symbol}")
         logger.info(f"Will send {amount_to_send.ETHER} {from_token.symbol}")
         logger.info(f"Remainder {keep_amount.ETHER} {from_token.symbol}")
 
-        await self._perform_swap(amount_to_send, from_token, to_token)
+        return await self._perform_swap(amount_to_send, from_token, to_token)
 
     async def _make_swap_amount(
         self, from_token: Token_Info, to_token: Token_Info, balance: Token_Amount
@@ -85,7 +85,7 @@ class Web3Swapper:
         logger.info(f"Balance {balance.ETHER} {from_token.symbol}")
         logger.info(f"Will send {amount_to_send.ETHER} {from_token.symbol}")
 
-        await self._perform_swap(amount_to_send, from_token, to_token)
+        return await self._perform_swap(amount_to_send, from_token, to_token)
 
     @abstractmethod
     async def _perform_swap(
@@ -146,19 +146,19 @@ class Web3Swapper:
             return
 
         if self.type_transfer == TYPE_OF_TRANSACTION.PERCENT:
-            await self._make_swap_percent(
+            return await self._make_swap_percent(
                 from_token=from_token_address,
                 to_token=to_token_address,
                 balance=balance,
             )
         elif self.type_transfer == TYPE_OF_TRANSACTION.ALL_BALANCE:
-            await self._make_swap_all_balance(
+            return await self._make_swap_all_balance(
                 from_token=from_token_address,
                 to_token=to_token_address,
                 balance=balance,
             )
         else:
-            await self._make_swap_amount(
+            return await self._make_swap_amount(
                 from_token=from_token_address,
                 to_token=to_token_address,
                 balance=balance,
@@ -212,7 +212,6 @@ class Web3Swapper:
         database = await Web3Swapper._create_database(
             wallets=wallets, params=settings.params
         )
-        # pprint.pprint(database)
         random.shuffle(database)
         random.shuffle(database)
         random.shuffle(database)
@@ -228,9 +227,11 @@ class Web3Swapper:
                 value=data.get("value"),
                 min_balance=data.get("min_balance"),
             )
-            await dex.swap(
+            result = await dex.swap(
                 from_token_address=data.get("from_token"),
                 to_token_address=data.get("to_token"),
             )
-            await utils.time.sleep_view(settings.SLEEP)
+            if result == RESULT_TRANSACTION.SUCCESS:
+                await utils.time.sleep_view(settings.SLEEP)
+            await utils.time.sleep_view((10, 15))
             counter += 1
