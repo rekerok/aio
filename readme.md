@@ -7,17 +7,17 @@
 ## Modules
 ### Modules that work
 - [x] Withdraw OKX
+- [x] Deploy contracts
 - [x] Woofi swap
 - [x] SushiSwap
 - [x] Transfers
 - [x] 1inch
 - [x] Odos
 - [x] SyncSwap
+- [x] Merkly
 ### Modules to add
-- [ ] Deploy contracts
 - [ ] Checker balances
 - [ ] Stargate
-- [ ] Merkly
 - [ ] Bungee refuel
 - [ ] Xy.Finance
 - [ ] Uniswap
@@ -27,13 +27,9 @@
 - [ ] Holograph
 - [ ] 0x_swap
 - [ ] Woofi bridge
-- [ ] Collector to Token
 - [ ] Check count transaction
-
 - [ ] ZkSwap
 - [ ] Dmail
-- [ ] SyncSwap
-
 ---
 
 
