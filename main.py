@@ -16,6 +16,7 @@ def get_module():
             Choice("5) WarmUP", warm_up_swaps),
             Choice("6) Merkly", merkly),
             Choice("7) Merkly get fees", merkly_check_comission),
+            Choice("8) Deploy contracts", deploy_contracts),
         ],
         qmark="⚙️ ",
         pointer="✅ ",

@@ -7,5 +7,6 @@ from .swaps.izumi_swap import IzumiSwap
 from .bridges.merkly import Merkly
 from .others.transfers import Transfers
 from .others.check_nft import Check_NFT
+from .others.deployer import Deployer
 from .others.okx import OKX
 from .swaps.warmup_swaps import WarmUPSwaps
