@@ -85,6 +85,8 @@ class Merkly:
     @staticmethod
     async def get_fees(from_chains: list[dict]):
         to_chains = contracts.LAYERZERO_CHAINS_ID
+        fees_list = []
+
         for from_chain in from_chains:
             acc = Account(network=from_chain)
             contract_merkly = acc.w3.eth.contract(
@@ -93,6 +95,7 @@ class Merkly:
                 ),
                 abi=config.MERKLY_ABI,
             )
+
             for to_chain_name, to_chain_id in to_chains.items():
                 if from_chain["name"] != to_chain_name:
                     dst_chain_id = to_chain_id
@@ -112,11 +115,25 @@ class Merkly:
                         price = Token_Amount(
                             amount=estimate_send_fee[0], decimals=18, wei=True
                         )
+                        fees_list.append(
+                            {
+                                "from_chain": from_chain["name"],
+                                "to_chain": to_chain_name,
+                                "to_chain_id": to_chain_id,
+                                "price": price,
+                            }
+                        )
                     except:
                         price = Token_Amount(amount=0)
-                    print(
-                        f"{from_chain['name']} -> {to_chain_name} ({to_chain_id}) {price.ETHER:.10f}"
-                    )
+
+        # Сортировка по стоимости (от самого дешевого к самому дорогому)
+        fees_list = sorted(fees_list, key=lambda x: x["price"].ETHER)
+
+        # Вывод результатов
+        for fee_info in fees_list:
+            print(
+                f"{fee_info['from_chain']} -> {fee_info['to_chain']} ({fee_info['to_chain_id']}) {fee_info['price'].ETHER:.10f}"
+            )
 
     @staticmethod
     async def _create_database(wallets: list[str], params):
