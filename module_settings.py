@@ -54,13 +54,29 @@ class TRANSFERS_SETTINGS:
 class SWAP_SETTINGS:
     params = [
         {
-            "network": Networks.polygon,
-            "dexs": [SushiSwap],
+            "network": Networks.zksync,
             "type_swap": TYPE_OF_TRANSACTION.PERCENT,
             "value": (90, 100),
-            "from_token": "0x2791bca1f2de4661ed88a30c99a7a9449aa84174",
+            "from_token": "",
             "min_balance": 0,
-            "to_token": "",
+            "to_tokens": [
+                {
+                    "address": "0x493257fD37EDB34451f62EDf8D2a0C418852bA4C",
+                    "dexs": [
+                        WoofiSwap,
+                        InchSwap,
+                        OdosSwap,
+                        SyncSwap,
+                    ],  # usdt
+                    "address": "0x3355df6D4c9C3035724Fd0e3914dE96A5a83aaf4",
+                    "dexs": [
+                        WoofiSwap,
+                        InchSwap,
+                        OdosSwap,
+                        SyncSwap,
+                    ],  # usdc
+                }
+            ],
             "wallets_file": "",
         },
     ]

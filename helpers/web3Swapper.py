@@ -189,16 +189,17 @@ class Web3Swapper:
                 else await utils.files.read_file_lines(param["wallets_file"])
             ):
                 # print(param)
+                to_token = random.choice(param.get("to_tokens"))
                 database.append(
                     {
                         "private_key": wallet,
                         "network": param.get("network"),
-                        "dex": random.choice(param.get("dexs")),
+                        "dex": random.choice(to_token.get("dexs")),
                         "type_swap": param.get("type_swap"),
                         "value": param.get("value"),
                         "from_token": param.get("from_token"),
                         "min_balance": param.get("min_balance"),
-                        "to_token": param.get("to_token"),
+                        "to_token": to_token.get("address"),
                     }
                 )
         return database

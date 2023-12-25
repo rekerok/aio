@@ -47,6 +47,18 @@ class Networks:
         "check_gas": False,
     }
 
+    zksync = {
+        "name": "zkera",
+        "rpc": [
+            "https://mainnet.era.zksync.io",
+            "https://zksync-era.blockpi.network/v1/rpc/public",
+        ],
+        "scan": "https://explorer.zksync.io/",
+        "eip1559": False,
+        "token": "ETH",
+        "check_gas": True,
+    }
+
     avalanche = {
         "name": "avalanche",
         "rpc": [
@@ -63,8 +75,7 @@ class Networks:
     polygon = {
         "name": "polygon",
         "rpc": [
-            "https://polygon.llamarpc.com",
-            "wss://polygon-bor.publicnode.com",
+            "https://rpc.ankr.com/polygon/6eb719a8acb9be4873e5616d579ee1dd2f1f20cd08be5f76cd50a2ce3753e260",
         ],
         "scan": "https://polygonscan.com/",
         "eip1559": True,
