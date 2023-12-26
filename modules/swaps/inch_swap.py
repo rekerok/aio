@@ -38,7 +38,7 @@ class InchSwap(Web3Swapper):
             "accept": "application/json",
         }
         response = await utils.aiohttp.get_json_aiohttp(url=url, headers=headers)
-        return response["address"]
+        return response.get("address")
 
     async def _get_quote(
         self, from_token: Token_Info, to_token: Token_Info, amount: Token_Amount

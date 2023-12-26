@@ -34,12 +34,10 @@ class Transfers:
             amount=balance.ETHER * percent / 100,
             decimals=token_info.decimals,
         )
-        logger.info(f"Percentage of balance - {percent} %")
-        logger.info(f"Balance {balance.ETHER} {token_info.symbol}")
-        logger.info(f"Will send {amount_to_send.ETHER} {token_info.symbol}")
-        logger.info(
-            f"Remainder {balance.ETHER-amount_to_send.ETHER} {token_info.symbol}"
-        )
+        logger.info(f"PERCENT: {percent} %")
+        logger.info(f"BALANCE: {balance.ETHER} {token_info.symbol}")
+        logger.info(f"SEND: {amount_to_send.ETHER} {token_info.symbol}")
+
 
         return await self.acc.transfer(
             to_address=self.to_address,
@@ -54,14 +52,13 @@ class Transfers:
         amount_to_send = Token_Amount(
             amount=balance.ETHER - kepp_amount, decimals=token_info.decimals
         )
-        logger.info(f"Balance {balance.ETHER} {token_info.symbol}")
-        logger.info(f"Remainder {kepp_amount} {token_info.symbol}")
+        logger.info(f"BALANCE: {balance.ETHER} {token_info.symbol}")
         if kepp_amount > balance.ETHER:
             logger.info(f"Keep amount {kepp_amount} > {balance.ETHER}")
             return RESULT_TRANSACTION.FAIL
 
         amount_to_send = balance.ETHER - kepp_amount
-        logger.info(f"Will send {amount_to_send} {token_info.symbol}")
+        logger.info(f"SEND: {amount_to_send} {token_info.symbol}")
         return await self.acc.transfer(
             to_address=self.to_address,
             amount=amount_to_send,
@@ -72,13 +69,12 @@ class Transfers:
         self, balance: Token_Amount, token_info: Token_Info
     ) -> None:
         amount_to_send = random.uniform(self.value[0], self.value[1])
-        logger.info(f"Balance {balance.ETHER} {token_info.symbol}")
+        logger.info(f"BALANCE: {balance.ETHER} {token_info.symbol}")
         if amount_to_send > balance.ETHER:
-            logger.error(f"Balance {balance.ETHER} < {amount_to_send}")
+            logger.error(f"BALANCE: {balance.ETHER} < {amount_to_send}")
             return RESULT_TRANSACTION.FAIL
 
-        logger.info(f"Будет отправлено {amount_to_send} {token_info.symbol}")
-        logger.info(f"Remainder {balance.ETHER - amount_to_send} {token_info.symbol}")
+        logger.info(f"SEND: {amount_to_send} {token_info.symbol}")
         return await self.acc.transfer(
             to_address=self.to_address,
             amount=amount_to_send,
@@ -94,9 +90,9 @@ class Transfers:
         logger.info(f"TO: {self.to_address}")
         logger.info(f"NETWORK: {self.acc.network.get('name')}")
         logger.info(f"TOKEN: {token_info.symbol}")
-        logger.info(f"Starting to make transfer")
+    
         if balance.ETHER < self.min_balance:
-            logger.error(f"Balance {balance.ETHER} < {self.min_balance}")
+            logger.error(f"BALANCE: {balance.ETHER} < {self.min_balance}")
             return RESULT_TRANSACTION.FAIL
 
         if self.type_transfer == TYPE_OF_TRANSACTION.PERCENT:
@@ -134,6 +130,9 @@ class Transfers:
             wallets_path="files/wallets.txt", recipients_path="files/recipients.txt"
         )
         database = await Transfers.create_database(wallets=wallets, settings=settings)
+        random.shuffle(database)
+        random.shuffle(database)
+        random.shuffle(database)
         random.shuffle(database)
         counter = 1
         for data in database:

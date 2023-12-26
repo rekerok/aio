@@ -39,12 +39,8 @@ class Web3Swapper:
             balance.ETHER * percent / 100, decimals=from_token.decimals
         )
 
-        logger.info(f"Percentage of balance - {percent} %")
-        logger.info(f"Balance {balance.ETHER} {from_token.symbol}")
-        logger.info(f"Will send {amount_to_send.ETHER} {from_token.symbol}")
-        logger.info(
-            f"Remainder {balance.ETHER-amount_to_send.ETHER} {from_token.symbol}"
-        )
+        logger.info(f"PERCENT: {percent} %")
+        logger.info(f"SEND: {amount_to_send.ETHER} {from_token.symbol}")
 
         return await self._perform_swap(
             amount_to_send=amount_to_send, from_token=from_token, to_token=to_token
@@ -62,12 +58,11 @@ class Web3Swapper:
         )
 
         if keep_amount.ETHER > balance.ETHER:
-            logger.error(f"KEEP AMOUNT  {keep_amount.ETHER} > {balance.ETHER} BALANCE")
+            logger.error(f"KEEP AMOUNT:  {keep_amount.ETHER} > {balance.ETHER} BALANCE")
             return RESULT_TRANSACTION.FAIL
 
-        logger.info(f"Balance {balance.ETHER} {from_token.symbol}")
-        logger.info(f"Will send {amount_to_send.ETHER} {from_token.symbol}")
-        logger.info(f"Remainder {keep_amount.ETHER} {from_token.symbol}")
+        logger.info(f"BALANCE: {balance.ETHER} {from_token.symbol}")
+        logger.info(f"SEND: {amount_to_send.ETHER} {from_token.symbol}")
 
         return await self._perform_swap(amount_to_send, from_token, to_token)
 
@@ -80,10 +75,10 @@ class Web3Swapper:
         )
 
         if amount_to_send.ETHER > balance.ETHER:
-            logger.info(f"BALANCE {balance.ETHER} < {amount_to_send.ETHER} SEND")
-            return
-        logger.info(f"Balance {balance.ETHER} {from_token.symbol}")
-        logger.info(f"Will send {amount_to_send.ETHER} {from_token.symbol}")
+            logger.info(f"BALANCE: {balance.ETHER} < {amount_to_send.ETHER} SEND")
+            return RESULT_TRANSACTION.FAIL
+
+        logger.info(f"SEND: {amount_to_send.ETHER} {from_token.symbol}")
 
         return await self._perform_swap(amount_to_send, from_token, to_token)
 
@@ -134,12 +129,10 @@ class Web3Swapper:
 
         balance: Token_Amount = await self.acc.get_balance(from_token_address.address)
 
-        logger.info(f"FROM: {self.acc.address}")
+        logger.info(f"WALLET: {self.acc.address}")
         logger.info(f"NETWORK: {self.acc.network.get('name')}")
-        logger.info(f"DEX NAME: {self.NAME}")
-        logger.info(f"FROM_TOKEN: {from_token_address.symbol}")
-        logger.info(f"TO_TOKEN: {to_token_address.symbol}")
-        logger.info(f"Starting to make swap")
+        logger.info(f"DEX: {self.NAME} ")
+        logger.info(f"{from_token_address.symbol} -> {to_token_address.symbol}")
 
         if balance.ETHER < self.min_balance:
             logger.error(f"Balance {balance.ETHER} < {self.min_balance}")
@@ -234,5 +227,6 @@ class Web3Swapper:
             )
             if result == RESULT_TRANSACTION.SUCCESS:
                 await utils.time.sleep_view(settings.SLEEP)
-            await utils.time.sleep_view((10, 15))
+            else:
+                await utils.time.sleep_view((10, 15))
             counter += 1

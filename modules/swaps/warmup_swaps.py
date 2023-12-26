@@ -66,5 +66,5 @@ class WarmUPSwaps:
                 await utils.time.sleep_view(settings.SLEEP)
             else:
                 await utils.time.sleep_view((10, 15))
+            logger.info("------------------------------------")
             counter += 1
-            logger.info("------------------------")
