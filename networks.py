@@ -63,8 +63,6 @@ class Networks:
         "name": "avalanche",
         "rpc": [
             "https://avalanche.drpc.org",
-            "https://api.avax.network/ext/bc/C/rpc",
-            "https://1rpc.io/avax/c",
         ],
         "scan": "https://snowtrace.io/",
         "eip1559": True,

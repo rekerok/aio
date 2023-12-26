@@ -38,7 +38,6 @@ class Transfers:
         logger.info(f"BALANCE: {balance.ETHER} {token_info.symbol}")
         logger.info(f"SEND: {amount_to_send.ETHER} {token_info.symbol}")
 
-
         return await self.acc.transfer(
             to_address=self.to_address,
             amount=amount_to_send,
@@ -48,7 +47,7 @@ class Transfers:
     async def _make_tranfer_all_amount(
         self, balance: Token_Amount, token_info: Token_Info
     ) -> None:
-        kepp_amount = random.uniform(self.value[0], self.value[1])
+        kepp_amount = random.uniform(*self.value)
         amount_to_send = Token_Amount(
             amount=balance.ETHER - kepp_amount, decimals=token_info.decimals
         )
@@ -57,8 +56,6 @@ class Transfers:
             logger.info(f"Keep amount {kepp_amount} > {balance.ETHER}")
             return RESULT_TRANSACTION.FAIL
 
-        amount_to_send = balance.ETHER - kepp_amount
-        logger.info(f"SEND: {amount_to_send} {token_info.symbol}")
         return await self.acc.transfer(
             to_address=self.to_address,
             amount=amount_to_send,
@@ -73,8 +70,9 @@ class Transfers:
         if amount_to_send > balance.ETHER:
             logger.error(f"BALANCE: {balance.ETHER} < {amount_to_send}")
             return RESULT_TRANSACTION.FAIL
-
-        logger.info(f"SEND: {amount_to_send} {token_info.symbol}")
+        amount_to_send = Token_Amount(
+            amount=amount_to_send, decimals=token_info.decimals
+        )
         return await self.acc.transfer(
             to_address=self.to_address,
             amount=amount_to_send,
@@ -90,7 +88,7 @@ class Transfers:
         logger.info(f"TO: {self.to_address}")
         logger.info(f"NETWORK: {self.acc.network.get('name')}")
         logger.info(f"TOKEN: {token_info.symbol}")
-    
+
         if balance.ETHER < self.min_balance:
             logger.error(f"BALANCE: {balance.ETHER} < {self.min_balance}")
             return RESULT_TRANSACTION.FAIL
@@ -99,7 +97,7 @@ class Transfers:
             return await self._make_tranfer_percent(
                 balance=balance, token_info=token_info
             )
-        elif self.type_transfer == TYPE_OF_TRANSACTION.AMOUNT:
+        elif self.type_transfer == TYPE_OF_TRANSACTION.ALL_BALANCE:
             return await self._make_tranfer_all_amount(
                 balance=balance, token_info=token_info
             )

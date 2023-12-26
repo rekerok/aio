@@ -67,7 +67,9 @@ class SWAP_SETTINGS:
                         InchSwap,
                         OdosSwap,
                         SyncSwap,
-                    ],  # usdt
+                    ],
+                },  # usdt
+                {
                     "address": "0x3355df6D4c9C3035724Fd0e3914dE96A5a83aaf4",
                     "dexs": [
                         WoofiSwap,
@@ -75,7 +77,7 @@ class SWAP_SETTINGS:
                         OdosSwap,
                         SyncSwap,
                     ],  # usdc
-                }
+                },
             ],
             "wallets_file": "",
         },
