@@ -97,7 +97,7 @@ class Transfers:
         logger.info(f"Starting to make transfer")
         if balance.ETHER < self.min_balance:
             logger.error(f"Balance {balance.ETHER} < {self.min_balance}")
-            return
+            return RESULT_TRANSACTION.FAIL
 
         if self.type_transfer == TYPE_OF_TRANSACTION.PERCENT:
             return await self._make_tranfer_percent(
@@ -135,8 +135,9 @@ class Transfers:
         )
         database = await Transfers.create_database(wallets=wallets, settings=settings)
         random.shuffle(database)
-
+        counter = 1
         for data in database:
+            logger.info(f"OPERATION {counter}/{len(database)}")
             tranfer = Transfers(
                 private_key=data.get("private_key"),
                 network=data.get("network"),
@@ -149,5 +150,6 @@ class Transfers:
             result = await tranfer.make_transfer()
             if result == RESULT_TRANSACTION.SUCCESS:
                 await utils.time.sleep_view(settings.SLEEP)
-            await utils.time.sleep_view((10, 15))
+            else:
+                await utils.time.sleep_view((10, 15))
             counter += 1

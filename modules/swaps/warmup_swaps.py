@@ -64,6 +64,7 @@ class WarmUPSwaps:
             )
             if result == RESULT_TRANSACTION.SUCCESS:
                 await utils.time.sleep_view(settings.SLEEP)
-            await utils.time.sleep_view((10, 15))
+            else:
+                await utils.time.sleep_view((10, 15))
             counter += 1
             logger.info("------------------------")

@@ -30,8 +30,10 @@ class Merkly:
                 abi=config.MERKLY_ABI,
             )
 
-    async def bridge(self, amount_to_get: Union[int, float], to_chain_id):
-        amount_to_get: Token_Amount = Token_Amount(amount=amount_to_get)
+    async def bridge(self, amount_to_get: tuple, to_chain_id):
+        amount_to_get: Token_Amount = Token_Amount(
+            amount=random.uniform(*amount_to_get)
+        )
         logger.info(self.NAME)
         logger.info(f"WALLET {self.acc.address}")
         to_chain_name = [
@@ -50,9 +52,13 @@ class Merkly:
             "bridgeGas",
             args=(to_chain_id, self.acc.address, adapter_params),
         )
-        estimate_send_fee = await self.contract.functions.estimateSendFee(
-            to_chain_id, "0x", adapter_params
-        ).call()
+        try:
+            estimate_send_fee = await self.contract.functions.estimateSendFee(
+                to_chain_id, "0x", adapter_params
+            ).call()
+        except Exception as e:
+            logger.error(e)
+            return RESULT_TRANSACTION.FAIL
         value = Token_Amount(amount=estimate_send_fee[0] * 1.01, wei=True)
         return await self.acc.send_transaction(
             to_address=self.contract.address,
@@ -180,11 +186,12 @@ class Merkly:
                 network=data["network"],
             )
             result = await merkly.bridge(
-                amount_to_get=random.uniform(*data.get("amount_to_get")),
+                amount_to_get=data.get("amount_to_get"),
                 to_chain_id=data.get("to_chain_id"),
             )
             if result == RESULT_TRANSACTION.SUCCESS:
                 await utils.time.sleep_view(settings.SLEEP)
-            await utils.time.sleep_view((10, 15))
+            else:
+                await utils.time.sleep_view((10, 15))
             logger.info("------------------------------------")
             counter += 1

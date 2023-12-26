@@ -3,6 +3,8 @@ import utils
 from modules.account import Account
 from loguru import logger
 
+from utils.enums import RESULT_TRANSACTION
+
 
 class Deployer:
     def __init__(self, acc: Account, bytecode: str = "0x") -> None:
@@ -12,7 +14,7 @@ class Deployer:
     async def make_deploy(
         self,
     ):
-        await self.acc.deploy_contract(self.bytecode)
+        return await self.acc.deploy_contract(self.bytecode)
 
     @staticmethod
     async def deploy(private_key: str, network: dict, contract: dict):
@@ -21,7 +23,7 @@ class Deployer:
         logger.info(f"NETWORK {network.get('name')}")
         logger.info(f"Name deploy contract {contract.get('name')}")
         deployre = Deployer(acc=acc, bytecode=contract.get("bytecode"))
-        await deployre.make_deploy()
+        return await deployre.make_deploy()
 
     @staticmethod
     async def create_database(wallets: list[str], params: dict) -> list[dict]:
@@ -49,10 +51,14 @@ class Deployer:
         counter = 1
         for data in database:
             logger.info(f"WALLET {counter}")
-            await Deployer.deploy(
+            result = await Deployer.deploy(
                 private_key=data.get("private_key"),
                 network=data.get("network"),
                 contract=data.get("contract"),
             )
+            if result == RESULT_TRANSACTION.SUCCESS:
+                await utils.time.sleep_view(settings.SLEEP)
+            else:
+                await utils.time.sleep_view((10, 15))
             await utils.time.sleep_view(settings.SLEEP)
             counter += 1

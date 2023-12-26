@@ -151,7 +151,7 @@ class Account:
         logger.info("START TRANSFER MODULE")
         logger.info(f"WILL SEND {amount.ETHER} to {to_address}")
         if token_address is None or token_address == "":
-            await self.send_transaction(to_address=to_address, value=amount)
+            return await self.send_transaction(to_address=to_address, value=amount)
         else:
             contract = self.w3.eth.contract(
                 address=self.w3.to_checksum_address(token_address),
@@ -163,11 +163,13 @@ class Account:
             data = contract.encodeABI(
                 "transfer", args=(self.w3.to_checksum_address(to_address), amount.WEI)
             )
-            return await self.send_transaction(data=data, to_address=token_address, value=0)
+            return await self.send_transaction(
+                data=data, to_address=token_address, value=0
+            )
 
     # @check_gas
     async def deploy_contract(self, bytecode: str):
-        await self.send_transaction(data=bytecode)
+        return await self.send_transaction(data=bytecode)
 
     async def send_transaction(
         self,
