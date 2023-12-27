@@ -99,7 +99,7 @@ class Client_Networks:
     avalanche = {
         NETWORK_FIELDS.NAME: Network.AVALANCHE,
         NETWORK_FIELDS.RPCS: [
-            "https://rpc.ankr.com/avalanche/6eb719a8acb9be4873e5616d579ee1dd2f1f20cd08be5f76cd50a2ce3753e260",
+            "https://rpc.ankr.com/avalanche",
         ],
         NETWORK_FIELDS.EXPLORER: "https://snowtrace.io/",
         NETWORK_FIELDS.EIP1559: True,
@@ -115,5 +115,16 @@ class Client_Networks:
         NETWORK_FIELDS.EXPLORER: "https://polygonscan.com/",
         NETWORK_FIELDS.EIP1559: True,
         NETWORK_FIELDS.NATIVE_TOKEN: "MATIC",
+        NETWORK_FIELDS.CHECK_GAS: False,
+    }
+
+    fantom = {
+        NETWORK_FIELDS.NAME: Network.FANTOM,
+        NETWORK_FIELDS.RPCS: [
+            "https://rpc.ankr.com/fantom/",
+        ],
+        NETWORK_FIELDS.EXPLORER: "https://ftmscan.com/",
+        NETWORK_FIELDS.EIP1559: True,
+        NETWORK_FIELDS.NATIVE_TOKEN: "FTM",
         NETWORK_FIELDS.CHECK_GAS: False,
     }

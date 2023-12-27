@@ -23,7 +23,7 @@ class Merkly:
         if network:
             self.contract = self.acc.w3.eth.contract(
                 address=eth_utils.address.to_checksum_address(
-                    MERKLY.CONTRACT.value(self.acc.network.get(NETWORK_FIELDS.NAME))
+                    MERKLY.CONTRACT.value.get(self.acc.network.get(NETWORK_FIELDS.NAME))
                 ),
                 abi=MERKLY.ABI.value,
             )
@@ -35,27 +35,29 @@ class Merkly:
         logger.info(self.NAME)
         logger.info(f"WALLET {self.acc.address}")
         to_chain_name = [
-            key
-            for key in GENERAL.LAYERZERO_CHAINS_ID.value
-            if GENERAL.LAYERZERO_CHAINS_ID.value[key] == to_chain_id
+            chain
+            for chain, id in GENERAL.LAYERZERO_CHAINS_ID.value.items()
+            if GENERAL.LAYERZERO_CHAINS_ID.value.get(chain) == to_chain_id
         ]
-        logger.info(f"{self.acc.network.get('name')} -> {to_chain_name[0]}")
+        logger.info(
+            f"{self.acc.network.get(NETWORK_FIELDS.NAME)} -> {to_chain_name[0]}"
+        )
         adapter_params = await Merkly._get_adapter_params(
             contract=self.contract,
             dst_chain_id=to_chain_id,
             amount_to_get=amount_to_get,
             to_address=self.acc.address,
         )
-        data = self.contract.encodeABI(
-            "bridgeGas",
-            args=(to_chain_id, self.acc.address, adapter_params),
-        )
         try:
+            data = self.contract.encodeABI(
+                "bridgeGas",
+                args=(to_chain_id, self.acc.address, adapter_params),
+            )
             estimate_send_fee = await self.contract.functions.estimateSendFee(
                 to_chain_id, "0x", adapter_params
             ).call()
-        except Exception as e:
-            logger.error(e)
+        except Exception as error:
+            logger.error(error)
             return RESULT_TRANSACTION.FAIL
         value = Token_Amount(amount=estimate_send_fee[0] * 1.01, wei=True)
         return await self.acc.send_transaction(
@@ -149,10 +151,10 @@ class Merkly:
                 else await utils.files.read_file_lines(param.get(PARAMETR.WALLETS_FILE))
             ):
                 for _ in range(random.randint(*param.get(PARAMETR.COUNT_TRANSACTION))):
-                    to_chain = random.choice(param(PARAMETR.TO_CHAINS))
-                    to_chain_id = GENERAL.LAYERZERO_CHAINS_ID.value[
-                        to_chain.get(NETWORK_FIELDS.NAME)
-                    ]
+                    to_chain = random.choice(param.get(PARAMETR.TO_CHAINS))
+                    to_chain_id = GENERAL.LAYERZERO_CHAINS_ID.value.get(
+                        to_chain.get(PARAMETR.NAME)
+                    )
 
                     database.append(
                         {
