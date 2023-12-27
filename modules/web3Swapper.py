@@ -1,15 +1,12 @@
-import pprint
+import utils
 import random
 from typing import Union
 from loguru import logger
-from modules.account import Account
-from helpers import contracts
-from utils import TYPE_OF_TRANSACTION, RESULT_TRANSACTION
-from helpers.token_amount import Token_Amount
-from helpers.token_info import Token_Info
 from abc import abstractmethod
-
-import utils
+from modules.account import Account
+from utils import Token_Amount, Token_Info
+from utils.enums import NETWORK_FIELDS, PARAMETR
+from utils import TYPES_OF_TRANSACTION, RESULT_TRANSACTION
 
 
 class Web3Swapper:
@@ -19,7 +16,7 @@ class Web3Swapper:
         self,
         private_key: str,
         network: dict,
-        type_transfer: TYPE_OF_TRANSACTION,
+        type_transfer: TYPES_OF_TRANSACTION,
         value: tuple[Union[int, float]],
         min_balance: float,
         slippage: float,
@@ -106,14 +103,14 @@ class Web3Swapper:
         data,
         from_token: Token_Info,
         to_address: str,
-        value_approove: Token_Amount = None,
+        value_approve: Token_Amount = None,
         value: Token_Amount = None,
     ):
-        if value_approove:
+        if value_approve:
             await self.acc.approve(
                 token_address=from_token.address,
                 spender=to_address,
-                amount=value_approove,
+                amount=value_approve,
             )
         return await self.acc.send_transaction(
             to_address=to_address, data=data, value=value
@@ -130,21 +127,21 @@ class Web3Swapper:
         balance: Token_Amount = await self.acc.get_balance(from_token_address.address)
 
         logger.info(f"WALLET: {self.acc.address}")
-        logger.info(f"NETWORK: {self.acc.network.get('name')}")
+        logger.info(f"NETWORK: {self.acc.network.get(NETWORK_FIELDS.NAME)}")
         logger.info(f"DEX: {self.NAME} ")
         logger.info(f"{from_token_address.symbol} -> {to_token_address.symbol}")
 
         if balance.ETHER < self.min_balance:
             logger.error(f"Balance {balance.ETHER} < {self.min_balance}")
-            return
+            return RESULT_TRANSACTION.FAIL
 
-        if self.type_transfer == TYPE_OF_TRANSACTION.PERCENT:
+        if self.type_transfer == TYPES_OF_TRANSACTION.PERCENT:
             return await self._make_swap_percent(
                 from_token=from_token_address,
                 to_token=to_token_address,
                 balance=balance,
             )
-        elif self.type_transfer == TYPE_OF_TRANSACTION.ALL_BALANCE:
+        elif self.type_transfer == TYPES_OF_TRANSACTION.ALL_BALANCE:
             return await self._make_swap_all_balance(
                 from_token=from_token_address,
                 to_token=to_token_address,
@@ -156,6 +153,16 @@ class Web3Swapper:
                 to_token=to_token_address,
                 balance=balance,
             )
+
+    @staticmethod
+    async def _get_value_and_allowance(amount: Token_Amount, from_native_token: bool):
+        if from_native_token:
+            value = amount
+            value_approve = None
+        else:
+            value = None
+            value_approve = amount
+        return value, value_approve
 
     @staticmethod
     async def _get_random_pair_for_swap(token_list: list):
@@ -178,21 +185,20 @@ class Web3Swapper:
         for param in params:
             for wallet in (
                 wallets
-                if param["wallets_file"] == ""
-                else await utils.files.read_file_lines(param["wallets_file"])
+                if param.get(PARAMETR.WALLETS_FILE) == ""
+                else await utils.files.read_file_lines(param.get(PARAMETR.WALLETS_FILE))
             ):
-                # print(param)
-                to_token = random.choice(param.get("to_tokens"))
+                to_token = random.choice(param.get(PARAMETR.TO_TOKENS))
                 database.append(
                     {
                         "private_key": wallet,
-                        "network": param.get("network"),
-                        "dex": random.choice(to_token.get("dexs")),
-                        "type_swap": param.get("type_swap"),
-                        "value": param.get("value"),
-                        "from_token": param.get("from_token"),
-                        "min_balance": param.get("min_balance"),
-                        "to_token": to_token.get("address"),
+                        "network": param.get(PARAMETR.NETWORK),
+                        "dex": random.choice(to_token.get(PARAMETR.DEXS)),
+                        "type_swap": param.get(PARAMETR.TYPE_TRANSACTION),
+                        "value": param.get(PARAMETR.VALUE),
+                        "from_token": param.get(PARAMETR.FROM_TOKEN),
+                        "min_balance": param.get(PARAMETR.MIN_BALANCE),
+                        "to_token": to_token.get(PARAMETR.TOKEN_ADDRESS),
                     }
                 )
         return database
@@ -202,9 +208,8 @@ class Web3Swapper:
         wallets = await utils.files.read_file_lines(
             path="files/wallets.txt",
         )
-
         database = await Web3Swapper._create_database(
-            wallets=wallets, params=settings.params
+            wallets=wallets, params=settings.PARAMS
         )
         random.shuffle(database)
         random.shuffle(database)
@@ -212,7 +217,7 @@ class Web3Swapper:
         random.shuffle(database)
         counter = 1
         for data in database:
-            logger.info(f"SWAP {counter}/{len(database)}")
+            logger.info(f"OPERATION {counter}/{len(database)}")
             dex_class = data.get("dex")
             dex = dex_class(
                 private_key=data.get("private_key"),

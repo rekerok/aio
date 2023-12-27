@@ -3,9 +3,10 @@ import eth_utils
 import config
 from typing import Union
 from utils import aiohttp
-from helpers import contracts
-from helpers import Token_Info, Token_Amount, Web3Swapper
-from utils import TYPE_OF_TRANSACTION
+from utils import Token_Amount, Token_Info
+from modules.web3Swapper import Web3Swapper
+from utils import TYPES_OF_TRANSACTION
+from utils.enums import NETWORK_FIELDS
 
 
 class IzumiSwap(Web3Swapper):
@@ -15,7 +16,7 @@ class IzumiSwap(Web3Swapper):
         self,
         private_key: str = None,
         network: dict = None,
-        type_transfer: TYPE_OF_TRANSACTION = None,
+        type_transfer: TYPES_OF_TRANSACTION = None,
         value: tuple[Union[int, float]] = None,
         min_balance: float = 0,
         slippage: float = 1.0,
@@ -28,12 +29,12 @@ class IzumiSwap(Web3Swapper):
             min_balance=min_balance,
             slippage=slippage,
         )
-        self.contract = self.acc.w3.eth.contract(
-            address=eth_utils.address.to_checksum_address(
-                contracts.IZUMI_SWAP.get(self.acc.network.get("name"))
-            ),
-            abi=config.IZUMISWAP_ABI,
-        )
+        # self.contract = self.acc.w3.eth.contract(
+        #     address=eth_utils.address.to_checksum_address(
+        #         config.IZUMI.get(self.acc.network.get(NETWORK_FIELDS.NAME))
+        #     ),
+        #     abi=config.IZUMI,
+        # )
 
     # async def _get_path(self, from_token: Token_Info, to_token: Token_Info, fee: int):
     #     return f"{from_token.address[2:]}{fee:x}{to_token.address[2:]}"
@@ -104,7 +105,7 @@ class IzumiSwap(Web3Swapper):
         recipient = (
             self.acc.address
             if to_token.symbol != self.acc.network.get("token").upper()
-            else contracts.ZERO_ADDRESS
+            else config.GENERAL.ZERO_ADDRESS.value
         )
         data_swapAmount = await self._get_data(
             self.contract,
@@ -166,5 +167,5 @@ class IzumiSwap(Web3Swapper):
             from_token=from_token,
             to_address=self.contract.address,
             value=value,
-            value_approove=value_approove,
+            value_approve=value_approove,
         )

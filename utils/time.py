@@ -1,12 +1,11 @@
-import asyncio
-import random
-import time
 import tqdm
-import eth_utils
+import time
+import random
+import asyncio
+from settings import *
 from loguru import logger
 from web3 import AsyncHTTPProvider, AsyncWeb3
 from web3.middleware import async_geth_poa_middleware
-from settings import *
 
 
 async def sleep_view(sleep: tuple):

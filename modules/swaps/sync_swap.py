@@ -3,9 +3,10 @@ import config
 import eth_abi
 from loguru import logger
 from typing import Union
-from helpers import contracts
-from helpers import Web3Swapper, Token_Amount, Token_Info
-from utils import TYPE_OF_TRANSACTION
+from utils import Token_Amount, Token_Info
+from modules.web3Swapper import Web3Swapper
+from utils import TYPES_OF_TRANSACTION
+from utils.enums import NETWORK_FIELDS, RESULT_TRANSACTION
 
 
 class SyncSwap(Web3Swapper):
@@ -15,7 +16,7 @@ class SyncSwap(Web3Swapper):
         self,
         private_key: str = None,
         network: dict = None,
-        type_transfer: TYPE_OF_TRANSACTION = None,
+        type_transfer: TYPES_OF_TRANSACTION = None,
         value: tuple[Union[int, float]] = None,
         min_balance: float = 0,
         slippage: float = 5.0,
@@ -30,15 +31,17 @@ class SyncSwap(Web3Swapper):
         )
 
         self.contract_pool_factory = self.acc.w3.eth.contract(
-            address=contracts.SYNCSWAP.get(self.acc.network.get("name")).get(
+            address=config.SYNCSWAP.CONSTRACTS.value.get(NETWORK_FIELDS.NAME).get(
                 "pool_factory"
             ),
-            abi=config.SYNCSWAP_ABI.get("pool_factory"),
+            abi=config.SYNCSWAP.ABI_POOL_FACTORY.value,
         )
 
         self.contract_router = self.acc.w3.eth.contract(
-            address=contracts.SYNCSWAP.get(self.acc.network.get("name")).get("router"),
-            abi=config.SYNCSWAP_ABI.get("router"),
+            address=config.SYNCSWAP.CONSTRACTS.value.get(NETWORK_FIELDS.NAME).get(
+                "router"
+            ),
+            abi=config.SYNCSWAP.ABI_POOL_ROUTER.value,
         )
 
     async def _get_pool_address(self, from_token: Token_Info, to_token: Token_Info):
@@ -81,16 +84,16 @@ class SyncSwap(Web3Swapper):
         from_token, to_token = await Token_Info.to_wrapped_token(
             from_token=from_token,
             to_token=to_token,
-            name_network=self.acc.network.get("name"),
+            name_network=self.acc.network.get(NETWORK_FIELDS.NAME),
         )
         pool_address = await self._get_pool_address(
             from_token=from_token, to_token=to_token
         )
-        if pool_address == contracts.ZERO_ADDRESS or None:
+        if pool_address == config.GENERAL.ZERO_ADDRESS.value or None:
             logger.error(f"Pool not exists")
-            return
+            return RESULT_TRANSACTION.FAIL
         contract_pool = self.acc.w3.eth.contract(
-            address=pool_address, abi=config.SYNCSWAP_ABI.get("pool")
+            address=pool_address, abi=config.SYNCSWAP.ABI_POOL.value
         )
         amount_in = await self._get_amount_out(
             contract=contract_pool,
@@ -112,7 +115,7 @@ class SyncSwap(Web3Swapper):
             {
                 "pool": pool_address,
                 "data": swapData,
-                "callback": contracts.ZERO_ADDRESS,
+                "callback": config.GENERAL.ZERO_ADDRESS.value,
                 "callbackData": "0x",
             }
         ]
@@ -120,7 +123,7 @@ class SyncSwap(Web3Swapper):
         paths = [
             {
                 "steps": steps,
-                "tokenIn": contracts.ZERO_ADDRESS
+                "tokenIn": config.GENERAL.ZERO_ADDRESS.value
                 if from_token.symbol == "ETH"
                 else from_token.address,
                 "amountIn": amount_to_send.WEI,
@@ -140,7 +143,7 @@ class SyncSwap(Web3Swapper):
             None
             if from_token.address
             == self.acc.w3.to_checksum_address(
-                contracts.WETH_CONTRACTS.get(self.acc.network.get("name"))
+                config.GENERAL.WETH.value.get(self.acc.network.get(NETWORK_FIELDS.NAME))
             )
             else amount_to_send
         )
@@ -148,7 +151,7 @@ class SyncSwap(Web3Swapper):
             None
             if from_token.address
             != self.acc.w3.to_checksum_address(
-                contracts.WETH_CONTRACTS.get(self.acc.network.get("name"))
+                config.GENERAL.WETH.value.get(self.acc.network.get(NETWORK_FIELDS.NAME))
             )
             else amount_to_send
         )
@@ -156,6 +159,6 @@ class SyncSwap(Web3Swapper):
             data=data,
             from_token=from_token,
             to_address=self.contract_router.address,
-            value_approove=value_approve,
+            value_approve=value_approve,
             value=value,
         )

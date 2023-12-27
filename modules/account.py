@@ -1,14 +1,14 @@
-from networks import Networks
 import utils
 import config
 import random
 import eth_utils
-from web3 import AsyncWeb3, AsyncHTTPProvider
-from helpers import Token_Amount
 from loguru import logger
-from web3.middleware import async_geth_poa_middleware
+from utils import Token_Amount
 from settings import GAS_MULTIPLAY
-from utils.enums import RESULT_TRANSACTION
+from settings import Client_Networks
+from web3 import AsyncWeb3, AsyncHTTPProvider
+from web3.middleware import async_geth_poa_middleware
+from utils.enums import NETWORK_FIELDS, RESULT_TRANSACTION
 
 
 class Account:
@@ -18,7 +18,7 @@ class Account:
         address=None,
         network: dict = None,
         proxies: list[str] = None,
-        timeout=60,
+        timeout: int = 60,
     ) -> None:
         self.timeout = timeout
         self.request_kwargs = {
@@ -29,7 +29,7 @@ class Account:
             random.choice(self.proxies) if self.proxies else None
         )
         self.network = network
-        self.rpcs: list[str] = network.get("rpc")
+        self.rpcs: list[str] = self.network.get(NETWORK_FIELDS.RPCS)
         self.w3 = AsyncWeb3(
             AsyncHTTPProvider(
                 endpoint_uri=random.choice(self.rpcs),
@@ -52,7 +52,7 @@ class Account:
             else:
                 contract_token = self.w3.eth.contract(
                     address=self.w3.to_checksum_address(token_address),
-                    abi=config.ERC20_ABI,
+                    abi=config.GENERAL.ERC20_ABI.value,
                 )
                 value = await contract_token.functions.balanceOf(self.address).call()
                 return Token_Amount(
@@ -60,8 +60,8 @@ class Account:
                     decimals=await contract_token.functions.decimals().call(),
                     wei=True,
                 )
-        except Exception as e:
-            print(e)
+        except Exception as error:
+            logger.error(error)
             return None
 
     async def change_connection(self, change_proxy=True, change_rpc=True):
@@ -93,7 +93,7 @@ class Account:
             else:
                 return False
         except Exception as error:
-            print(error)
+            logger.error(error)
             return False
 
     async def get_allowance(
@@ -101,7 +101,8 @@ class Account:
     ) -> Token_Amount:
         try:
             contract = self.w3.eth.contract(
-                address=self.w3.to_checksum_address(token_address), abi=config.ERC20_ABI
+                address=self.w3.to_checksum_address(token_address),
+                abi=config.GENERAL.ERC20_ABI.value,
             )
             amount_allowance = await contract.functions.allowance(
                 self.w3.to_checksum_address(owner), self.w3.to_checksum_address(spender)
@@ -128,7 +129,8 @@ class Account:
         else:
             logger.info(f"Apptove need")
             contract = self.w3.eth.contract(
-                address=self.w3.to_checksum_address(token_address), abi=config.ERC20_ABI
+                address=self.w3.to_checksum_address(token_address),
+                abi=config.GENERAL.ERC20_ABI.value,
             )
             logger.info(
                 f"Make approve for {amount.ETHER + amount.ETHER * random.uniform(0.01,0.05)}"
@@ -155,7 +157,7 @@ class Account:
         else:
             contract = self.w3.eth.contract(
                 address=self.w3.to_checksum_address(token_address),
-                abi=config.ERC20_ABI,
+                abi=config.GENERAL.ERC20_ABI.value,
             )
             await self.approve(
                 token_address=token_address, spender=to_address, amount=amount
@@ -182,7 +184,9 @@ class Account:
             allow_transaction = await utils.time.wait_gas(
                 AsyncWeb3(
                     AsyncHTTPProvider(
-                        endpoint_uri=random.choice(Networks.ethereum.get("rpc")),
+                        endpoint_uri=random.choice(
+                            Client_Networks.ethereum.get(NETWORK_FIELDS.RPCS)
+                        ),
                         request_kwargs=self.request_kwargs,
                     )
                 )
@@ -207,7 +211,7 @@ class Account:
                 else:
                     tx_params["value"] = value.WEI
 
-                if self.network["eip1559"]:
+                if self.network[NETWORK_FIELDS.EIP1559]:
                     tx_params = await self.get_eip1559_tx(tx_params=tx_params)
                 else:
                     tx_params["gasPrice"] = await self.w3.eth.gas_price
@@ -219,10 +223,14 @@ class Account:
                 tx_hash = await self.sign_transaction(tx=tx_params)
                 verify = await self.verifi_tx(tx_hash=tx_hash)
                 if verify:
-                    logger.success(f"LINK {self.network['scan']}tx/{tx_hash}")
+                    logger.success(
+                        f"LINK {self.network[NETWORK_FIELDS.EXPLORER]}tx/{tx_hash}"
+                    )
                     return RESULT_TRANSACTION.SUCCESS
                 else:
-                    logger.error(f"LINK {self.network['scan']['scan']}tx/{tx_hash}")
+                    logger.error(
+                        f"LINK {self.network[NETWORK_FIELDS.EXPLORER]}tx/{tx_hash}"
+                    )
                     return RESULT_TRANSACTION.FAIL
             except Exception as error:
                 logger.error(error)

@@ -1,9 +1,8 @@
-import pprint
 import random
 import utils
 from loguru import logger
-from helpers import Web3Swapper
-from utils import TYPE_OF_TRANSACTION
+from modules.web3Swapper import Web3Swapper
+from utils import TYPES_OF_TRANSACTION
 from utils.enums import RESULT_TRANSACTION
 
 
@@ -41,7 +40,6 @@ class WarmUPSwaps:
         database = await WarmUPSwaps._create_database(
             wallets=wallets, params=settings.params
         )
-        # pprint.pprint(database)
         random.shuffle(database)
         random.shuffle(database)
         random.shuffle(database)
@@ -51,7 +49,7 @@ class WarmUPSwaps:
             dex: Web3Swapper = data["dex"](
                 private_key=data["private_key"],
                 network=data["network"],
-                type_transfer=TYPE_OF_TRANSACTION.PERCENT,
+                type_transfer=TYPES_OF_TRANSACTION.PERCENT,
                 value=data["value"],
                 min_balance=data["min_balance"],
                 slippage=settings.SLIPPAGE,

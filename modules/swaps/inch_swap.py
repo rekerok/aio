@@ -3,8 +3,10 @@ import eth_utils
 import settings
 import utils
 from typing import Union
-from helpers import Token_Info, Token_Amount, Web3Swapper
-from utils import TYPE_OF_TRANSACTION
+from utils import TYPES_OF_TRANSACTION
+from utils import Token_Amount, Token_Info
+from modules.web3Swapper import Web3Swapper
+from utils.enums import NETWORK_FIELDS
 
 
 class InchSwap(Web3Swapper):
@@ -14,7 +16,7 @@ class InchSwap(Web3Swapper):
         self,
         private_key: str = None,
         network: dict = None,
-        type_transfer: TYPE_OF_TRANSACTION = None,
+        type_transfer: TYPES_OF_TRANSACTION = None,
         value: tuple[Union[int, float]] = None,
         min_balance: float = 0,
         slippage: float = 5.0,
@@ -79,7 +81,7 @@ class InchSwap(Web3Swapper):
             to_token=to_token,
         )
 
-        if from_token.symbol != self.acc.network.get("token"):
+        if from_token.symbol != self.acc.network.get(NETWORK_FIELDS.NATIVE_TOKEN):
             await self.acc.approve(
                 token_address=from_token.address,
                 spender=contract_address,
@@ -92,7 +94,7 @@ class InchSwap(Web3Swapper):
 
         value = (
             amount_to_send.WEI
-            if from_token.symbol == self.acc.network.get("token")
+            if from_token.symbol == self.acc.network.get(NETWORK_FIELDS.NATIVE_TOKEN)
             else None
         )
         return await self._send_swap_transaction(

@@ -1,9 +1,9 @@
-import random
 import utils
-from modules.account import Account
+import random
 from loguru import logger
-
+from modules.account import Account
 from utils.enums import RESULT_TRANSACTION
+
 
 
 class Deployer:

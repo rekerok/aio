@@ -1,4 +1,5 @@
 import aiohttp
+from loguru import logger
 
 
 async def get_json_aiohttp(
@@ -13,10 +14,10 @@ async def get_json_aiohttp(
                 if response.status == 200:
                     return await response.json()
                 else:
-                    print(f"HTTP request failed with status code {response.status}")
+                    logger.error(f"HTTP request failed with status code {response.status}")
                     return None
-    except Exception as e:
-        print(f"An error occurred during the HTTP request: {str(e)}")
+    except Exception as error:
+        logger.error(f"An error occurred during the HTTP request: {str(error)}")
         return None
 
 

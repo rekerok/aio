@@ -1,11 +1,10 @@
-import random
 import utils
+import random
 from typing import Union
 from loguru import logger
-from helpers import Token_Amount, Token_Info, Token_Info
-from utils import TYPE_OF_TRANSACTION
 from modules.account import Account
-from utils.enums import RESULT_TRANSACTION
+from utils import Token_Amount, Token_Info
+from utils.enums import RESULT_TRANSACTION, TYPES_OF_TRANSACTION
 
 
 class Transfers:
@@ -14,7 +13,7 @@ class Transfers:
         private_key: str,
         network: dict,
         value: tuple[Union[int, float]],
-        type_transfer: TYPE_OF_TRANSACTION,
+        type_transfer: TYPES_OF_TRANSACTION,
         to_address: str = None,
         token_address: str = None,
         min_balance: float = 0,
@@ -93,11 +92,11 @@ class Transfers:
             logger.error(f"BALANCE: {balance.ETHER} < {self.min_balance}")
             return RESULT_TRANSACTION.FAIL
 
-        if self.type_transfer == TYPE_OF_TRANSACTION.PERCENT:
+        if self.type_transfer == TYPES_OF_TRANSACTION.PERCENT:
             return await self._make_tranfer_percent(
                 balance=balance, token_info=token_info
             )
-        elif self.type_transfer == TYPE_OF_TRANSACTION.ALL_BALANCE:
+        elif self.type_transfer == TYPES_OF_TRANSACTION.ALL_BALANCE:
             return await self._make_tranfer_all_amount(
                 balance=balance, token_info=token_info
             )

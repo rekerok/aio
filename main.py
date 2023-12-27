@@ -1,8 +1,8 @@
+import os
 import asyncio
 import questionary
-import os
-from questionary import Choice
 from module_settings import *
+from questionary import Choice
 
 
 def get_module():

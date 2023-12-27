@@ -1,9 +1,10 @@
-from typing import Union
 import config
-from helpers import contracts
+from typing import Union
 from loguru import logger
-from helpers import Web3Swapper, Token_Info, Token_Amount
-from utils import TYPE_OF_TRANSACTION
+from utils import TYPES_OF_TRANSACTION
+from utils import Token_Amount, Token_Info
+from modules.web3Swapper import Web3Swapper
+from utils.enums import NETWORK_FIELDS
 
 
 class WoofiSwap(Web3Swapper):
@@ -13,7 +14,7 @@ class WoofiSwap(Web3Swapper):
         self,
         private_key: str = None,
         network: dict = None,
-        type_transfer: TYPE_OF_TRANSACTION = None,
+        type_transfer: TYPES_OF_TRANSACTION = None,
         value: tuple[Union[int, float]] = None,
         min_balance: float = 0,
         slippage: float = 5.0,
@@ -27,8 +28,10 @@ class WoofiSwap(Web3Swapper):
             slippage=slippage,
         )
         self.contract = self.acc.w3.eth.contract(
-            address=contracts.WOOFI_SWAP.get(self.acc.network.get("name")),
-            abi=config.WOOFI_ABI,
+            address=config.WOOFI.CONTRACTS.value.get(
+                self.acc.network.get(NETWORK_FIELDS.NAME)
+            ),
+            abi=config.WOOFI.ABI.value,
         )
 
     async def _query_swap(
@@ -83,10 +86,10 @@ class WoofiSwap(Web3Swapper):
             data=data,
             from_token=from_token,
             to_address=self.contract.address,
-            value_approove=None
-            if from_token.address == contracts.NATIVE_TOKEN
+            value_approve=None
+            if from_token.address == config.GENERAL.NATIVE_TOKEN.value
             else amount_to_send,
             value=amount_to_send
-            if from_token.address == contracts.NATIVE_TOKEN
+            if from_token.address == config.GENERAL.NATIVE_TOKEN.value
             else None,
         )

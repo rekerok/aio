@@ -1,85 +1,59 @@
 from modules import *
-from utils import TYPE_OF_TRANSACTION
-from networks import Networks
-from helpers.web3Swapper import Web3Swapper
+from config import Network
+from settings import Client_Networks
+from utils import TYPES_OF_TRANSACTION, PARAMETR
 
 
 class OKX_settings:
     # PROXY: str = "http://user:pass@ip:port"
     PROXY: str = ""
-    SLEEP: tuple[int] = (60, 200)
     KEYS: dict = {
-        "api_key": "",
-        "api_secret": "",
-        "password": "",
+        PARAMETR.OKX_API_KEY: "",
+        PARAMETR.OKX_API_SECRET: "",
+        PARAMETR.OKX_PASSWORD: "",
     }
-
-    params: list = [
+    PARAMS: list[dict] = [
         {
-            "network": "Linea",
-            "symbol": "ETH",
-            "amount": (0.01494673, 0.02241770),
-            "round": (3, 5),
-            "wallets_file": "",
+            PARAMETR.NETWORK: "Linea",
+            PARAMETR.SYMBOL: "ETH",
+            PARAMETR.VALUE: (0.01494673, 0.02241770),
+            PARAMETR.ROUND: (3, 5),
+            PARAMETR.WALLETS_FILE: "",
         },
-        # {
-        #     "network": "Aptos",
-        #     "symbol": "APT",
-        #     "amount": {"min": 0.5, "max": 1},
-        #     "round": {"min": 1, "max": 3},
-        #     "wallets_file": "files/aptos_withdraw.txt",
-        # },
     ]
+    SLEEP: tuple[int] = (60, 200)
 
 
 class TRANSFERS_SETTINGS:
-    params = [
+    PARAMS: list[dict] = [
         {
-            "network": Networks.linea,
-            "token": "",
-            "type_transfer": TYPE_OF_TRANSACTION.PERCENT,
-            "value": (90, 95),
-            "min_balance": 0.00075,
+            PARAMETR.NETWORK: Client_Networks.linea,
+            PARAMETR.TOKEN_ADDRESS: "",
+            PARAMETR.TYPE_TRANSACTION: TYPES_OF_TRANSACTION.PERCENT,
+            PARAMETR.VALUE: (90, 95),
+            PARAMETR.MIN_BALANCE: 0.00075,
         },
     ]
-    SLEEP = (100, 300)
+    SLEEP: tuple[int] = (100, 300)
 
 
-# SushiSwap
-# WoofiSwap
-# InchSwap
-# OdosSwap
-# SyncSwap
-# IzumiSwap
 class SWAP_SETTINGS:
-    params = [
+    PARAMS = [
         {
-            "network": Networks.zksync,
-            "type_swap": TYPE_OF_TRANSACTION.PERCENT,
-            "value": (90, 100),
-            "from_token": "",
-            "min_balance": 0,
-            "to_tokens": [
+            PARAMETR.NETWORK: Client_Networks.zksync,
+            PARAMETR.TYPE_TRANSACTION: TYPES_OF_TRANSACTION.PERCENT,
+            PARAMETR.VALUE: (20, 20),
+            PARAMETR.FROM_TOKEN: "",
+            PARAMETR.MIN_BALANCE: 0,
+            PARAMETR.TO_TOKENS: [
                 {
-                    "address": "0x493257fD37EDB34451f62EDf8D2a0C418852bA4C",
-                    "dexs": [
-                        WoofiSwap,
+                    PARAMETR.TOKEN_ADDRESS: "0x493257fD37EDB34451f62EDf8D2a0C418852bA4C",
+                    PARAMETR.DEXS: [
                         InchSwap,
-                        OdosSwap,
-                        SyncSwap,
                     ],
                 },  # usdt
-                {
-                    "address": "0x3355df6D4c9C3035724Fd0e3914dE96A5a83aaf4",
-                    "dexs": [
-                        WoofiSwap,
-                        InchSwap,
-                        OdosSwap,
-                        SyncSwap,
-                    ],  # usdc
-                },
             ],
-            "wallets_file": "",
+            PARAMETR.WALLETS_FILE: "",
         },
     ]
     SLIPPAGE = 1
@@ -87,62 +61,26 @@ class SWAP_SETTINGS:
 
 
 class CHECK_NFT_SETTINGS:
-    params = [
+    PARAMS = [
         {
-            "network": Networks.polygon,
-            "nfts": [
+            PARAMETR.NETWORK: Client_Networks.polygon,
+            PARAMETR.NFTS: [
                 {
-                    "address": "0x6D6768A0b24299bEdE0492A4571D79F535c330D8",
-                    "name": "How Far We've Come",
+                    PARAMETR.TOKEN_ADDRESS: "0x6D6768A0b24299bEdE0492A4571D79F535c330D8",
+                    PARAMETR.NAME: "How Far We've Come",
                 },
                 {
-                    "address": "0xB6432d111bc2A022048b9aEA7C11b2d627184bdD",
-                    "name": "azure",
-                },
-                {
-                    "address": "0xe5325804D68033eDF65a86403B2592a99E1f06de",
-                    "name": "fs",
-                },
-                {
-                    "address": "0x8C531f965C05Fab8135d951e2aD0ad75CF3405A2",
-                    "name": "Building",
-                },
-                {
-                    "address": "0x61B2d56645d697Ac3a27c2fa1e5B26B45429d1A9",
-                    "name": "Kauai Walmart",
-                },
-                {
-                    "address": "0xd4Feff615c0E90f06340Be95d30e1f397779A184",
-                    "name": "Cosmic flower",
+                    PARAMETR.TOKEN_ADDRESS: "0xB6432d111bc2A022048b9aEA7C11b2d627184bdD",
+                    PARAMETR.NAME: "azure",
                 },
             ],
         },
         {
-            "network": Networks.avalanche,
-            "nfts": [
+            PARAMETR.NETWORK: Client_Networks.avalanche,
+            PARAMETR.NFTS: [
                 {
-                    "address": "0x6D6768A0b24299bEdE0492A4571D79F535c330D8",
-                    "name": "How Far We've Come",
-                },
-                {
-                    "address": "0xB6432d111bc2A022048b9aEA7C11b2d627184bdD",
-                    "name": "azure",
-                },
-                {
-                    "address": "0xe5325804D68033eDF65a86403B2592a99E1f06de",
-                    "name": "fs",
-                },
-                {
-                    "address": "0x8C531f965C05Fab8135d951e2aD0ad75CF3405A2",
-                    "name": "Building",
-                },
-                {
-                    "address": "0x61B2d56645d697Ac3a27c2fa1e5B26B45429d1A9",
-                    "name": "Kauai Walmart",
-                },
-                {
-                    "address": "0xd4Feff615c0E90f06340Be95d30e1f397779A184",
-                    "name": "Cosmic flower",
+                    PARAMETR.TOKEN_ADDRESS: "0xB6432d111bc2A022048b9aEA7C11b2d627184bdD",
+                    PARAMETR.NAME: "azure",
                 },
             ],
         },
@@ -150,22 +88,22 @@ class CHECK_NFT_SETTINGS:
 
 
 class WARMUPSWAPS_SETTINGS:
-    params = {
-        InchSwap: [
+    PARAMS = {
+        WoofiSwap: [
             {
-                "network": Networks.polygon,
-                "tokens": [
+                PARAMETR.NETWORK: Client_Networks.polygon,
+                PARAMETR.TOKENS: [
                     {
-                        "address": "",
-                        "min_balance": 0,
+                        PARAMETR.TOKEN_ADDRESS: "",
+                        PARAMETR.MIN_BALANCE: 0,
                     },
                     {
-                        "address": "0x2791bca1f2de4661ed88a30c99a7a9449aa84174",
-                        "min_balance": 0,
+                        PARAMETR.TOKEN_ADDRESS: "0x2791bca1f2de4661ed88a30c99a7a9449aa84174",
+                        PARAMETR.MIN_BALANCE: 0,
                     },
                 ],
-                "count_swaps": (1, 2),
-                "percent_swap": (10, 20),
+                PARAMETR.COUNT_TRANSACTION: (1, 2),
+                PARAMETR.VALUE: (10, 20),
             },
         ],
     }
@@ -174,18 +112,18 @@ class WARMUPSWAPS_SETTINGS:
 
 
 class MERKLY_SETTINGS:
-    CHECK_COMISSION_NETWORKS = [Networks.polygon, Networks.base]
+    CHECK_COMISSION_NETWORKS = [Client_Networks.polygon, Client_Networks.base]
     params = [
         {
-            "network": Networks.polygon,
-            "to_chains": [
+            PARAMETR.NETWORK: Client_Networks.polygon,
+            PARAMETR.TO_CHAINS: [
                 {
-                    "name": "beam",
-                    "amount": (3.23, 3.23),
+                    PARAMETR.NAME: Network.BEAM,
+                    PARAMETR.VALUE: (3.23, 3.23),
                 }
             ],
-            "count_transaction": (2, 2),
-            "wallets_file": "",
+            PARAMETR.COUNT_TRANSACTION: (2, 2),
+            PARAMETR.WALLETS_FILE: "",
         }
     ]
     SLEEP = (100, 150)
@@ -194,11 +132,11 @@ class MERKLY_SETTINGS:
 class DEPLOY_SETTINGS:
     params = [
         {
-            "network": Networks.polygon,
-            "contracts": [
+            PARAMETR.NETWORK: Client_Networks.polygon,
+            PARAMETR.CONTRACTS: [
                 {
-                    "name": "merkly",
-                    "bytecode": "0x60806040526000805461ffff1916905534801561001b57600080fd5b5060fb8061002a6000396000f3fe6080604052348015600f57600080fd5b506004361060325760003560e01c80630c55699c146037578063b49004e914605b575b600080fd5b60005460449061ffff1681565b60405161ffff909116815260200160405180910390f35b60616063565b005b60008054600191908190607a90849061ffff166096565b92506101000a81548161ffff021916908361ffff160217905550565b61ffff81811683821601908082111560be57634e487b7160e01b600052601160045260246000fd5b509291505056fea2646970667358221220666c87ec501268817295a4ca1fc6e3859faf241f38dd688f145135970920009264736f6c63430008120033",
+                    PARAMETR.NAME: "merkly",
+                    PARAMETR.BYTECODE_CONTRACT: "0x60806040526000805461ffff1916905534801561001b57600080fd5b5060fb8061002a6000396000f3fe6080604052348015600f57600080fd5b506004361060325760003560e01c80630c55699c146037578063b49004e914605b575b600080fd5b60005460449061ffff1681565b60405161ffff909116815260200160405180910390f35b60616063565b005b60008054600191908190607a90849061ffff166096565b92506101000a81548161ffff021916908361ffff160217905550565b61ffff81811683821601908082111560be57634e487b7160e01b600052601160045260246000fd5b509291505056fea2646970667358221220666c87ec501268817295a4ca1fc6e3859faf241f38dd688f145135970920009264736f6c63430008120033",
                 }
             ],
             "count": (1, 1),
@@ -209,11 +147,11 @@ class DEPLOY_SETTINGS:
 
 ### NOT CHANGE ###
 async def okx_withdrawer():
-    await OKX.withdraw_use_database(OKX_settings)
+    await OKX.withdraw_use_database(settings=OKX_settings)
 
 
 async def transfers():
-    await Transfers.transfer_use_database(TRANSFERS_SETTINGS)
+    await Transfers.transfer_use_database(settings=TRANSFERS_SETTINGS)
 
 
 async def check_nft():

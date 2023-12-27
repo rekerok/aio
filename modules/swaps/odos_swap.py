@@ -1,11 +1,11 @@
-import pprint
-import eth_utils
 import config
-from utils import aiohttp
-from helpers import contracts
+import eth_utils
 from typing import Union
-from helpers import Web3Swapper, Token_Amount, Token_Info
-from utils import TYPE_OF_TRANSACTION
+from utils import aiohttp
+from utils import TYPES_OF_TRANSACTION
+from utils.enums import NETWORK_FIELDS
+from utils import Token_Amount, Token_Info
+from modules.web3Swapper import Web3Swapper
 
 
 class OdosSwap(Web3Swapper):
@@ -15,7 +15,7 @@ class OdosSwap(Web3Swapper):
         self,
         private_key: str = None,
         network: dict = None,
-        type_transfer: TYPE_OF_TRANSACTION = None,
+        type_transfer: TYPES_OF_TRANSACTION = None,
         value: tuple[Union[int, float]] = None,
         min_balance: float = 0,
         slippage: float = 5.0,
@@ -30,9 +30,11 @@ class OdosSwap(Web3Swapper):
         )
         self.contract = self.acc.w3.eth.contract(
             address=eth_utils.address.to_checksum_address(
-                contracts.ODOS_SWAP.get(self.acc.network.get("name"))
+                config.ODOS.CONTRACTS.value.get(
+                    self.acc.network.get(NETWORK_FIELDS.NAME)
+                )
             ),
-            abi=config.ODOS_ABI,
+            abi=config.ODOS.ABI.value,
         )
 
     async def _get_quote(
@@ -70,10 +72,10 @@ class OdosSwap(Web3Swapper):
         from_token: Token_Info,
         to_token: Token_Info,
     ):
-        if from_token.symbol == self.acc.network.get("token").upper():
-            from_token.address = contracts.ZERO_ADDRESS
-        if to_token.symbol == self.acc.network.get("token").upper():
-            to_token.address = contracts.ZERO_ADDRESS
+        if from_token.symbol == self.acc.network.get(NETWORK_FIELDS.NATIVE_TOKEN):
+            from_token.address = config.GENERAL.ZERO_ADDRESS.value
+        if to_token.symbol == self.acc.network.get(NETWORK_FIELDS.NATIVE_TOKEN):
+            to_token.address = config.GENERAL.ZERO_ADDRESS.value
 
         quote = await self._get_quote(
             from_token=from_token, to_token=to_token, amount_to_send=amount_to_send
@@ -81,13 +83,15 @@ class OdosSwap(Web3Swapper):
         assemble = await self._get_assemble(path_id=quote.get("pathId"))
         value_approve = (
             None
-            if from_token.symbol == self.acc.network.get("token").upper()
+            if from_token.symbol
+            == self.acc.network.get(NETWORK_FIELDS.NATIVE_TOKEN).upper()
             else amount_to_send
         )
 
         value = (
             amount_to_send
-            if from_token.symbol == self.acc.network.get("token").upper()
+            if from_token.symbol
+            == self.acc.network.get(NETWORK_FIELDS.NATIVE_TOKEN).upper()
             else None
         )
 
@@ -95,6 +99,6 @@ class OdosSwap(Web3Swapper):
             data=assemble["transaction"]["data"],
             from_token=from_token,
             to_address=self.contract.address,
-            value_approove=value_approve,
+            value_approve=value_approve,
             value=value,
         )

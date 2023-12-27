@@ -1,15 +1,13 @@
-import pprint
-import eth_utils
+import utils
 import config
 import random
+import eth_utils
 from loguru import logger
-from typing import Union
-from helpers import contracts, Token_Amount
+from utils import Token_Amount
+from config import MERKLY, GENERAL
 from modules.account import Account
 from eth_abi.packed import encode_packed
-
-import utils
-from utils.enums import RESULT_TRANSACTION
+from utils.enums import NETWORK_FIELDS, PARAMETR, RESULT_TRANSACTION
 
 
 class Merkly:
@@ -25,9 +23,9 @@ class Merkly:
         if network:
             self.contract = self.acc.w3.eth.contract(
                 address=eth_utils.address.to_checksum_address(
-                    contracts.MERKLY.get(self.acc.network.get("name"))
+                    MERKLY.CONTRACT.value(self.acc.network.get(NETWORK_FIELDS.NAME))
                 ),
-                abi=config.MERKLY_ABI,
+                abi=MERKLY.ABI.value,
             )
 
     async def bridge(self, amount_to_get: tuple, to_chain_id):
@@ -38,8 +36,8 @@ class Merkly:
         logger.info(f"WALLET {self.acc.address}")
         to_chain_name = [
             key
-            for key in contracts.LAYERZERO_CHAINS_ID
-            if contracts.LAYERZERO_CHAINS_ID[key] == to_chain_id
+            for key in GENERAL.LAYERZERO_CHAINS_ID.value
+            if GENERAL.LAYERZERO_CHAINS_ID.value[key] == to_chain_id
         ]
         logger.info(f"{self.acc.network.get('name')} -> {to_chain_name[0]}")
         adapter_params = await Merkly._get_adapter_params(
@@ -90,20 +88,20 @@ class Merkly:
 
     @staticmethod
     async def get_fees(from_chains: list[dict]):
-        to_chains = contracts.LAYERZERO_CHAINS_ID
+        to_chains = GENERAL.LAYERZERO_CHAINS_ID.value
         fees_list = []
-
+        logger.debug("COLLEC INFORMATION")
         for from_chain in from_chains:
             acc = Account(network=from_chain)
             contract_merkly = acc.w3.eth.contract(
                 address=eth_utils.address.to_checksum_address(
-                    contracts.MERKLY.get(acc.network.get("name"))
+                    MERKLY.CONTRACT.value.get(acc.network.get(NETWORK_FIELDS.NAME))
                 ),
-                abi=config.MERKLY_ABI,
+                abi=config.MERKLY.ABI.value,
             )
 
             for to_chain_name, to_chain_id in to_chains.items():
-                if from_chain["name"] != to_chain_name:
+                if from_chain.get(PARAMETR.NAME) != to_chain_name:
                     dst_chain_id = to_chain_id
                     adapter_params = await Merkly._get_adapter_params(
                         dst_chain_id=dst_chain_id,
@@ -123,7 +121,7 @@ class Merkly:
                         )
                         fees_list.append(
                             {
-                                "from_chain": from_chain["name"],
+                                "from_chain": from_chain.get(NETWORK_FIELDS.NAME),
                                 "to_chain": to_chain_name,
                                 "to_chain_id": to_chain_id,
                                 "price": price,
@@ -137,7 +135,7 @@ class Merkly:
 
         # Вывод результатов
         for fee_info in fees_list:
-            print(
+            logger.info(
                 f"{fee_info['from_chain']} -> {fee_info['to_chain']} ({fee_info['to_chain_id']}) {fee_info['price'].ETHER:.10f}"
             )
 
@@ -147,19 +145,21 @@ class Merkly:
         for param in params:
             for wallet in (
                 wallets
-                if param["wallets_file"] == ""
-                else await utils.files.read_file_lines(param["wallets_file"])
+                if param.get(PARAMETR.WALLETS_FILE) == ""
+                else await utils.files.read_file_lines(param.get(PARAMETR.WALLETS_FILE))
             ):
-                for _ in range(random.randint(*param["count_transaction"])):
-                    to_chain = random.choice(param["to_chains"])
-                    to_chain_id = contracts.LAYERZERO_CHAINS_ID[to_chain.get("name")]
+                for _ in range(random.randint(*param.get(PARAMETR.COUNT_TRANSACTION))):
+                    to_chain = random.choice(param(PARAMETR.TO_CHAINS))
+                    to_chain_id = GENERAL.LAYERZERO_CHAINS_ID.value[
+                        to_chain.get(NETWORK_FIELDS.NAME)
+                    ]
 
                     database.append(
                         {
                             "wallet": wallet,
-                            "network": param["network"],
+                            "network": param.get(PARAMETR.NETWORK),
                             "to_chain_id": to_chain_id,
-                            "amount_to_get": to_chain.get("amount"),
+                            "amount_to_get": to_chain.get(PARAMETR.VALUE),
                         }
                     )
         return database
@@ -172,7 +172,6 @@ class Merkly:
         database = await Merkly._create_database(
             wallets=wallets, params=settings.params
         )
-        # pprint.pprint(database)
         random.shuffle(database)
         random.shuffle(database)
         random.shuffle(database)

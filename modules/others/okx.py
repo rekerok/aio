@@ -1,8 +1,8 @@
-import pprint
-import random
 import ccxt
 import utils
+import random
 from loguru import logger
+from utils.enums import PARAMETR
 
 
 class OKX:
@@ -82,42 +82,43 @@ class OKX:
                 logger.error(error)
 
     @staticmethod
-    async def create_database(wallets: list[str], settings: list[dict]) -> list[dict]:
-        tasks: list[dict] = list()
-        print(settings)
-        for param in settings.params:
+    async def create_database(wallets: list[str], params: list[dict]) -> list[dict]:
+        database: list[dict] = list()
+        for param in params:
             for wallet in (
                 wallets
-                if param["wallets_file"] == ""
-                else await utils.files.read_file_lines(param["wallets_file"])
+                if param[PARAMETR.WALLETS_FILE] == ""
+                else await utils.files.read_file_lines(param[PARAMETR.WALLETS_FILE])
             ):
-                round_number = random.randint(*param["round"])
+                round_number = random.randint(*param[PARAMETR.ROUND])
                 amount = round(
-                    random.uniform(*param["amount"]),
+                    random.uniform(*param[PARAMETR.VALUE]),
                     round_number,
                 )
-                tasks.append(
+                database.append(
                     {
                         "address": wallet,
-                        "network": param["network"],
-                        "ccy": param["symbol"],
+                        "network": param[PARAMETR.NETWORK],
+                        "ccy": param[PARAMETR.SYMBOL],
                         "amount": amount,
                     }
                 )
-        return tasks
+        return database
 
     @staticmethod
     async def withdraw_use_database(settings):
         wallets = await utils.files.read_file_lines("files/wallets.txt")
-        settings = settings
-        database = await OKX.create_database(wallets=wallets, settings=settings)
-        # pprint.pprint(database)
+        database = await OKX.create_database(wallets=wallets, params=settings.PARAMS)
+
+        random.shuffle(database)
+        random.shuffle(database)
+        random.shuffle(database)
         random.shuffle(database)
 
         okx = OKX(
-            apiKey=settings.KEYS.get("api_key"),
-            secret=settings.KEYS.get("api_secret"),
-            password=settings.KEYS.get("password"),
+            apiKey=settings.KEYS.get(PARAMETR.OKX_API_KEY),
+            secret=settings.KEYS.get(PARAMETR.OKX_API_SECRET),
+            password=settings.KEYS.get(PARAMETR.OKX_PASSWORD),
             proxy=settings.PROXY,
         )
         counter = 1
@@ -130,6 +131,7 @@ class OKX:
                 currency=wallet["ccy"],
             )
             await utils.time.sleep_view(settings.SLEEP)
+            logger.info("------------------------------------")
             counter += 1
 
 
