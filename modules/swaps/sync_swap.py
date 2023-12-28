@@ -31,16 +31,16 @@ class SyncSwap(Web3Swapper):
         )
 
         self.contract_pool_factory = self.acc.w3.eth.contract(
-            address=config.SYNCSWAP.CONSTRACTS.value.get(NETWORK_FIELDS.NAME).get(
-                "pool_factory"
-            ),
+            address=config.SYNCSWAP.CONSTRACTS.value.get(
+                self.acc.network.get(NETWORK_FIELDS.NAME)
+            ).get("pool_factory"),
             abi=config.SYNCSWAP.ABI_POOL_FACTORY.value,
         )
 
         self.contract_router = self.acc.w3.eth.contract(
-            address=config.SYNCSWAP.CONSTRACTS.value.get(NETWORK_FIELDS.NAME).get(
-                "router"
-            ),
+            address=config.SYNCSWAP.CONSTRACTS.value.get(
+                self.acc.network.get(NETWORK_FIELDS.NAME)
+            ).get("router"),
             abi=config.SYNCSWAP.ABI_POOL_ROUTER.value,
         )
 
@@ -84,7 +84,7 @@ class SyncSwap(Web3Swapper):
         from_token, to_token = await Token_Info.to_wrapped_token(
             from_token=from_token,
             to_token=to_token,
-            name_network=self.acc.network.get(NETWORK_FIELDS.NAME),
+            network=self.acc.network,
         )
         pool_address = await self._get_pool_address(
             from_token=from_token, to_token=to_token
@@ -106,11 +106,9 @@ class SyncSwap(Web3Swapper):
             decimals=to_token.decimals,
             wei=True,
         )
-
         swapData = eth_abi.encode(
             ["address", "address", "uint8"], [from_token.address, self.acc.address, 1]
         )
-
         steps = [
             {
                 "pool": pool_address,
@@ -119,7 +117,6 @@ class SyncSwap(Web3Swapper):
                 "callbackData": "0x",
             }
         ]
-
         paths = [
             {
                 "steps": steps,
@@ -139,21 +136,11 @@ class SyncSwap(Web3Swapper):
                 deadline,  # deadline 30 min
             ),
         )
-        value_approve = (
-            None
-            if from_token.address
-            == self.acc.w3.to_checksum_address(
-                config.GENERAL.WETH.value.get(self.acc.network.get(NETWORK_FIELDS.NAME))
-            )
-            else amount_to_send
-        )
-        value = (
-            None
-            if from_token.address
-            != self.acc.w3.to_checksum_address(
-                config.GENERAL.WETH.value.get(self.acc.network.get(NETWORK_FIELDS.NAME))
-            )
-            else amount_to_send
+        value, value_approve = await Web3Swapper._get_value_and_allowance(
+            amount=amount_to_send,
+            from_native_token=True
+            if from_token.symbol == self.acc.network.get(NETWORK_FIELDS.NATIVE_TOKEN)
+            else False,
         )
         return await self._send_swap_transaction(
             data=data,
