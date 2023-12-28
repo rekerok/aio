@@ -180,7 +180,7 @@ class Account:
         value: Token_Amount = None,
     ):
         allow_transaction = True
-        if self.network.get("check_gas"):
+        if self.network.get(NETWORK_FIELDS.CHECK_GAS):
             allow_transaction = await utils.time.wait_gas(
                 AsyncWeb3(
                     AsyncHTTPProvider(
