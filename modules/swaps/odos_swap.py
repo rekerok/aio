@@ -67,7 +67,7 @@ class OdosSwap(Web3Swapper):
         response = await aiohttp.post_request(url=url, data=data)
         return response
 
-    # https://docs.odos.xyz/    
+    # https://docs.odos.xyz/
     async def _perform_swap(
         self,
         amount_to_send: Token_Amount,
@@ -89,16 +89,9 @@ class OdosSwap(Web3Swapper):
         if not assemble:
             logger.error("NOT ASSEMBLE")
             return RESULT_TRANSACTION.FAIL
-        value, value_approve = await Web3Swapper._get_value_and_allowance(
-            amount=amount_to_send,
-            from_native_token=True
-            if from_token.symbol == self.acc.network.get(NETWORK_FIELDS.NATIVE_TOKEN)
-            else False,
-        )
         return await self._send_swap_transaction(
             data=assemble["transaction"]["data"],
             from_token=from_token,
             to_address=self.contract.address,
-            value_approve=value_approve,
-            value=value,
+            amount_to_send=amount_to_send,
         )

@@ -136,16 +136,9 @@ class SyncSwap(Web3Swapper):
                 deadline,  # deadline 30 min
             ),
         )
-        value, value_approve = await Web3Swapper._get_value_and_allowance(
-            amount=amount_to_send,
-            from_native_token=True
-            if from_token.symbol == self.acc.network.get(NETWORK_FIELDS.NATIVE_TOKEN)
-            else False,
-        )
         return await self._send_swap_transaction(
             data=data,
             from_token=from_token,
             to_address=self.contract_router.address,
-            value_approve=value_approve,
-            value=value,
+            amount_to_send=amount_to_send,
         )

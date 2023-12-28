@@ -101,16 +101,9 @@ class InchSwap(Web3Swapper):
             logger.error("FAIL GET DATA FOR SWAP OR NOT BALANCE")
             return RESULT_TRANSACTION.FAIL
 
-        value, value_approve = await Web3Swapper._get_value_and_allowance(
-            amount=amount_to_send,
-            from_native_token=True
-            if from_token.address == config.GENERAL.NATIVE_TOKEN.value
-            else False,
-        )
         return await self._send_swap_transaction(
             data=data,
             from_token=from_token,
             to_address=contract_address,
-            value_approve=None,
-            value=value,
+            amount_to_send=amount_to_send,
         )

@@ -103,9 +103,16 @@ class Web3Swapper:
         data,
         from_token: Token_Info,
         to_address: str,
+        amount_to_send: Token_Amount,
         value_approve: Token_Amount = None,
         value: Token_Amount = None,
     ):
+        value, value_approve = await Web3Swapper._get_value_and_allowance(
+            amount=amount_to_send,
+            from_native_token=await Token_Info.is_native_token(
+                self.acc.network, token=from_token
+            ),
+        )
         if value_approve:
             await self.acc.approve(
                 token_address=from_token.address,
@@ -117,19 +124,20 @@ class Web3Swapper:
         )
 
     async def swap(self, from_token_address: str = None, to_token_address: str = None):
-        from_token_address: Token_Info = await Token_Info.get_info_token(
+        from_token: Token_Info = await Token_Info.get_info_token(
             acc=self.acc, token_address=from_token_address
         )
-        to_token_address: Token_Info = await Token_Info.get_info_token(
+        to_token: Token_Info = await Token_Info.get_info_token(
             acc=self.acc, token_address=to_token_address
         )
-
-        balance: Token_Amount = await self.acc.get_balance(from_token_address.address)
+        if not from_token or not to_token:
+            return RESULT_TRANSACTION.FAIL
+        balance: Token_Amount = await self.acc.get_balance(from_token.address)
 
         logger.info(f"WALLET: {self.acc.address}")
         logger.info(f"NETWORK: {self.acc.network.get(NETWORK_FIELDS.NAME)}")
         logger.info(f"DEX: {self.NAME} ")
-        logger.info(f"{from_token_address.symbol} -> {to_token_address.symbol}")
+        logger.info(f"{from_token.symbol} -> {to_token.symbol}")
 
         if balance.ETHER < self.min_balance:
             logger.error(f"Balance {balance.ETHER} < {self.min_balance}")
@@ -137,20 +145,20 @@ class Web3Swapper:
 
         if self.type_transfer == TYPES_OF_TRANSACTION.PERCENT:
             return await self._make_swap_percent(
-                from_token=from_token_address,
-                to_token=to_token_address,
+                from_token=from_token,
+                to_token=to_token,
                 balance=balance,
             )
         elif self.type_transfer == TYPES_OF_TRANSACTION.ALL_BALANCE:
             return await self._make_swap_all_balance(
-                from_token=from_token_address,
-                to_token=to_token_address,
+                from_token=from_token,
+                to_token=to_token,
                 balance=balance,
             )
         else:
             return await self._make_swap_amount(
-                from_token=from_token_address,
-                to_token=to_token_address,
+                from_token=from_token,
+                to_token=to_token,
                 balance=balance,
             )
 
