@@ -1,9 +1,10 @@
+from loguru import logger
 import config
 import eth_utils
 from typing import Union
 from utils import aiohttp
 from utils import TYPES_OF_TRANSACTION
-from utils.enums import NETWORK_FIELDS
+from utils.enums import NETWORK_FIELDS, RESULT_TRANSACTION
 from utils import Token_Amount, Token_Info
 from modules.web3Swapper import Web3Swapper
 
@@ -66,6 +67,7 @@ class OdosSwap(Web3Swapper):
         response = await aiohttp.post_request(url=url, data=data)
         return response
 
+    # https://docs.odos.xyz/    
     async def _perform_swap(
         self,
         amount_to_send: Token_Amount,
@@ -80,21 +82,19 @@ class OdosSwap(Web3Swapper):
         quote = await self._get_quote(
             from_token=from_token, to_token=to_token, amount_to_send=amount_to_send
         )
+        if not quote:
+            logger.error("NOT QUOTE FOR TRANSACTION")
+            return RESULT_TRANSACTION.FAIL
         assemble = await self._get_assemble(path_id=quote.get("pathId"))
-        value_approve = (
-            None
-            if from_token.symbol
-            == self.acc.network.get(NETWORK_FIELDS.NATIVE_TOKEN).upper()
-            else amount_to_send
+        if not assemble:
+            logger.error("NOT ASSEMBLE")
+            return RESULT_TRANSACTION.FAIL
+        value, value_approve = await Web3Swapper._get_value_and_allowance(
+            amount=amount_to_send,
+            from_native_token=True
+            if from_token.symbol == self.acc.network.get(NETWORK_FIELDS.NATIVE_TOKEN)
+            else False,
         )
-
-        value = (
-            amount_to_send
-            if from_token.symbol
-            == self.acc.network.get(NETWORK_FIELDS.NATIVE_TOKEN).upper()
-            else None
-        )
-
         return await self._send_swap_transaction(
             data=assemble["transaction"]["data"],
             from_token=from_token,
