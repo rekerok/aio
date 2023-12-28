@@ -173,19 +173,31 @@ class Web3Swapper:
         return value, value_approve
 
     @staticmethod
-    async def _get_random_pair_for_swap(token_list: list):
-        # Выбрать случайный токен "from"
-        from_token = random.choice(token_list)
-
+    async def _get_random_pair_for_swap(tokens: list, acc: Account):
+        random.shuffle(tokens)
+        random.shuffle(tokens)
+        random.shuffle(tokens)
+        random.shuffle(tokens)
+        from_token = None
+        for token in tokens:
+            balance = await acc.get_balance(
+                token_address=token.get(PARAMETR.TOKEN_ADDRESS)
+            )
+            if balance.ETHER > token.get(PARAMETR.MIN_BALANCE):
+                from_token = token
+                break
         # Выбрать случайный токен "to", отличающийся от "from"
+        if from_token is None:
+            return (None, None)
         to_token = random.choice(
             [
                 token
-                for token in token_list
-                if token.get("address") != from_token.get("address")
+                for token in tokens
+                if token.get(PARAMETR.TOKEN_ADDRESS)
+                != from_token.get(PARAMETR.TOKEN_ADDRESS)
             ]
         )
-        return from_token, to_token
+        return (from_token, to_token)
 
     @staticmethod
     async def _create_database(wallets: list[str], params):
