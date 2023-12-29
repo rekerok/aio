@@ -4,7 +4,7 @@ from loguru import logger
 from utils import TYPES_OF_TRANSACTION
 from utils import Token_Amount, Token_Info
 from modules.web3Swapper import Web3Swapper
-from utils.enums import NETWORK_FIELDS
+from utils.enums import NETWORK_FIELDS, RESULT_TRANSACTION
 
 
 class WoofiSwap(Web3Swapper):
@@ -46,6 +46,7 @@ class WoofiSwap(Web3Swapper):
             logger.error(error)
             return None
 
+    # https://learn.woo.org/v/woofi-dev-docs/
     async def _perform_swap(
         self,
         amount_to_send: Token_Amount,
@@ -61,7 +62,8 @@ class WoofiSwap(Web3Swapper):
             fromToken=from_token, toToken=to_token, fromAmount=amount_to_send
         )
         if amount_in is None:
-            return
+            logger.error("DON'T GET AMOUNT IN")
+            return RESULT_TRANSACTION.FAIL
 
         amount_in = Token_Amount(
             amount=int(amount_in - amount_in * self.slippage / 100),
@@ -81,15 +83,13 @@ class WoofiSwap(Web3Swapper):
                 self.acc.address,  # rebateTo
             ),
         )
+        if data is None:
+            logger.error("NOT DATA FOR SWAP")
+            return RESULT_TRANSACTION.FAIL
 
         return await self._send_swap_transaction(
             data=data,
             from_token=from_token,
             to_address=self.contract.address,
-            value_approve=None
-            if from_token.address == config.GENERAL.NATIVE_TOKEN.value
-            else amount_to_send,
-            value=amount_to_send
-            if from_token.address == config.GENERAL.NATIVE_TOKEN.value
-            else None,
+            amount_to_send=amount_to_send,
         )
