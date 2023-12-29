@@ -59,6 +59,7 @@ class WarmUPSwaps:
                 logger.error(
                     f"NOT PAIR FOR SWAP IN {data.get('dex')} {data.get('network').get(NETWORK_FIELDS.NAME)}"
                 )
+                counter += 1
                 continue
             dex: Web3Swapper = data["dex"](
                 private_key=data.get("private_key"),

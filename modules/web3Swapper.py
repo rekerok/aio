@@ -174,6 +174,8 @@ class Web3Swapper:
 
     @staticmethod
     async def _get_random_pair_for_swap(tokens: list, acc: Account):
+        if len(tokens) == 0 or len(tokens) == 1:
+            return (None, None)
         random.shuffle(tokens)
         random.shuffle(tokens)
         random.shuffle(tokens)
