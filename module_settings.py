@@ -1,7 +1,17 @@
 from modules import *
 from config import Network
 from settings import Client_Networks
-from utils import TYPES_OF_TRANSACTION, PARAMETR
+from utils import TYPES_OF_TRANSACTION, PARAMETR, TOKENS
+
+
+class DEX:
+    ONE_INCH = InchSwap
+    IZUMI = IzumiSwap
+    ODOS = OdosSwap
+    OPENOCEAN = OpenoceanSwap
+    SUSHI = SushiSwap
+    SYNCSWAP = SyncSwap
+    WOOFI = WoofiSwap
 
 
 class OKX_settings:
@@ -42,16 +52,14 @@ class SWAP_SETTINGS:
         {
             PARAMETR.NETWORK: Client_Networks.zksync,
             PARAMETR.TYPE_TRANSACTION: TYPES_OF_TRANSACTION.PERCENT,
-            PARAMETR.VALUE: (20, 20),
-            PARAMETR.FROM_TOKEN: "",
+            PARAMETR.VALUE: (25, 40),
+            PARAMETR.FROM_TOKEN: TOKENS.ZKSYNC.ETH,
             PARAMETR.MIN_BALANCE: 0,
             PARAMETR.TO_TOKENS: [
                 {
-                    PARAMETR.TOKEN_ADDRESS: "0x493257fD37EDB34451f62EDf8D2a0C418852bA4C",
-                    PARAMETR.DEXS: [
-                        InchSwap,
-                    ],
-                },  # usdt
+                    PARAMETR.TOKEN_ADDRESS: TOKENS.ZKSYNC.USDT,
+                    PARAMETR.DEXS: [DEX.SYNCSWAP, DEX.ONE_INCH],
+                },
             ],
             PARAMETR.WALLETS_FILE: "",
         },
@@ -89,26 +97,47 @@ class CHECK_NFT_SETTINGS:
 
 class WARMUPSWAPS_SETTINGS:
     PARAMS = {
-        WoofiSwap: [
+        DEX.ONE_INCH: [
             {
-                PARAMETR.NETWORK: Client_Networks.polygon,
+                PARAMETR.NETWORK: Client_Networks.zksync,
                 PARAMETR.TOKENS: [
                     {
-                        PARAMETR.TOKEN_ADDRESS: "",
-                        PARAMETR.MIN_BALANCE: 0,
+                        PARAMETR.TOKEN_ADDRESS: TOKENS.ZKSYNC.DAI,
+                        PARAMETR.MIN_BALANCE: 10,
                     },
                     {
-                        PARAMETR.TOKEN_ADDRESS: "0x2791bca1f2de4661ed88a30c99a7a9449aa84174",
-                        PARAMETR.MIN_BALANCE: 0,
+                        PARAMETR.TOKEN_ADDRESS: TOKENS.ZKSYNC.USDC,
+                        PARAMETR.MIN_BALANCE: 10,
+                    },
+                    {
+                        PARAMETR.TOKEN_ADDRESS: TOKENS.ZKSYNC.USDC,
+                        PARAMETR.MIN_BALANCE: 10,
+                    },
+                ],
+                PARAMETR.COUNT_TRANSACTION: (3, 4),
+                PARAMETR.VALUE: (100, 100),
+            },
+        ],
+        DEX.SYNCSWAP: [
+            {
+                PARAMETR.NETWORK: Client_Networks.zksync,
+                PARAMETR.TOKENS: [
+                    {
+                        PARAMETR.TOKEN_ADDRESS: TOKENS.ZKSYNC.USDC,
+                        PARAMETR.MIN_BALANCE: 10,
+                    },
+                    {
+                        PARAMETR.TOKEN_ADDRESS: TOKENS.ZKSYNC.USDC,
+                        PARAMETR.MIN_BALANCE: 10,
                     },
                 ],
                 PARAMETR.COUNT_TRANSACTION: (1, 2),
-                PARAMETR.VALUE: (10, 20),
+                PARAMETR.VALUE: (100, 100),
             },
         ],
     }
-    SLIPPAGE = 1
-    SLEEP = (1000, 2000)
+    SLIPPAGE = 3
+    SLEEP = (100, 200)
 
 
 class MERKLY_SETTINGS:
@@ -118,9 +147,9 @@ class MERKLY_SETTINGS:
             PARAMETR.NETWORK: Client_Networks.polygon,
             PARAMETR.TO_CHAINS: [
                 {
-                    PARAMETR.NAME: Network.BEAM,
-                    PARAMETR.VALUE: (3.23, 3.23),
-                }
+                    PARAMETR.NAME: Network.FUSE,
+                    PARAMETR.VALUE: (0.0001, 0.001),
+                },
             ],
             PARAMETR.COUNT_TRANSACTION: (2, 2),
             PARAMETR.WALLETS_FILE: "",

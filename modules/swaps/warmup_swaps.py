@@ -51,9 +51,15 @@ class WarmUPSwaps:
                 tokens=data.get("tokens"), acc=acc
             )
             if pair_tokens[0] is None or pair_tokens[1] is None:
+                logger.info(
+                    Account(
+                        private_key=data.get("private_key"), network=data.get("network")
+                    ).address
+                )
                 logger.error(
                     f"NOT PAIR FOR SWAP IN {data.get('dex')} {data.get('network').get(NETWORK_FIELDS.NAME)}"
                 )
+                continue
             dex: Web3Swapper = data["dex"](
                 private_key=data.get("private_key"),
                 network=data.get("network"),

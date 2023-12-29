@@ -1,6 +1,6 @@
-from loguru import logger
 import config
 import eth_utils
+from loguru import logger
 from utils.enums import NETWORK_FIELDS
 
 
