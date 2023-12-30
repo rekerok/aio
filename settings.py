@@ -40,9 +40,7 @@ class Client_Networks:
     optimism = {
         NETWORK_FIELDS.NAME: Network.OPTIMISM,
         NETWORK_FIELDS.RPCS: [
-            "https://optimism.llamarpc.com",
-            "wss://optimism.publicnode.com",
-            "https://mainnet.optimism.io",
+            "https://rpc.ankr.com/optimism",
         ],
         NETWORK_FIELDS.EXPLORER: "https://optimistic.etherscan.io/",
         NETWORK_FIELDS.EIP1559: True,
