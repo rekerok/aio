@@ -2,6 +2,7 @@ from .account import Account
 from .web3Swapper import Web3Swapper
 from .bridges.merkly import Merkly
 from .bridges.l2pass import L2Pass
+from .bridges.warmupRefuel import WarmUpRefuel
 from .bridges.across import Across
 from .others.check_nft import Check_NFT
 from .others.deployer import Deployer

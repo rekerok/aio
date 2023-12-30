@@ -28,20 +28,14 @@ class Merkly:
                 abi=MERKLY.ABI.value,
             )
 
-    async def bridge(self, amount_to_get: tuple, to_chain_id):
+    async def refuel(self, amount_to_get: tuple, to_chain):
         amount_to_get: Token_Amount = Token_Amount(
             amount=random.uniform(*amount_to_get)
         )
-        logger.info(self.NAME)
+        logger.warning(self.NAME)
         logger.info(f"WALLET {self.acc.address}")
-        to_chain_name = [
-            chain
-            for chain, id in GENERAL.LAYERZERO_CHAINS_ID.value.items()
-            if GENERAL.LAYERZERO_CHAINS_ID.value.get(chain) == to_chain_id
-        ]
-        logger.info(
-            f"{self.acc.network.get(NETWORK_FIELDS.NAME)} -> {to_chain_name[0]}"
-        )
+        to_chain_id = GENERAL.LAYERZERO_CHAINS_ID.value.get(to_chain)
+        logger.info(f"{self.acc.network.get(NETWORK_FIELDS.NAME)} -> {to_chain}")
         adapter_params = await Merkly._get_adapter_params(
             contract=self.contract,
             dst_chain_id=to_chain_id,
@@ -60,6 +54,9 @@ class Merkly:
             logger.error(error)
             return RESULT_TRANSACTION.FAIL
         value = Token_Amount(amount=estimate_send_fee[0] * 1.01, wei=True)
+        logger.info(
+            f"SEND {value.ETHER} {self.acc.network.get(NETWORK_FIELDS.NATIVE_TOKEN)}"
+        )
         return await self.acc.send_transaction(
             to_address=self.contract.address,
             data=data,
@@ -140,59 +137,3 @@ class Merkly:
             logger.info(
                 f"{fee_info['from_chain']} -> {fee_info['to_chain']} ({fee_info['to_chain_id']}) {fee_info['price'].ETHER:.10f}"
             )
-
-    @staticmethod
-    async def _create_database(wallets: list[str], params):
-        database = list()
-        for param in params:
-            for wallet in (
-                wallets
-                if param.get(PARAMETR.WALLETS_FILE) == ""
-                else await utils.files.read_file_lines(param.get(PARAMETR.WALLETS_FILE))
-            ):
-                for _ in range(random.randint(*param.get(PARAMETR.COUNT_TRANSACTION))):
-                    to_chain = random.choice(param.get(PARAMETR.TO_CHAINS))
-                    to_chain_id = GENERAL.LAYERZERO_CHAINS_ID.value.get(
-                        to_chain.get(PARAMETR.NAME)
-                    )
-
-                    database.append(
-                        {
-                            "wallet": wallet,
-                            "network": param.get(PARAMETR.NETWORK),
-                            "to_chain_id": to_chain_id,
-                            "amount_to_get": to_chain.get(PARAMETR.VALUE),
-                        }
-                    )
-        return database
-
-    @staticmethod
-    async def swap_use_database(settings=None):
-        wallets = await utils.files.read_file_lines(
-            path="files/wallets.txt",
-        )
-        database = await Merkly._create_database(
-            wallets=wallets, params=settings.params
-        )
-        random.shuffle(database)
-        random.shuffle(database)
-        random.shuffle(database)
-        random.shuffle(database)
-        random.shuffle(database)
-        counter = 1
-        for data in database:
-            logger.info(f"OPERATION {counter}/{len(database)}")
-            merkly = Merkly(
-                private_key=data["wallet"],
-                network=data["network"],
-            )
-            result = await merkly.bridge(
-                amount_to_get=data.get("amount_to_get"),
-                to_chain_id=data.get("to_chain_id"),
-            )
-            if result == RESULT_TRANSACTION.SUCCESS:
-                await utils.time.sleep_view(settings.SLEEP)
-            else:
-                await utils.time.sleep_view((10, 15))
-            logger.info("------------------------------------")
-            counter += 1

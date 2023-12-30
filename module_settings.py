@@ -14,6 +14,11 @@ class DEX:
     WOOFI = WoofiSwap
 
 
+class REFUEL_APP:
+    MERKLY = Merkly
+    L2PASS = L2Pass
+
+
 class OKX_settings:
     # PROXY: str = "http://user:pass@ip:port"
     PROXY: str = ""
@@ -140,22 +145,40 @@ class WARMUPSWAPS_SETTINGS:
     SLEEP = (100, 200)
 
 
-class MERKLY_SETTINGS:
-    CHECK_COMISSION_NETWORKS = [Client_Networks.polygon, Client_Networks.base]
-    params = [
-        {
-            PARAMETR.NETWORK: Client_Networks.polygon,
-            PARAMETR.TO_CHAINS: [
-                {
-                    PARAMETR.NAME: Network.FUSE,
-                    PARAMETR.VALUE: (0.0001, 0.001),
-                },
-            ],
-            PARAMETR.COUNT_TRANSACTION: (2, 2),
-            PARAMETR.WALLETS_FILE: "",
-        }
-    ]
-    SLEEP = (100, 150)
+class REFUEL_SETTINGS:
+    CHECK_COMISSION_NETWORKS = {
+        REFUEL_APP.MERKLY: [Client_Networks.arbitrum, Client_Networks.avalanche],
+        REFUEL_APP.L2PASS: [Client_Networks.arbitrum, Client_Networks.avalanche],
+    }
+    PARAMS = {
+        REFUEL_APP.MERKLY: [
+            {
+                PARAMETR.NETWORK: Client_Networks.polygon,
+                PARAMETR.TO_CHAINS: [
+                    {
+                        PARAMETR.NAME: Network.FUSE,
+                        PARAMETR.VALUE: (0.0001, 0.001),
+                    },
+                ],
+                PARAMETR.COUNT_TRANSACTION: (1, 1),
+                PARAMETR.WALLETS_FILE: "",
+            }
+        ],
+        REFUEL_APP.L2PASS: [
+            {
+                PARAMETR.NETWORK: Client_Networks.polygon,
+                PARAMETR.TO_CHAINS: [
+                    {
+                        PARAMETR.NAME: Network.BEAM,
+                        PARAMETR.VALUE: (0.0001, 0.001),
+                    },
+                ],
+                PARAMETR.COUNT_TRANSACTION: (1, 1),
+                PARAMETR.WALLETS_FILE: "",
+            }
+        ],
+    }
+    SLEEP = (50, 100)
 
 
 class DEPLOY_SETTINGS:
@@ -195,12 +218,12 @@ async def warm_up_swaps():
     await WarmUPSwaps.warmup(settings=WARMUPSWAPS_SETTINGS)
 
 
-async def merkly():
-    await Merkly.swap_use_database(settings=MERKLY_SETTINGS)
+async def warm_up_refuel():
+    await WarmUpRefuel.warm_up_refuel(settings=REFUEL_SETTINGS)
 
 
-async def merkly_check_comission():
-    await Merkly.get_fees(from_chains=MERKLY_SETTINGS.CHECK_COMISSION_NETWORKS)
+async def get_fees_refuel():
+    await WarmUpRefuel.get_fees(apps=REFUEL_SETTINGS.CHECK_COMISSION_NETWORKS)
 
 
 async def deploy_contracts():
