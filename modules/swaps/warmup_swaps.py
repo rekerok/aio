@@ -29,6 +29,35 @@ class WarmUPSwaps:
         return database
 
     @staticmethod
+    async def _get_random_pair_for_swap(tokens: list, acc: Account):
+        if len(tokens) == 0 or len(tokens) == 1:
+            return (None, None)
+        random.shuffle(tokens)
+        random.shuffle(tokens)
+        random.shuffle(tokens)
+        random.shuffle(tokens)
+        from_token = None
+        for token in tokens:
+            balance = await acc.get_balance(
+                token_address=token.get(PARAMETR.TOKEN_ADDRESS)
+            )
+            if balance.ETHER > token.get(PARAMETR.MIN_BALANCE):
+                from_token = token
+                break
+        # Выбрать случайный токен "to", отличающийся от "from"
+        if from_token is None:
+            return (None, None)
+        to_token = random.choice(
+            [
+                token
+                for token in tokens
+                if token.get(PARAMETR.TOKEN_ADDRESS)
+                != from_token.get(PARAMETR.TOKEN_ADDRESS)
+            ]
+        )
+        return (from_token, to_token)
+
+    @staticmethod
     async def warmup(settings):
         wallets = await utils.files.read_file_lines(
             path="files/wallets.txt",
@@ -47,7 +76,7 @@ class WarmUPSwaps:
                 private_key=data.get("private_key"),
                 network=data.get("network"),
             )
-            pair_tokens = await Web3Swapper._get_random_pair_for_swap(
+            pair_tokens = await WarmUPSwaps._get_random_pair_for_swap(
                 tokens=data.get("tokens"), acc=acc
             )
             if pair_tokens[0] is None or pair_tokens[1] is None:

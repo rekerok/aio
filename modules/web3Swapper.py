@@ -4,14 +4,13 @@ from typing import Union
 from loguru import logger
 from abc import abstractmethod
 from modules.account import Account
+from modules.web3Client import Web3Client
 from utils import Token_Amount, Token_Info
 from utils.enums import NETWORK_FIELDS, PARAMETR
 from utils import TYPES_OF_TRANSACTION, RESULT_TRANSACTION
 
 
-class Web3Swapper:
-    NAME = ""
-
+class Web3Swapper(Web3Client):
     def __init__(
         self,
         private_key: str,
@@ -21,8 +20,10 @@ class Web3Swapper:
         min_balance: float,
         slippage: float,
     ) -> None:
-        self.network = network
-        self.acc = Account(private_key=private_key, network=self.network)
+        super().__init__(
+            private_key=private_key,
+            network=network,
+        )
         self.type_transfer = type_transfer
         self.value = value
         self.min_balance = min_balance
@@ -88,41 +89,6 @@ class Web3Swapper:
     ):
         pass
 
-    async def _get_data(self, contract, function_of_contract: str, args: tuple = None):
-        try:
-            return contract.encodeABI(
-                function_of_contract,
-                args=args,
-            )
-        except Exception as e:
-            logger.error(e)
-            return None
-
-    async def _send_swap_transaction(
-        self,
-        data,
-        from_token: Token_Info,
-        to_address: str,
-        amount_to_send: Token_Amount,
-        value_approve: Token_Amount = None,
-        value: Token_Amount = None,
-    ):
-        value, value_approve = await Web3Swapper._get_value_and_allowance(
-            amount=amount_to_send,
-            from_native_token=await Token_Info.is_native_token(
-                self.acc.network, token=from_token
-            ),
-        )
-        if value_approve:
-            await self.acc.approve(
-                token_address=from_token.address,
-                spender=to_address,
-                amount=value_approve,
-            )
-        return await self.acc.send_transaction(
-            to_address=to_address, data=data, value=value
-        )
-
     async def swap(self, from_token_address: str = None, to_token_address: str = None):
         from_token: Token_Info = await Token_Info.get_info_token(
             acc=self.acc, token_address=from_token_address
@@ -161,45 +127,6 @@ class Web3Swapper:
                 to_token=to_token,
                 balance=balance,
             )
-
-    @staticmethod
-    async def _get_value_and_allowance(amount: Token_Amount, from_native_token: bool):
-        if from_native_token:
-            value = amount
-            value_approve = None
-        else:
-            value = None
-            value_approve = amount
-        return value, value_approve
-
-    @staticmethod
-    async def _get_random_pair_for_swap(tokens: list, acc: Account):
-        if len(tokens) == 0 or len(tokens) == 1:
-            return (None, None)
-        random.shuffle(tokens)
-        random.shuffle(tokens)
-        random.shuffle(tokens)
-        random.shuffle(tokens)
-        from_token = None
-        for token in tokens:
-            balance = await acc.get_balance(
-                token_address=token.get(PARAMETR.TOKEN_ADDRESS)
-            )
-            if balance.ETHER > token.get(PARAMETR.MIN_BALANCE):
-                from_token = token
-                break
-        # Выбрать случайный токен "to", отличающийся от "from"
-        if from_token is None:
-            return (None, None)
-        to_token = random.choice(
-            [
-                token
-                for token in tokens
-                if token.get(PARAMETR.TOKEN_ADDRESS)
-                != from_token.get(PARAMETR.TOKEN_ADDRESS)
-            ]
-        )
-        return (from_token, to_token)
 
     @staticmethod
     async def _create_database(wallets: list[str], params):

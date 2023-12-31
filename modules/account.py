@@ -29,10 +29,9 @@ class Account:
             random.choice(self.proxies) if self.proxies else None
         )
         self.network = network
-        self.rpcs: list[str] = self.network.get(NETWORK_FIELDS.RPCS)
         self.w3 = AsyncWeb3(
             AsyncHTTPProvider(
-                endpoint_uri=random.choice(self.rpcs),
+                endpoint_uri=random.choice(self.network.get(NETWORK_FIELDS.RPCS)),
                 request_kwargs=self.request_kwargs,
             )
         )
@@ -77,7 +76,7 @@ class Account:
                 )
             )
 
-    async def get_eip1559_tx(self, tx_params: dict, increase_gas: float = 1.0):
+    async def _get_eip1559_tx(self, tx_params: dict, increase_gas: float = 1.0):
         last_block = await self.w3.eth.get_block("latest")
         base_fee = int(last_block["baseFeePerGas"] * increase_gas)
         max_priority_fee_per_gas = await self.w3.eth.max_priority_fee
@@ -85,7 +84,7 @@ class Account:
         tx_params["maxPriorityFeePerGas"] = max_priority_fee_per_gas
         return tx_params
 
-    async def verifi_tx(self, tx_hash):
+    async def _verifi_tx(self, tx_hash):
         try:
             data = await self.w3.eth.wait_for_transaction_receipt(tx_hash, timeout=400)
             if "status" in data and data["status"] == 1:
@@ -96,7 +95,7 @@ class Account:
             logger.error(error)
             return False
 
-    async def get_allowance(
+    async def _get_allowance(
         self, token_address: str, owner: str, spender: str
     ) -> Token_Amount:
         try:
@@ -119,7 +118,7 @@ class Account:
 
     async def approve(self, token_address: str, spender: str, amount: Token_Amount):
         logger.info(f"Check approve")
-        allowanced: Token_Amount = await self.get_allowance(
+        allowanced: Token_Amount = await self._get_allowance(
             token_address=token_address, owner=self.address, spender=spender
         )
 
@@ -169,7 +168,6 @@ class Account:
                 data=data, to_address=token_address, value=0
             )
 
-    # @check_gas
     async def deploy_contract(self, bytecode: str):
         return await self.send_transaction(data=bytecode)
 
@@ -212,7 +210,7 @@ class Account:
                     tx_params["value"] = value.WEI
 
                 if self.network[NETWORK_FIELDS.EIP1559]:
-                    tx_params = await self.get_eip1559_tx(tx_params=tx_params)
+                    tx_params = await self._get_eip1559_tx(tx_params=tx_params)
                 else:
                     tx_params["gasPrice"] = await self.w3.eth.gas_price
 
@@ -221,7 +219,7 @@ class Account:
                 )
 
                 tx_hash = await self.sign_transaction(tx=tx_params)
-                verify = await self.verifi_tx(tx_hash=tx_hash)
+                verify = await self._verifi_tx(tx_hash=tx_hash)
                 if verify:
                     logger.success(
                         f"LINK {self.network[NETWORK_FIELDS.EXPLORER]}tx/{tx_hash}"
@@ -238,7 +236,7 @@ class Account:
         else:
             return RESULT_TRANSACTION.FAIL
 
-    async def sign_transaction(self, tx: dict):
+    async def _sign_transaction(self, tx: dict):
         signed_tx = self.w3.eth.account.sign_transaction(tx, self.private_key)
         raw_tx_hash = await self.w3.eth.send_raw_transaction(signed_tx.rawTransaction)
         tx_hash = self.w3.to_hex(raw_tx_hash)
