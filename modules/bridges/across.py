@@ -87,17 +87,28 @@ class Across:
         from_token: Token_Info = await Token_Info.get_info_token(
             acc=self.acc, token_address=from_token_address
         )
-        to_token: Token_Info = Token_Info(
-            address=config.GENERAL.WETH.value.get(to_chain), symbol="WETH", decimals=18
-        )
         from_token = (
             await Token_Info.to_wrapped_token(
                 network=self.acc.network, from_token=from_token
             )
         )[0]
+
+        if to_token_address == "":
+            to_token: Token_Info = Token_Info(
+                address=config.GENERAL.WETH.value.get(to_chain),
+                symbol="WETH",
+                decimals=18,
+            )
+        else:
+            to_token: Token_Info = Token_Info(
+                address=to_token_address,
+                symbol=from_token.symbol,
+                decimals=from_token.decimals,
+            )
         amount_to_send: Token_Amount = Token_Amount(
             amount=amount_to_send, decimals=from_token.decimals
         )
+
         info = await self._get_info(
             from_token=from_token,
             to_chain_id=to_chain_id,
@@ -118,15 +129,20 @@ class Across:
         ):
             logger.error("FAIL LIMITS")
             return RESULT_TRANSACTION.FAIL
-        allow_bridge = await self._check_route(
-            from_chain_id=await self.acc.w3.eth.chain_id,
-            to_chain_id=to_chain_id,
-            from_token=from_token,
-            to_token=to_token,
-        )
-        if allow_bridge is None or []:
+
+        if (
+            await self._check_route(
+                from_chain_id=await self.acc.w3.eth.chain_id,
+                to_chain_id=to_chain_id,
+                from_token=from_token,
+                to_token=to_token,
+            )
+            is None
+            or []
+        ):
             logger.error("INVALID DATA")
             return RESULT_TRANSACTION.FAIL
+
         args = [
             self.acc.address,
             from_token.address,
@@ -140,31 +156,67 @@ class Across:
         pool_address = eth_utils.address.to_checksum_address(
             info.get("spokePoolAddress")
         )
+
         try:
             if from_chain_id == 324:
                 contract_across = self.acc.w3.eth.contract(
                     address=pool_address, abi=config.ACROSS.ABI_POOL.value
                 )
-            else:
-                args.insert(0, pool_address)
-                contract_across = self.acc.w3.eth.contract(
-                    address=eth_utils.address.to_checksum_address(
-                        config.ACROSS.CONTRACTS.value.get(
-                            self.acc.network.get(NETWORK_FIELDS.NAME)
-                        )
-                    ),
-                    abi=config.ACROSS.ABI_ROUTER.value,
+                data = contract_across.encodeABI(
+                    "deposit",
+                    args=(*args,),
                 )
-            print((*args,))
-            data = contract_across.encodeABI(
-                "deposit",
-                args=(*args,),
-            )
-            return await self.acc.send_transaction(
-                to_address=contract_across.address,
-                data=data,
-                value=amount_to_send,
-            )
+            else:
+                if await Token_Info.is_native_token(
+                    network=self.acc.network, token=from_token
+                ):
+                    args.insert(0, pool_address)
+                    contract_across = self.acc.w3.eth.contract(
+                        address=eth_utils.address.to_checksum_address(
+                            config.ACROSS.CONTRACTS.value.get(
+                                self.acc.network.get(NETWORK_FIELDS.NAME)
+                            )
+                        ),
+                        abi=config.ACROSS.ABI_ROUTER.value,
+                    )
+                    data = contract_across.encodeABI(
+                        "deposit",
+                        args=(*args,),
+                    )
+                else:
+                    contract_across = self.acc.w3.eth.contract(
+                        address=pool_address,
+                        abi=config.ACROSS.ABI_POOL.value,
+                    )
+                    data = contract_across.encodeABI(
+                        "deposit",
+                        args=(*args,),
+                    )
+                    data = contract_across.encodeABI(
+                        "multicall",
+                        args=[[data]],
+                    )
+
+            if not (
+                await Token_Info.is_native_token(self.acc.network, token=from_token)
+            ):
+                await self.acc.approve(
+                    token_address=from_token.address,
+                    spender=contract_across.address,
+                    amount=amount_to_send,
+                )
+                return await self.acc.send_transaction(
+                    to_address=contract_across.address,
+                    data=data,
+                    value=0,
+                )
+            else:
+                return await self.acc.send_transaction(
+                    to_address=contract_across.address,
+                    data=data,
+                    value=amount_to_send,
+                )
+
         except Exception as error:
             logger.error(error)
             return RESULT_TRANSACTION.FAIL
