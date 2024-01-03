@@ -62,7 +62,7 @@ class SushiSwap(Web3Swapper):
         from_token, to_token = await Token_Info.to_wrapped_token(
             from_token=from_token,
             to_token=to_token,
-            name_network=self.acc.network.get(NETWORK_FIELDS.NAME),
+            network=self.acc.network,
         )
         amount_out_in = await self._get_amounts_out(
             amountIn=amount_to_send,

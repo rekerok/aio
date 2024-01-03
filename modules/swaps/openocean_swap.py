@@ -87,7 +87,11 @@ class OpenoceanSwap(Web3Swapper):
         contract_address = eth_utils.address.to_checksum_address(
             transaction.get("data").get("to")
         )
-        data = transaction.get("data").get("data")
+        try:
+            data = transaction.get("data").get("data")
+        except Exception as error:
+            logger.error(error)
+            return RESULT_TRANSACTION.FAIL
         return await self._send_transaction(
             data=data,
             from_token=from_token,
