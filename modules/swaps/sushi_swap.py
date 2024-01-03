@@ -2,9 +2,10 @@ import time
 import config
 from typing import Union
 from loguru import logger
+from utils import TYPES_OF_TRANSACTION
+from modules.web3Client import Web3Client
 from utils import Token_Amount, Token_Info
 from modules.web3Swapper import Web3Swapper
-from utils import TYPES_OF_TRANSACTION
 from utils.enums import NETWORK_FIELDS, RESULT_TRANSACTION
 
 
@@ -31,7 +32,7 @@ class SushiSwap(Web3Swapper):
             slippage=slippage,
         )
         self.contract = self.acc.w3.eth.contract(
-            address=config.SUSHI.CONSTRACTS.value.get(
+            address=config.SUSHI.CONTRACTS.value.get(
                 self.acc.network.get(NETWORK_FIELDS.NATIVE_TOKEN)
             ),
             abi=config.SUSHI.ABI.value,
@@ -87,7 +88,7 @@ class SushiSwap(Web3Swapper):
         to = self.acc.address
         deadline = int(time.time()) + 10000
 
-        data = await self._get_data(
+        data = await Web3Client.get_data(
             contract=self.contract,
             function_of_contract="swapExactETHForTokens",
             args=(amount_in.WEI, path, to, deadline),
@@ -107,7 +108,7 @@ class SushiSwap(Web3Swapper):
             config.GENERAL.WETH.value.get(self.acc.network.get(NETWORK_FIELDS.NAME))
         ):
             return await self._send_transaction(
-                data=await self._get_data(
+                data=await Web3Client.get_data(
                     contract=self.contract,
                     function_of_contract="swapExactTokensForETH",
                     args=(amount_out.WEI, amount_in.WEI, path, to, deadline),
@@ -118,7 +119,7 @@ class SushiSwap(Web3Swapper):
             )
         else:
             return await self._send_transaction(
-                data=await self._get_data(
+                data=await Web3Client.get_data(
                     contract=self.contract,
                     function_of_contract="swapExactTokensForTokens",
                     args=(amount_out.WEI, amount_in.WEI, path, to, deadline),

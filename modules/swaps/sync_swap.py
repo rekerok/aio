@@ -3,9 +3,10 @@ import config
 import eth_abi
 from loguru import logger
 from typing import Union
+from utils import TYPES_OF_TRANSACTION
+from modules.web3Client import Web3Client
 from utils import Token_Amount, Token_Info
 from modules.web3Swapper import Web3Swapper
-from utils import TYPES_OF_TRANSACTION
 from utils.enums import NETWORK_FIELDS, RESULT_TRANSACTION
 
 
@@ -129,7 +130,7 @@ class SyncSwap(Web3Swapper):
             }
         ]
         deadline = int(time.time()) + 1000000
-        data = await self._get_data(
+        data = await Web3Client.get_data(
             contract=self.contract_router,
             function_of_contract="swap",
             args=(

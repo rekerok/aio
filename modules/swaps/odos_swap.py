@@ -4,9 +4,9 @@ import eth_utils
 from typing import Union
 from utils import aiohttp
 from utils import TYPES_OF_TRANSACTION
-from utils.enums import NETWORK_FIELDS, RESULT_TRANSACTION
 from utils import Token_Amount, Token_Info
 from modules.web3Swapper import Web3Swapper
+from utils.enums import NETWORK_FIELDS, RESULT_TRANSACTION
 
 
 class OdosSwap(Web3Swapper):
@@ -28,8 +28,8 @@ class OdosSwap(Web3Swapper):
             type_transfer=type_transfer,
             value=value,
             min_balance=min_balance,
-            max_balance=max_balance,
             slippage=slippage,
+            max_balance=max_balance,
         )
         self.contract = self.acc.w3.eth.contract(
             address=eth_utils.address.to_checksum_address(

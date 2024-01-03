@@ -2,6 +2,7 @@ import config
 from typing import Union
 from loguru import logger
 from utils import TYPES_OF_TRANSACTION
+from modules.web3Client import Web3Client
 from utils import Token_Amount, Token_Info
 from modules.web3Swapper import Web3Swapper
 from utils.enums import NETWORK_FIELDS, RESULT_TRANSACTION
@@ -73,7 +74,7 @@ class WoofiSwap(Web3Swapper):
             wei=True,
         )
 
-        data = await self._get_data(
+        data=await Web3Client.get_data(
             self.contract,
             "swap",
             args=(
