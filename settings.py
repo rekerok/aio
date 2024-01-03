@@ -14,9 +14,7 @@ class Client_Networks:
     ethereum = {
         NETWORK_FIELDS.NAME: Network.ETHEREUM,
         NETWORK_FIELDS.RPCS: [
-            "https://eth.llamarpc.com",
-            "wss://ethereum.publicnode.com",
-            "https://rpc.mevblocker.io",
+            "https://rpc.ankr.com/eth",
         ],
         NETWORK_FIELDS.EXPLORER: "https://etherscan.io/",
         NETWORK_FIELDS.EIP1559: True,
@@ -27,9 +25,7 @@ class Client_Networks:
     arbitrum = {
         NETWORK_FIELDS.NAME: Network.ARBITRUM,
         NETWORK_FIELDS.RPCS: [
-            "https://arbitrum.llamarpc.com",
-            "wss://arbitrum-one.publicnode.com",
-            "https://endpoints.omniatech.io/v1/arbitrum/one/public",
+            "https://rpc.ankr.com/arbitrum",
         ],
         NETWORK_FIELDS.EXPLORER: "https://arbiscan.io/",
         NETWORK_FIELDS.EIP1559: True,
@@ -50,7 +46,7 @@ class Client_Networks:
 
     base = {
         NETWORK_FIELDS.NAME: Network.BASE,
-        NETWORK_FIELDS.RPCS: ["https://base.llamarpc.com"],
+        NETWORK_FIELDS.RPCS: ["https://rpc.ankr.com/base"],
         NETWORK_FIELDS.EXPLORER: "https://basescan.org/",
         NETWORK_FIELDS.EIP1559: True,
         NETWORK_FIELDS.NATIVE_TOKEN: "ETH",
@@ -60,8 +56,7 @@ class Client_Networks:
     zksync = {
         NETWORK_FIELDS.NAME: Network.ZKSYNC,
         NETWORK_FIELDS.RPCS: [
-            "https://mainnet.era.zksync.io",
-            "https://zksync-era.blockpi.network/v1/rpc/public",
+            "https://rpc.ankr.com/zksync_era",
         ],
         NETWORK_FIELDS.EXPLORER: "https://explorer.zksync.io/",
         NETWORK_FIELDS.EIP1559: False,
@@ -72,8 +67,6 @@ class Client_Networks:
     scroll = {
         NETWORK_FIELDS.NAME: Network.SCROLL,
         NETWORK_FIELDS.RPCS: [
-            "https://scroll.blockpi.network/v1/rpc/public",
-            "https://rpc-scroll.icecreamswap.com",
             "https://rpc.ankr.com/scroll",
         ],
         NETWORK_FIELDS.EXPLORER: "https://scrollscan.com/",
