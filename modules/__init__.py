@@ -18,3 +18,4 @@ from .swaps.sushi_swap import SushiSwap
 from .swaps.sync_swap import SyncSwap
 from .swaps.warmup_swaps import WarmUPSwaps
 from .swaps.woofi_swap import WoofiSwap
+from .swaps.zk_swap import ZkSwap

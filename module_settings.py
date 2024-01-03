@@ -12,6 +12,7 @@ class DEX:
     SUSHI = SushiSwap
     SYNCSWAP = SyncSwap
     WOOFI = WoofiSwap
+    ZKSWAP = ZkSwap
     ACROSS = Across
 
 
@@ -56,16 +57,16 @@ class TRANSFERS_SETTINGS:
 class SWAP_SETTINGS:
     PARAMS = [
         {
-            PARAMETR.NETWORK: Client_Networks.optimism,
+            PARAMETR.NETWORK: Client_Networks.zksync,
             PARAMETR.TYPE_TRANSACTION: TYPES_OF_TRANSACTION.PERCENT,
-            PARAMETR.VALUE: (100, 100),
-            PARAMETR.FROM_TOKEN: TOKENS.OPTIMISM.USDT,
+            PARAMETR.VALUE: (1, 10),
+            PARAMETR.FROM_TOKEN: TOKENS.ZKSYNC.USDC,
             PARAMETR.MIN_BALANCE: 0.1,
-            PARAMETR.MAX_BALANCE: 5,
+            PARAMETR.MAX_BALANCE: 1000,
             PARAMETR.TO_TOKENS: [
                 {
-                    PARAMETR.TOKEN_ADDRESS: TOKENS.OPTIMISM.USDC_BRIDGED,
-                    PARAMETR.DEXS: [DEX.OPENOCEAN],
+                    PARAMETR.TOKEN_ADDRESS: TOKENS.OPTIMISM.ETH,
+                    PARAMETR.DEXS: [DEX.ZKSWAP],
                 },
             ],
             PARAMETR.WALLETS_FILE: "",
