@@ -14,6 +14,9 @@
 - [x] 1inch
 - [x] Odos
 - [x] SyncSwap
+- [x] ZkSwap
+- [x] Across 
+- [x] L2Pass 
 - [x] Merkly
 ### Modules to add
 - [ ] Checker balances
@@ -28,7 +31,6 @@
 - [ ] 0x_swap
 - [ ] Woofi bridge
 - [ ] Check count transaction
-- [ ] ZkSwap
 - [ ] Dmail
 ---
 
