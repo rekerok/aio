@@ -37,6 +37,7 @@ class PARAMETR:
     TO_TOKENS = auto()
     CONTRACTS = auto()
     FROM_TOKEN = auto()
+    MAX_BALANCE = auto()
     MIN_BALANCE = auto()
     OKX_API_KEY = auto()
     OKX_PASSWORD = auto()

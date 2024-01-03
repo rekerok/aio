@@ -18,6 +18,7 @@ class SushiSwap(Web3Swapper):
         type_transfer: TYPES_OF_TRANSACTION = None,
         value: tuple[Union[int, float]] = None,
         min_balance: float = 0,
+        max_balance: float = 100,
         slippage: float = 5.0,
     ) -> None:
         super().__init__(
@@ -26,6 +27,7 @@ class SushiSwap(Web3Swapper):
             type_transfer=type_transfer,
             value=value,
             min_balance=min_balance,
+            max_balance=max_balance,
             slippage=slippage,
         )
         self.contract = self.acc.w3.eth.contract(

@@ -18,6 +18,7 @@ class Web3Swapper(Web3Client):
         type_transfer: TYPES_OF_TRANSACTION,
         value: tuple[Union[int, float]],
         min_balance: float,
+        max_balance: float,
         slippage: float,
     ) -> None:
         super().__init__(
@@ -27,6 +28,7 @@ class Web3Swapper(Web3Client):
         self.type_transfer = type_transfer
         self.value = value
         self.min_balance = min_balance
+        self.max_balance = max_balance
         self.slippage = slippage
 
     async def _make_swap_percent(
@@ -115,8 +117,10 @@ class Web3Swapper(Web3Client):
         logger.info(f"DEX: {self.NAME} ")
         logger.info(f"{from_token.symbol} -> {to_token.symbol}")
 
-        if balance.ETHER < self.min_balance:
-            logger.error(f"Balance {balance.ETHER} < {self.min_balance}")
+        if not self.min_balance <= balance.ETHER <= self.max_balance:
+            logger.error(
+                f"NOT {self.min_balance} < {balance.ETHER} < {self.max_balance}"
+            )
             return RESULT_TRANSACTION.FAIL
 
         func_swap = await self._choice_type_transaction()
@@ -146,6 +150,7 @@ class Web3Swapper(Web3Client):
                         "value": param.get(PARAMETR.VALUE),
                         "from_token": param.get(PARAMETR.FROM_TOKEN),
                         "min_balance": param.get(PARAMETR.MIN_BALANCE),
+                        "max_balance": param.get(PARAMETR.MAX_BALANCE),
                         "to_token": to_token.get(PARAMETR.TOKEN_ADDRESS),
                     }
                 )
@@ -173,6 +178,7 @@ class Web3Swapper(Web3Client):
                 type_transfer=data.get("type_swap"),
                 value=data.get("value"),
                 min_balance=data.get("min_balance"),
+                max_balance=data.get("max_balance"),
             )
             result = await dex.swap(
                 from_token_address=data.get("from_token"),
