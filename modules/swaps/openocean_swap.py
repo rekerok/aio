@@ -86,7 +86,7 @@ class OpenoceanSwap(Web3Swapper):
             transaction.get("data").get("to")
         )
         data = transaction.get("data").get("data")
-        return await self._send_swap_transaction(
+        return await self._send_transaction(
             data=data,
             from_token=from_token,
             to_address=contract_address,

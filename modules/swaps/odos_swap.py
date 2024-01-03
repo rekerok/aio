@@ -89,7 +89,7 @@ class OdosSwap(Web3Swapper):
         if not assemble:
             logger.error("NOT ASSEMBLE")
             return RESULT_TRANSACTION.FAIL
-        return await self._send_swap_transaction(
+        return await self._send_transaction(
             data=assemble["transaction"]["data"],
             from_token=from_token,
             to_address=self.contract.address,

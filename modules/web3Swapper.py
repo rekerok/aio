@@ -80,6 +80,16 @@ class Web3Swapper(Web3Client):
 
         return await self._perform_swap(amount_to_send, from_token, to_token)
 
+    async def _choice_type_transaction(
+        self,
+    ):
+        if self.type_transfer == TYPES_OF_TRANSACTION.PERCENT:
+            return self._make_swap_percent
+        elif self.type_transfer == TYPES_OF_TRANSACTION.ALL_BALANCE:
+            return self._make_swap_all_balance
+        else:
+            return self._make_swap_amount
+
     @abstractmethod
     async def _perform_swap(
         self,
@@ -109,24 +119,13 @@ class Web3Swapper(Web3Client):
             logger.error(f"Balance {balance.ETHER} < {self.min_balance}")
             return RESULT_TRANSACTION.FAIL
 
-        if self.type_transfer == TYPES_OF_TRANSACTION.PERCENT:
-            return await self._make_swap_percent(
-                from_token=from_token,
-                to_token=to_token,
-                balance=balance,
-            )
-        elif self.type_transfer == TYPES_OF_TRANSACTION.ALL_BALANCE:
-            return await self._make_swap_all_balance(
-                from_token=from_token,
-                to_token=to_token,
-                balance=balance,
-            )
-        else:
-            return await self._make_swap_amount(
-                from_token=from_token,
-                to_token=to_token,
-                balance=balance,
-            )
+        func_swap = await self._choice_type_transaction()
+
+        return await func_swap(
+            from_token=from_token,
+            to_token=to_token,
+            balance=balance,
+        )
 
     @staticmethod
     async def _create_database(wallets: list[str], params):

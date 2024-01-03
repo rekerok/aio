@@ -5,19 +5,31 @@ from typing import Union
 from loguru import logger
 from modules.account import Account
 from utils.token_info import Token_Info
+from modules.web3Bridger import Web3Bridger
 from utils.token_amount import Token_Amount
-from utils.enums import NETWORK_FIELDS, RESULT_TRANSACTION
+from utils.enums import NETWORK_FIELDS, RESULT_TRANSACTION, TYPES_OF_TRANSACTION
 
 
-class Across:
+class Across(Web3Bridger):
     NAME = "ACROSS"
 
     def __init__(
         self,
         private_key: str = None,
         network: dict = None,
+        type_transfer: TYPES_OF_TRANSACTION = None,
+        value: tuple[Union[int, float]] = None,
+        min_balance: float = 0,
+        slippage: float = 1,
     ) -> None:
-        self.acc = Account(private_key=private_key, network=network)
+        super().__init__(
+            private_key=private_key,
+            network=network,
+            type_transfer=type_transfer,
+            value=value,
+            min_balance=min_balance,
+            slippage=slippage,
+        )
 
     async def _get_info(
         self,
@@ -74,19 +86,16 @@ class Across:
         return response
 
     # https://docs.across.to/v/developer-docs/developers/across-api
-    async def bridge(
+    async def _perform_bridge(
         self,
-        from_token_address: str = "",
+        amount_to_send: Token_Amount,
+        from_token: Token_Info,
+        to_chain: config.Network,
         to_token_address: str = "",
-        to_chain: config.Network = None,
-        amount_to_get: Union[int, float] = 0.0001,
-        amount_to_send: Union[int, float] = 1,
     ):
         from_chain_id = await self.acc.w3.eth.chain_id
         to_chain_id: int = config.GENERAL.CHAIN_IDS.value.get(to_chain)
-        from_token: Token_Info = await Token_Info.get_info_token(
-            acc=self.acc, token_address=from_token_address
-        )
+
         from_token = (
             await Token_Info.to_wrapped_token(
                 network=self.acc.network, from_token=from_token
@@ -105,9 +114,6 @@ class Across:
                 symbol=from_token.symbol,
                 decimals=from_token.decimals,
             )
-        amount_to_send: Token_Amount = Token_Amount(
-            amount=amount_to_send, decimals=from_token.decimals
-        )
 
         info = await self._get_info(
             from_token=from_token,
@@ -162,9 +168,8 @@ class Across:
                 contract_across = self.acc.w3.eth.contract(
                     address=pool_address, abi=config.ACROSS.ABI_POOL.value
                 )
-                data = contract_across.encodeABI(
-                    "deposit",
-                    args=(*args,),
+                data = self.get_data(
+                    contract=contract_across, function_of_contract="deposit", args=args
                 )
             else:
                 if await Token_Info.is_native_token(
@@ -179,43 +184,32 @@ class Across:
                         ),
                         abi=config.ACROSS.ABI_ROUTER.value,
                     )
-                    data = contract_across.encodeABI(
-                        "deposit",
-                        args=(*args,),
+                    data = await self.get_data(
+                        contract=contract_across,
+                        function_of_contract="deposit",
+                        args=args,
                     )
                 else:
                     contract_across = self.acc.w3.eth.contract(
                         address=pool_address,
                         abi=config.ACROSS.ABI_POOL.value,
                     )
-                    data = contract_across.encodeABI(
-                        "deposit",
-                        args=(*args,),
+                    data = await self.get_data(
+                        contract=contract_across,
+                        function_of_contract="deposit",
+                        args=args,
                     )
-                    data = contract_across.encodeABI(
-                        "multicall",
-                        args=[[data]],
+                    data = await self.get_data(
+                        contract=contract_across,
+                        function_of_contract="multicall",
+                        args=[data],
                     )
-
-            if not (
-                await Token_Info.is_native_token(self.acc.network, token=from_token)
-            ):
-                await self.acc.approve(
-                    token_address=from_token.address,
-                    spender=contract_across.address,
-                    amount=amount_to_send,
-                )
-                return await self.acc.send_transaction(
-                    to_address=contract_across.address,
-                    data=data,
-                    value=0,
-                )
-            else:
-                return await self.acc.send_transaction(
-                    to_address=contract_across.address,
-                    data=data,
-                    value=amount_to_send,
-                )
+            return await self._send_transaction(
+                data=data,
+                from_token=from_token,
+                to_address=contract_across.address,
+                amount_to_send=amount_to_send,
+            )
 
         except Exception as error:
             logger.error(error)

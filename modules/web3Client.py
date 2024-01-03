@@ -31,8 +31,6 @@ class Web3Client:
         from_token: Token_Info,
         to_address: str,
         amount_to_send: Token_Amount,
-        value_approve: Token_Amount = None,
-        value: Token_Amount = None,
     ):
         value, value_approve = await Web3Client.get_value_and_allowance(
             amount=amount_to_send,

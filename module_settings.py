@@ -12,6 +12,7 @@ class DEX:
     SUSHI = SushiSwap
     SYNCSWAP = SyncSwap
     WOOFI = WoofiSwap
+    ACROSS = Across
 
 
 class REFUEL_APP:
@@ -55,15 +56,37 @@ class TRANSFERS_SETTINGS:
 class SWAP_SETTINGS:
     PARAMS = [
         {
-            PARAMETR.NETWORK: Client_Networks.zksync,
+            PARAMETR.NETWORK: Client_Networks.optimism,
             PARAMETR.TYPE_TRANSACTION: TYPES_OF_TRANSACTION.PERCENT,
-            PARAMETR.VALUE: (25, 40),
-            PARAMETR.FROM_TOKEN: TOKENS.ZKSYNC.ETH,
+            PARAMETR.VALUE: (100, 100),
+            PARAMETR.FROM_TOKEN: TOKENS.OPTIMISM.USDT,
             PARAMETR.MIN_BALANCE: 0,
             PARAMETR.TO_TOKENS: [
                 {
-                    PARAMETR.TOKEN_ADDRESS: TOKENS.ZKSYNC.USDT,
-                    PARAMETR.DEXS: [DEX.SYNCSWAP, DEX.ONE_INCH],
+                    PARAMETR.TOKEN_ADDRESS: TOKENS.OPTIMISM.USDC_BRIDGED,
+                    PARAMETR.DEXS: [DEX.OPENOCEAN],
+                },
+            ],
+            PARAMETR.WALLETS_FILE: "",
+        },
+    ]
+    SLIPPAGE = 1
+    SLEEP = (10, 50)
+
+
+class BRIDGE_SETTINGS:
+    PARAMS = [
+        {
+            PARAMETR.NETWORK: Client_Networks.optimism,
+            PARAMETR.TYPE_TRANSACTION: TYPES_OF_TRANSACTION.PERCENT,
+            PARAMETR.VALUE: (80, 80),
+            PARAMETR.FROM_TOKEN: TOKENS.OPTIMISM.ETH,
+            PARAMETR.MIN_BALANCE: 0,
+            PARAMETR.TO_TOKENS: [
+                {
+                    PARAMETR.NETWORK: Network.ZKSYNC,
+                    PARAMETR.TOKEN_ADDRESS: TOKENS.ZKSYNC.ETH,
+                    PARAMETR.DEXS: [DEX.ACROSS],
                 },
             ],
             PARAMETR.WALLETS_FILE: "",
@@ -212,6 +235,10 @@ async def check_nft():
 
 async def swaps():
     await Web3Swapper.swap_use_database(settings=SWAP_SETTINGS)
+
+
+async def bridges():
+    await Web3Bridger.swap_use_database(settings=BRIDGE_SETTINGS)
 
 
 async def warm_up_swaps():

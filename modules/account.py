@@ -218,7 +218,7 @@ class Account:
                     await self.w3.eth.estimate_gas(tx_params) * GAS_MULTIPLAY
                 )
 
-                tx_hash = await self.sign_transaction(tx=tx_params)
+                tx_hash = await self._sign_transaction(tx=tx_params)
                 verify = await self._verifi_tx(tx_hash=tx_hash)
                 if verify:
                     logger.success(

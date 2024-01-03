@@ -136,7 +136,7 @@ class SyncSwap(Web3Swapper):
                 deadline,  # deadline 30 min
             ),
         )
-        return await self._send_swap_transaction(
+        return await self._send_transaction(
             data=data,
             from_token=from_token,
             to_address=self.contract_router.address,

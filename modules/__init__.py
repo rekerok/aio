@@ -1,5 +1,7 @@
 from .account import Account
+from .web3Client import Web3Client
 from .web3Swapper import Web3Swapper
+from .web3Bridger import Web3Bridger
 from .bridges.merkly import Merkly
 from .bridges.l2pass import L2Pass
 from .bridges.warmupRefuel import WarmUpRefuel

@@ -87,7 +87,7 @@ class WoofiSwap(Web3Swapper):
             logger.error("NOT DATA FOR SWAP")
             return RESULT_TRANSACTION.FAIL
 
-        return await self._send_swap_transaction(
+        return await self._send_transaction(
             data=data,
             from_token=from_token,
             to_address=self.contract.address,
