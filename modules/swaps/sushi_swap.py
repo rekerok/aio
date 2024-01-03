@@ -101,8 +101,7 @@ class SushiSwap(Web3Swapper):
                 data=data,
                 to_address=self.contract.address,
                 from_token=from_token,
-                value=amount_out,
-                value_approve=None,
+                amount_to_send=amount_to_send,
             )
         elif to_token.address == self.acc.w3.to_checksum_address(
             config.GENERAL.WETH.value.get(self.acc.network.get(NETWORK_FIELDS.NAME))
@@ -113,9 +112,9 @@ class SushiSwap(Web3Swapper):
                     function_of_contract="swapExactTokensForETH",
                     args=(amount_out.WEI, amount_in.WEI, path, to, deadline),
                 ),
-                to_address=self.contract.address,
                 from_token=from_token,
-                value_approve=amount_out,
+                to_address=self.contract.address,
+                amount_to_send=amount_to_send,
             )
         else:
             return await self._send_transaction(
@@ -124,7 +123,7 @@ class SushiSwap(Web3Swapper):
                     function_of_contract="swapExactTokensForTokens",
                     args=(amount_out.WEI, amount_in.WEI, path, to, deadline),
                 ),
-                to_address=self.contract.address,
                 from_token=from_token,
-                value_approve=amount_out,
+                to_address=self.contract.address,
+                amount_to_send=amount_to_send,
             )
