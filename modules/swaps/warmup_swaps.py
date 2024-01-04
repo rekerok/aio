@@ -96,6 +96,7 @@ class WarmUPSwaps:
                 type_transfer=TYPES_OF_TRANSACTION.PERCENT,
                 value=data.get("value"),
                 min_balance=pair_tokens[0].get(PARAMETR.MIN_BALANCE),
+                max_balance=pair_tokens[0].get(PARAMETR.MAX_BALANCE),
                 slippage=settings.SLIPPAGE,
             )
             result = await dex.swap(

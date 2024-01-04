@@ -80,7 +80,7 @@ class SWAP_SETTINGS:
 class BRIDGE_SETTINGS:
     PARAMS = [
         {
-            PARAMETR.NETWORK: Client_Networks.optimism,
+            PARAMETR.NETWORK: Client_Networks.base,
             PARAMETR.TYPE_TRANSACTION: TYPES_OF_TRANSACTION.PERCENT,
             PARAMETR.VALUE: (80, 80),
             PARAMETR.FROM_TOKEN: TOKENS.OPTIMISM.ETH,
@@ -135,14 +135,17 @@ class WARMUPSWAPS_SETTINGS:
                     {
                         PARAMETR.TOKEN_ADDRESS: TOKENS.ZKSYNC.DAI,
                         PARAMETR.MIN_BALANCE: 10,
+                        PARAMETR.MAX_BALANCE: 1000,
                     },
                     {
                         PARAMETR.TOKEN_ADDRESS: TOKENS.ZKSYNC.USDC,
                         PARAMETR.MIN_BALANCE: 10,
+                        PARAMETR.MAX_BALANCE: 1000,
                     },
                     {
                         PARAMETR.TOKEN_ADDRESS: TOKENS.ZKSYNC.USDC,
                         PARAMETR.MIN_BALANCE: 10,
+                        PARAMETR.MAX_BALANCE: 1000,
                     },
                 ],
                 PARAMETR.COUNT_TRANSACTION: (3, 4),
@@ -156,10 +159,12 @@ class WARMUPSWAPS_SETTINGS:
                     {
                         PARAMETR.TOKEN_ADDRESS: TOKENS.ZKSYNC.USDC,
                         PARAMETR.MIN_BALANCE: 10,
+                        PARAMETR.MAX_BALANCE: 1000,
                     },
                     {
                         PARAMETR.TOKEN_ADDRESS: TOKENS.ZKSYNC.USDC,
                         PARAMETR.MIN_BALANCE: 10,
+                        PARAMETR.MAX_BALANCE: 1000,
                     },
                 ],
                 PARAMETR.COUNT_TRANSACTION: (1, 2),
