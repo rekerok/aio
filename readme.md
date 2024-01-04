@@ -15,6 +15,7 @@
 - [x] Odos
 - [x] SyncSwap
 - [x] ZkSwap
+- [x] BaseSwap
 - [x] Across 
 - [x] L2Pass 
 - [x] Merkly

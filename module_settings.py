@@ -13,6 +13,7 @@ class DEX:
     SYNCSWAP = SyncSwap
     WOOFI = WoofiSwap
     ZKSWAP = ZkSwap
+    BASESWAP = BaseSwap
     ACROSS = Across
 
 
@@ -57,16 +58,16 @@ class TRANSFERS_SETTINGS:
 class SWAP_SETTINGS:
     PARAMS = [
         {
-            PARAMETR.NETWORK: Client_Networks.zksync,
+            PARAMETR.NETWORK: Client_Networks.base,
             PARAMETR.TYPE_TRANSACTION: TYPES_OF_TRANSACTION.PERCENT,
-            PARAMETR.VALUE: (1, 10),
-            PARAMETR.FROM_TOKEN: TOKENS.ZKSYNC.USDC,
-            PARAMETR.MIN_BALANCE: 0.1,
+            PARAMETR.VALUE: (1, 2),
+            PARAMETR.FROM_TOKEN: TOKENS.BASE.ETH,
+            PARAMETR.MIN_BALANCE: 0,
             PARAMETR.MAX_BALANCE: 1000,
             PARAMETR.TO_TOKENS: [
                 {
-                    PARAMETR.TOKEN_ADDRESS: TOKENS.OPTIMISM.ETH,
-                    PARAMETR.DEXS: [DEX.ZKSWAP],
+                    PARAMETR.TOKEN_ADDRESS: TOKENS.BASE.USDC,
+                    PARAMETR.DEXS: [DEX.BASESWAP],
                 },
             ],
             PARAMETR.WALLETS_FILE: "",
