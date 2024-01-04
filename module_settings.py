@@ -60,14 +60,14 @@ class SWAP_SETTINGS:
         {
             PARAMETR.NETWORK: Client_Networks.base,
             PARAMETR.TYPE_TRANSACTION: TYPES_OF_TRANSACTION.PERCENT,
-            PARAMETR.VALUE: (1, 2),
-            PARAMETR.FROM_TOKEN: TOKENS.BASE.ETH,
+            PARAMETR.VALUE: (100, 100),
+            PARAMETR.FROM_TOKEN: TOKENS.BASE.USDbC,
             PARAMETR.MIN_BALANCE: 0,
             PARAMETR.MAX_BALANCE: 1000,
             PARAMETR.TO_TOKENS: [
                 {
-                    PARAMETR.TOKEN_ADDRESS: TOKENS.BASE.USDC,
-                    PARAMETR.DEXS: [DEX.BASESWAP],
+                    PARAMETR.TOKEN_ADDRESS: TOKENS.BASE.ETH,
+                    PARAMETR.DEXS: [DEX.IZUMI],
                 },
             ],
             PARAMETR.WALLETS_FILE: "",
