@@ -1,6 +1,7 @@
 import utils
 import config
 import random
+import settings
 import eth_utils
 from loguru import logger
 from utils import Token_Amount
@@ -144,7 +145,7 @@ class Account:
                     ),
                 ),
             )
-            await utils.time.sleep_view((30, 60))
+            await utils.time.sleep_view(settings.SLEEP_AFTER_APPROOVE)
 
     async def transfer(
         self, to_address: str, amount: Token_Amount, token_address: str = None
