@@ -7,6 +7,7 @@ COUNT_CHECK_GAS = 1000
 
 ### API KEYS ###
 INCH_SWAP_KEY = ""
+ZEROX_KEY = ""
 
 
 ### НАСТРОЙКИ СЕТЕЙ ###

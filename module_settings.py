@@ -14,6 +14,7 @@ class DEX:
     WOOFI = WoofiSwap
     ZKSWAP = ZkSwap
     BASESWAP = BaseSwap
+    ZEROX = Zerox
     ACROSS = Across
 
 
@@ -60,14 +61,14 @@ class SWAP_SETTINGS:
         {
             PARAMETR.NETWORK: Client_Networks.base,
             PARAMETR.TYPE_TRANSACTION: TYPES_OF_TRANSACTION.PERCENT,
-            PARAMETR.VALUE: (100, 100),
-            PARAMETR.FROM_TOKEN: TOKENS.BASE.USDbC,
+            PARAMETR.VALUE: (1, 2),
+            PARAMETR.FROM_TOKEN: TOKENS.BASE.ETH,
             PARAMETR.MIN_BALANCE: 0,
             PARAMETR.MAX_BALANCE: 1000,
             PARAMETR.TO_TOKENS: [
                 {
-                    PARAMETR.TOKEN_ADDRESS: TOKENS.BASE.ETH,
-                    PARAMETR.DEXS: [DEX.IZUMI],
+                    PARAMETR.TOKEN_ADDRESS: TOKENS.BASE.USDbC,
+                    PARAMETR.DEXS: [DEX.ZEROX],
                 },
             ],
             PARAMETR.WALLETS_FILE: "",
