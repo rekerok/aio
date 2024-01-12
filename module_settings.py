@@ -59,20 +59,35 @@ class TRANSFERS_SETTINGS:
 class SWAP_SETTINGS:
     PARAMS = [
         {
-            PARAMETR.NETWORK: Client_Networks.base,
+            PARAMETR.NETWORK: Client_Networks.zksync,
             PARAMETR.TYPE_TRANSACTION: TYPES_OF_TRANSACTION.PERCENT,
-            PARAMETR.VALUE: (1, 2),
-            PARAMETR.FROM_TOKEN: TOKENS.BASE.ETH,
+            PARAMETR.VALUE: (100, 100),
+            PARAMETR.FROM_TOKEN: TOKENS.ZKSYNC.USDC,
             PARAMETR.MIN_BALANCE: 0,
             PARAMETR.MAX_BALANCE: 1000,
             PARAMETR.TO_TOKENS: [
                 {
-                    PARAMETR.TOKEN_ADDRESS: TOKENS.BASE.USDbC,
-                    PARAMETR.DEXS: [DEX.ZEROX],
+                    PARAMETR.TOKEN_ADDRESS: TOKENS.ZKSYNC.USDT,
+                    PARAMETR.DEXS: [DEX.IZUMI],
                 },
             ],
             PARAMETR.WALLETS_FILE: "",
         },
+        # {
+        #     PARAMETR.NETWORK: Client_Networks.zksync,
+        #     PARAMETR.TYPE_TRANSACTION: TYPES_OF_TRANSACTION.PERCENT,
+        #     PARAMETR.VALUE: (10, 20),
+        #     PARAMETR.FROM_TOKEN: TOKENS.ZKSYNC.ETH,
+        #     PARAMETR.MIN_BALANCE: 0,
+        #     PARAMETR.MAX_BALANCE: 1000,
+        #     PARAMETR.TO_TOKENS: [
+        #         {
+        #             PARAMETR.TOKEN_ADDRESS: TOKENS.ZKSYNC.USDC,
+        #             PARAMETR.DEXS: [DEX.IZUMI],
+        #         },
+        #     ],
+        #     PARAMETR.WALLETS_FILE: "",
+        # },
     ]
     SLIPPAGE = 1
     SLEEP = (10, 50)
@@ -229,6 +244,28 @@ class DEPLOY_SETTINGS:
     SLEEP = (100, 200)
 
 
+class CHECK_BALANCES_SETTINGS:
+    params = [
+        {
+            PARAMETR.NETWORK: Client_Networks.arbitrum,
+            PARAMETR.TOKENS: [TOKENS.ARBITRUM.ETH, TOKENS.ARBITRUM.USDC],
+        },
+        {
+            PARAMETR.NETWORK: Client_Networks.polygon,
+            PARAMETR.TOKENS: [
+                TOKENS.POLYGON.MATIC,
+                TOKENS.POLYGON.USDC,
+                TOKENS.POLYGON.USDC_BRIDGED,
+            ],
+        },
+    ]
+
+
+class CREATE_WALLETS_SETTIGS:
+    COUNT = 10
+    FILE = "wallest.csv"
+
+
 ### NOT CHANGE ###
 async def okx_withdrawer():
     await OKX.withdraw_use_database(settings=OKX_settings)
@@ -264,3 +301,13 @@ async def get_fees_refuel():
 
 async def deploy_contracts():
     await Deployer.deploy_with_database(settings=DEPLOY_SETTINGS)
+
+
+async def create_wallets():
+    await Create_Wallets().create_wallets(
+        count=CREATE_WALLETS_SETTIGS.COUNT, filename=CREATE_WALLETS_SETTIGS.FILE
+    )
+
+
+async def check_balance():
+    await check_balances(settings=CHECK_BALANCES_SETTINGS)

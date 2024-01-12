@@ -1,5 +1,6 @@
 import os
 import asyncio
+from loguru import logger
 import questionary
 from module_settings import *
 from questionary import Choice
@@ -18,6 +19,8 @@ def get_module():
             Choice("7) WarmUP refuel", warm_up_refuel),
             Choice("8) Get refuel fees", get_fees_refuel),
             Choice("9) Deploy contracts", deploy_contracts),
+            Choice("10) Create wallets", create_wallets),
+            Choice("11) Check balances", check_balance),
         ],
         qmark="⚙️ ",
         pointer="✅ ",
@@ -27,6 +30,7 @@ def get_module():
 
 async def main(module=None):
     await module()
+    logger.debug("FINISHHHHHHHH")
 
 
 if __name__ == "__main__":

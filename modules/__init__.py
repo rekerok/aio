@@ -7,9 +7,11 @@ from .bridges.l2pass import L2Pass
 from .bridges.warmupRefuel import WarmUpRefuel
 from .bridges.across import Across
 from .others.check_nft import Check_NFT
-from .others.deployer import Deployer
 from .others.transfers import Transfers
+from .others.check_balance import check_balances
 from .others.okx import OKX
+from .others.deployer import Deployer
+from .others.create_wallets import Create_Wallets
 from .swaps.inch_swap import InchSwap
 from .swaps.izumi_swap import IzumiSwap
 from .swaps.odos_swap import OdosSwap
