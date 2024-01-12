@@ -1,5 +1,19 @@
+import asyncio
+import random
 import aiohttp
 from loguru import logger
+
+import utils
+
+
+def get_random_proxy():
+    try:
+        with open("files/proxy.txt", "r") as file:
+            lines = [i.strip() for i in file.readlines()]
+            return random.choice(lines)
+    except Exception as error:
+        logger.error(error)
+        return []
 
 
 async def get_json_aiohttp(
@@ -14,7 +28,9 @@ async def get_json_aiohttp(
                 if response.status == 200:
                     return await response.json()
                 else:
-                    logger.error(f"HTTP request failed with status code {response.status}")
+                    logger.error(
+                        f"HTTP request failed with status code {response.status}"
+                    )
                     return None
     except Exception as error:
         logger.error(f"An error occurred during the HTTP request: {str(error)}")

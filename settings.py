@@ -5,6 +5,7 @@ LIMIT_GWEI = 35
 GAS_MULTIPLAY = 1.3
 COUNT_CHECK_GAS = 1000
 SLEEP_AFTER_APPROOVE = (40, 60)
+USE_PROXY = False
 
 ### API KEYS ###
 INCH_SWAP_KEY = ""
@@ -28,6 +29,9 @@ class Client_Networks:
         NETWORK_FIELDS.NAME: Network.ARBITRUM,
         NETWORK_FIELDS.RPCS: [
             "https://rpc.ankr.com/arbitrum",
+            "https://arbitrum.llamarpc.com",
+            "https://arbitrum-one.public.blastapi.io",
+            "https://arb-mainnet-public.unifra.io",
         ],
         NETWORK_FIELDS.EXPLORER: "https://arbiscan.io/",
         NETWORK_FIELDS.EIP1559: True,

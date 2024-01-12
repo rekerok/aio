@@ -1,3 +1,4 @@
+import asyncio
 import utils
 import config
 import random
@@ -18,16 +19,15 @@ class Account:
         private_key: str = None,
         address=None,
         network: dict = None,
-        proxies: list[str] = None,
         timeout: int = 60,
     ) -> None:
         self.timeout = timeout
         self.request_kwargs = {
             "timeout": timeout,
         }
-        self.proxies = proxies if proxies else None
+
         self.request_kwargs["proxy"] = (
-            random.choice(self.proxies) if self.proxies else None
+            utils.aiohttp.get_random_proxy() if settings.USE_PROXY else None
         )
         self.network = network
         self.w3 = AsyncWeb3(
@@ -47,7 +47,9 @@ class Account:
     async def get_balance(self, token_address: str = None) -> Token_Amount:
         try:
             if not token_address or token_address == "":
-                value = await self.w3.eth.get_balance(self.address)
+                value = await self.w3.eth.get_balance(
+                    eth_utils.address.to_checksum_address(self.address)
+                )
                 return Token_Amount(amount=value, wei=True)
             else:
                 contract_token = self.w3.eth.contract(
@@ -64,18 +66,21 @@ class Account:
             logger.error(error)
             return None
 
-    async def change_connection(self, change_proxy=True, change_rpc=True):
+    async def change_connection(self, change_rpc=True):
         self.request_kwargs = {
             "timeout": self.timeout,
         }
-        if change_proxy and self.proxies:
-            self.request_kwargs["proxy"] = random.choice(self.proxies)
-            self.w3 = AsyncWeb3(
-                AsyncHTTPProvider(
-                    endpoint_uri=random.choice(self.rpcs),
-                    request_kwargs=self.request_kwargs,
-                )
+        self.request_kwargs["proxy"] = (
+            utils.aiohttp.get_random_proxy() if settings.USE_PROXY else None
+        )
+        self.network = self.network
+        self.w3 = AsyncWeb3(
+            AsyncHTTPProvider(
+                endpoint_uri=random.choice(self.network.get(NETWORK_FIELDS.RPCS)),
+                request_kwargs=self.request_kwargs,
             )
+        )
+        self.w3.middleware_onion.inject(async_geth_poa_middleware, layer=0)
 
     async def _get_eip1559_tx(self, tx_params: dict, increase_gas: float = 1.0):
         last_block = await self.w3.eth.get_block("latest")
