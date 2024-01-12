@@ -115,10 +115,11 @@ class IzumiSwap(Web3Swapper):
             return RESULT_TRANSACTION.FAIL
         recipient = (
             self.acc.address
-            if to_token.symbol != self.acc.network.get(NETWORK_FIELDS.NATIVE_TOKEN)
+            if await Token_Info.is_native_token(
+                network=self.acc.network, token=to_token
+            )
             else config.GENERAL.ZERO_ADDRESS.value
         )
-        print(recipient)
         data_swapAmount = await Web3Client.get_data(
             self.contract_router,
             "swapAmount",
@@ -133,10 +134,7 @@ class IzumiSwap(Web3Swapper):
             ],
         )
 
-        if (
-            from_token.symbol
-            == self.acc.network.get(NETWORK_FIELDS.NATIVE_TOKEN).upper()
-        ):
+        if await Token_Info.is_native_token(network=self.acc.network, token=from_token):
             data_refund = await Web3Client.get_data(
                 contract=self.contract_router,
                 function_of_contract="refundETH",
@@ -152,7 +150,7 @@ class IzumiSwap(Web3Swapper):
                     ]
                 ],
             )
-        else:
+        elif await Token_Info.is_native_token(network=self.acc.network, token=to_token):
             data_unwrup = await Web3Client.get_data(
                 contract=self.contract_router,
                 function_of_contract="unwrapWETH9",
@@ -168,6 +166,17 @@ class IzumiSwap(Web3Swapper):
                     ]
                 ],
             )
+        else:
+            data_multicall = await Web3Client.get_data(
+                contract=self.contract_router,
+                function_of_contract="multicall",
+                args=[
+                    [
+                        data_swapAmount,
+                    ]
+                ],
+            )
+
         return await self._send_transaction(
             data=data_multicall,
             from_token=from_token,
