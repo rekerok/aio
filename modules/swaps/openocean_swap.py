@@ -84,10 +84,10 @@ class OpenoceanSwap(Web3Swapper):
         if not transaction:
             logger.error("FAIL GET DATA FOR SWAP")
             return RESULT_TRANSACTION.FAIL
-        contract_address = eth_utils.address.to_checksum_address(
-            transaction.get("data").get("to")
-        )
         try:
+            contract_address = eth_utils.address.to_checksum_address(
+                transaction.get("data").get("to")
+            )
             data = transaction.get("data").get("data")
         except Exception as error:
             logger.error(error)
