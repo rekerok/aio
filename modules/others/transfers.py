@@ -4,7 +4,12 @@ from typing import Union
 from loguru import logger
 from modules.account import Account
 from utils import Token_Amount, Token_Info
-from utils.enums import RESULT_TRANSACTION, TYPES_OF_TRANSACTION
+from utils.enums import (
+    NETWORK_FIELDS,
+    PARAMETR,
+    RESULT_TRANSACTION,
+    TYPES_OF_TRANSACTION,
+)
 
 
 class Transfers:
@@ -85,7 +90,7 @@ class Transfers:
         balance: Token_Amount = await self.acc.get_balance(self.token_adress)
         logger.info(f"FROM: {self.acc.address}")
         logger.info(f"TO: {self.to_address}")
-        logger.info(f"NETWORK: {self.acc.network.get('name')}")
+        logger.info(f"NETWORK: {self.acc.network.get(NETWORK_FIELDS.NAME)}")
         logger.info(f"TOKEN: {token_info.symbol}")
 
         if balance.ETHER < self.min_balance:
@@ -106,17 +111,17 @@ class Transfers:
     @staticmethod
     async def create_database(wallets: list[tuple], settings):
         database: list[dict] = list()
-        for param in settings.params:
+        for param in settings.PARAMS:
             for wallet in wallets:
                 database.append(
                     {
                         "private_key": wallet[0],
                         "recipient": wallet[1],
-                        "network": param.get("network"),
-                        "token_address": param.get("token"),
-                        "min_balance": param.get("min_balance"),
-                        "type_transfer": param.get("type_transfer"),
-                        "value": param.get("value"),
+                        "network": param.get(PARAMETR.NETWORK),
+                        "token_address": param.get(PARAMETR.TOKEN_ADDRESS),
+                        "min_balance": param.get(PARAMETR.MIN_BALANCE),
+                        "type_transfer": param.get(PARAMETR.TYPE_TRANSACTION),
+                        "value": param.get(PARAMETR.VALUE),
                     }
                 )
         return database
@@ -133,7 +138,7 @@ class Transfers:
         random.shuffle(database)
         counter = 1
         for data in database:
-            logger.info(f"OPERATION {counter}/{len(database)}")
+            logger.warning(f"OPERATION {counter}/{len(database)}")
             tranfer = Transfers(
                 private_key=data.get("private_key"),
                 network=data.get("network"),
