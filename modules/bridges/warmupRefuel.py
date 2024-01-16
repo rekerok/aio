@@ -54,7 +54,7 @@ class WarmUpRefuel:
         random.shuffle(database)
         counter = 1
         for data in database:
-            logger.info(f"OPERATION {counter}/{len(database)}")
+            logger.warning(f"OPERATION {counter}/{len(database)}")
 
             amount_to_get = data.get("dst_data").get(PARAMETR.VALUE)
             to_chain = data.get("dst_data").get(PARAMETR.NAME)

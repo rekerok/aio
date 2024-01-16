@@ -170,7 +170,7 @@ class Web3Swapper(Web3Client):
         random.shuffle(database)
         counter = 1
         for data in database:
-            logger.info(f"OPERATION {counter}/{len(database)}")
+            logger.warning(f"OPERATION {counter}/{len(database)}")
             dex_class = data.get("dex")
             dex = dex_class(
                 private_key=data.get("private_key"),
