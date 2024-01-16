@@ -1,4 +1,17 @@
 import json
+import random
+
+from loguru import logger
+
+
+def get_random_proxy():
+    try:
+        with open("files/proxy.txt", "r") as file:
+            lines = [i.strip() for i in file.readlines()]
+            return random.choice(lines)
+    except Exception as error:
+        logger.error(error)
+        return []
 
 
 async def load_json(path: str) -> dict:

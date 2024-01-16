@@ -27,7 +27,7 @@ class Account:
         }
 
         self.request_kwargs["proxy"] = (
-            utils.aiohttp.get_random_proxy() if settings.USE_PROXY else None
+            utils.files.get_random_proxy() if settings.USE_PROXY else None
         )
         self.network = network
         self.w3 = AsyncWeb3(
@@ -71,7 +71,7 @@ class Account:
             "timeout": self.timeout,
         }
         self.request_kwargs["proxy"] = (
-            utils.aiohttp.get_random_proxy() if settings.USE_PROXY else None
+            utils.files.get_random_proxy() if settings.USE_PROXY else None
         )
         self.network = self.network
         self.w3 = AsyncWeb3(

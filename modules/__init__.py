@@ -6,6 +6,7 @@ from .bridges.merkly import Merkly
 from .bridges.l2pass import L2Pass
 from .bridges.warmupRefuel import WarmUpRefuel
 from .bridges.across import Across
+from .bridges.stargate import Stargate
 from .others.check_nft import Check_NFT
 from .others.transfers import Transfers
 from .others.check_balance import check_balances

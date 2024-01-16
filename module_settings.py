@@ -16,6 +16,7 @@ class DEX:
     BASESWAP = BaseSwap
     ZEROX = Zerox
     ACROSS = Across
+    STARGATE = Stargate
 
 
 class REFUEL_APP:
@@ -46,14 +47,14 @@ class OKX_settings:
 class TRANSFERS_SETTINGS:
     PARAMS: list[dict] = [
         {
-            PARAMETR.NETWORK: Client_Networks.linea,
+            PARAMETR.NETWORK: Client_Networks.metis,
             PARAMETR.TOKEN_ADDRESS: "",
             PARAMETR.TYPE_TRANSACTION: TYPES_OF_TRANSACTION.PERCENT,
-            PARAMETR.VALUE: (90, 95),
-            PARAMETR.MIN_BALANCE: 0.00075,
+            PARAMETR.VALUE: (1, 1),
+            PARAMETR.MIN_BALANCE: 0.0001,
         },
     ]
-    SLEEP: tuple[int] = (100, 300)
+    SLEEP: tuple[int] = (1000, 4000)
 
 
 class SWAP_SETTINGS:
@@ -73,21 +74,6 @@ class SWAP_SETTINGS:
             ],
             PARAMETR.WALLETS_FILE: "",
         },
-        # {
-        #     PARAMETR.NETWORK: Client_Networks.zksync,
-        #     PARAMETR.TYPE_TRANSACTION: TYPES_OF_TRANSACTION.PERCENT,
-        #     PARAMETR.VALUE: (10, 20),
-        #     PARAMETR.FROM_TOKEN: TOKENS.ZKSYNC.ETH,
-        #     PARAMETR.MIN_BALANCE: 0,
-        #     PARAMETR.MAX_BALANCE: 1000,
-        #     PARAMETR.TO_TOKENS: [
-        #         {
-        #             PARAMETR.TOKEN_ADDRESS: TOKENS.ZKSYNC.USDC,
-        #             PARAMETR.DEXS: [DEX.IZUMI],
-        #         },
-        #     ],
-        #     PARAMETR.WALLETS_FILE: "",
-        # },
     ]
     SLIPPAGE = 1
     SLEEP = (10, 50)
@@ -96,16 +82,16 @@ class SWAP_SETTINGS:
 class BRIDGE_SETTINGS:
     PARAMS = [
         {
-            PARAMETR.NETWORK: Client_Networks.base,
+            PARAMETR.NETWORK: Client_Networks.polygon,
             PARAMETR.TYPE_TRANSACTION: TYPES_OF_TRANSACTION.PERCENT,
-            PARAMETR.VALUE: (80, 80),
-            PARAMETR.FROM_TOKEN: TOKENS.OPTIMISM.ETH,
+            PARAMETR.VALUE: (100, 100),
+            PARAMETR.FROM_TOKEN: TOKENS.POLYGON.USDC_BRIDGED,
             PARAMETR.MIN_BALANCE: 0,
             PARAMETR.TO_TOKENS: [
                 {
-                    PARAMETR.NETWORK: Network.ZKSYNC,
-                    PARAMETR.TOKEN_ADDRESS: TOKENS.ZKSYNC.ETH,
-                    PARAMETR.DEXS: [DEX.ACROSS],
+                    PARAMETR.NETWORK: Network.AVALANCHE,
+                    PARAMETR.TOKEN_ADDRESS: TOKENS.AVALANCHE.USDT,
+                    PARAMETR.DEXS: [DEX.STARGATE],
                 },
             ],
             PARAMETR.WALLETS_FILE: "",

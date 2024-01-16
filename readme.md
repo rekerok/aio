@@ -19,9 +19,10 @@
 - [x] Across 
 - [x] L2Pass 
 - [x] Merkly
+- [x] Checker balances
+- [x] Stargate
+- [x] 0x_swap
 ### Modules to add
-- [ ] Checker balances
-- [ ] Stargate
 - [ ] Bungee refuel
 - [ ] Xy.Finance
 - [ ] Uniswap
@@ -29,7 +30,7 @@
 - [ ] Orbiter finance
 - [ ] Rhino
 - [ ] Holograph
-- [ ] 0x_swap
+
 - [ ] Woofi bridge
 - [ ] Check count transaction
 - [ ] Dmail

@@ -23,6 +23,7 @@ class NETWORK_FIELDS(Enum):
 
 
 class PARAMETR:
+    ID = auto()
     DEXS = auto()
     NFTS = auto()
     NAME = auto()
@@ -42,6 +43,7 @@ class PARAMETR:
     OKX_API_KEY = auto()
     OKX_PASSWORD = auto()
     WALLETS_FILE = auto()
+    POOL_ADDRESS = auto()
     TOKEN_ADDRESS = auto()
     OKX_API_SECRET = auto()
     TYPE_TRANSACTION = auto()

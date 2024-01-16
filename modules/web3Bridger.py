@@ -144,11 +144,10 @@ class Web3Bridger(Web3Client):
         balance: Token_Amount = await self.acc.get_balance(from_token.address)
 
         logger.info(f"WALLET: {self.acc.address}")
-        logger.info(f"NETWORK: {self.acc.network.get(NETWORK_FIELDS.NAME)}")
-        logger.info(f"DEX: {self.NAME} ")
         logger.info(
-            f"{self.acc.network.get(NETWORK_FIELDS.NAME)}({from_token.symbol}) -> {to_network}"
+            f"{self.acc.network.get(NETWORK_FIELDS.NAME)} ({from_token.symbol}) -> {to_network}"
         )
+        logger.info(f"DEX: {self.NAME} ")
         if balance.ETHER < self.min_balance:
             logger.error(f"Balance {balance.ETHER} < {self.min_balance}")
             return RESULT_TRANSACTION.FAIL
@@ -200,7 +199,7 @@ class Web3Bridger(Web3Client):
         random.shuffle(database)
         counter = 1
         for data in database:
-            logger.info(f"OPERATION {counter}/{len(database)}")
+            logger.warning(f"OPERATION {counter}/{len(database)}")
             dex_class = data.get("dex")
             dex = dex_class(
                 private_key=data.get("private_key"),
