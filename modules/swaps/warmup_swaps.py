@@ -3,7 +3,9 @@ import random
 from loguru import logger
 from modules.account import Account
 from utils import TYPES_OF_TRANSACTION
+from utils.token_info import Token_Info
 from modules.web3Swapper import Web3Swapper
+from utils.token_amount import Token_Amount
 from utils.enums import NETWORK_FIELDS, PARAMETR, RESULT_TRANSACTION
 
 
@@ -57,6 +59,28 @@ class WarmUPSwaps:
         )
         return (from_token, to_token)
 
+    async def _get_pair_with_max_for_swap(tokens: list, acc: Account):
+        if len(tokens) == 0 or len(tokens) == 1:
+            return (None, None)
+        for token in tokens:
+            token_info: Token_Info = await Token_Info.get_info_token(
+                acc=acc, token_address=token.get(PARAMETR.TOKEN_ADDRESS)
+            )
+            balance: Token_Amount = await acc.get_balance(
+                token_address=token.get(PARAMETR.TOKEN_ADDRESS)
+            )
+            price_token = await utils.prices.get_price_token(
+                token_name=token_info.symbol
+            )
+            balance_in_usd: Token_Amount = Token_Amount(
+                amount=balance.ETHER * price_token,
+                decimals=token_info.decimals,
+            )
+            token.update({"price_usd": balance_in_usd.ETHER})
+            # Находим максимальный price_usd и его индекс
+        sorted_data = sorted(tokens, key=lambda x: x["price_usd"], reverse=True)
+        return (sorted_data[0], random.choice(sorted_data[1:]))
+
     @staticmethod
     async def warmup(settings):
         wallets = await utils.files.read_file_lines(
@@ -76,13 +100,19 @@ class WarmUPSwaps:
                 private_key=data.get("private_key"),
                 network=data.get("network"),
             )
-            pair_tokens = await WarmUPSwaps._get_random_pair_for_swap(
-                tokens=data.get("tokens"), acc=acc
-            )
+            if settings.USE_MAX_BALANCE:
+                pair_tokens = await WarmUPSwaps._get_pair_with_max_for_swap(
+                    tokens=data.get("tokens"), acc=acc
+                )
+            else:
+                pair_tokens = await WarmUPSwaps._get_random_pair_for_swap(
+                    tokens=data.get("tokens"), acc=acc
+                )
             if pair_tokens[0] is None or pair_tokens[1] is None:
                 logger.info(
                     Account(
-                        private_key=data.get("private_key"), network=data.get("network")
+                        private_key=data.get("private_key"),
+                        network=data.get("network"),
                     ).address
                 )
                 logger.error(

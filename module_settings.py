@@ -47,7 +47,7 @@ class OKX_settings:
 class TRANSFERS_SETTINGS:
     PARAMS: list[dict] = [
         {
-            PARAMETR.NETWORK: Client_Networks.metis,
+            PARAMETR.NETWORK: Client_Networks.arbitrum,
             PARAMETR.TOKEN_ADDRESS: "",
             PARAMETR.TYPE_TRANSACTION: TYPES_OF_TRANSACTION.PERCENT,
             PARAMETR.VALUE: (1, 1),
@@ -145,12 +145,12 @@ class WARMUPSWAPS_SETTINGS:
                         PARAMETR.MAX_BALANCE: 1000,
                     },
                     {
-                        PARAMETR.TOKEN_ADDRESS: TOKENS.ZKSYNC.USDC,
+                        PARAMETR.TOKEN_ADDRESS: TOKENS.ZKSYNC.USDT,
                         PARAMETR.MIN_BALANCE: 10,
                         PARAMETR.MAX_BALANCE: 1000,
                     },
                 ],
-                PARAMETR.COUNT_TRANSACTION: (3, 4),
+                PARAMETR.COUNT_TRANSACTION: (0, 0),
                 PARAMETR.VALUE: (100, 100),
             },
         ],
@@ -164,16 +164,22 @@ class WARMUPSWAPS_SETTINGS:
                         PARAMETR.MAX_BALANCE: 1000,
                     },
                     {
-                        PARAMETR.TOKEN_ADDRESS: TOKENS.ZKSYNC.USDC,
+                        PARAMETR.TOKEN_ADDRESS: TOKENS.ZKSYNC.USDT,
                         PARAMETR.MIN_BALANCE: 10,
                         PARAMETR.MAX_BALANCE: 1000,
                     },
+                    {
+                        PARAMETR.TOKEN_ADDRESS: TOKENS.ZKSYNC.ETH,
+                        PARAMETR.MIN_BALANCE: 0,
+                        PARAMETR.MAX_BALANCE: 1000,
+                    },
                 ],
-                PARAMETR.COUNT_TRANSACTION: (1, 2),
+                PARAMETR.COUNT_TRANSACTION: (10, 11),
                 PARAMETR.VALUE: (100, 100),
             },
         ],
     }
+    USE_MAX_BALANCE = True
     SLIPPAGE = 3
     SLEEP = (100, 200)
 

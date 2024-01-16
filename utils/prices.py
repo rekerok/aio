@@ -15,13 +15,15 @@ async def price_one_toke_in_other(in_token: str, out_token: str) -> float:
 
 
 async def get_price_token(token_name: str) -> float:
-    exchange = ccxt.binance(
+    token_name = token_name.upper()
+    exchange = ccxt.okx(
         {
             "enableRateLimit": True,
         }
     )
     try:
-        return exchange.fetch_ticker(f"{token_name.upper()}/USDT", params={})["last"]
+        if token_name == "USDT":
+            return 1
+        return exchange.fetch_ticker(f"{token_name}/USDT", params={})["last"]
     except:
-        return 0.0
-    # asyncio.run(price_one_toke_in_other(in_token="btc", out_token="apt"))
+        return 0
