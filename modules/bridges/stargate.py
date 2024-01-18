@@ -87,6 +87,14 @@ class Stargate(Web3Bridger):
         else:
             return None
 
+    async def _get_pool_id(self, chain: config.Network, token: Token_Info):
+        token_address = token.address.lower()
+        for network, addresses in config.STARGATE.POOL_IDS.value.items():
+            for address, data in addresses.items():
+                if address.lower() == token_address:
+                    return data[PARAMETR.ID]
+        return None
+
     # https://teletype.in/@cppmyk/stargate-bridger
     async def _perform_bridge(
         self,
@@ -98,20 +106,13 @@ class Stargate(Web3Bridger):
         to_token = await self._get_to_token(
             to_chain=to_chain, to_token_address=to_token_address
         )
-        from_pool_id = (
-            config.STARGATE.POOL_IDS.value.get(
-                self.acc.network.get(NETWORK_FIELDS.NAME)
-            )
-            .get(from_token.symbol)
-            .get(PARAMETR.ID)
-        )
-        to_pool_id = (
-            config.STARGATE.POOL_IDS.value.get(
-                self.acc.network.get(NETWORK_FIELDS.NAME)
-            )
-            .get(to_token.symbol)
-            .get(PARAMETR.ID)
-        )
+        from_pool_id = await self._get_pool_id(chain=self.acc.network, token=from_token)
+        # to_pool_id = (
+        #     config.STARGATE.POOL_IDS.value.get(to_chain)
+        #     .get(to_token.symbol)
+        #     .get(PARAMETR.ID)
+        # )
+        to_pool_id = await self._get_pool_id(chain=to_chain, token=to_token)
         if any(v is None for v in (to_token, from_pool_id, to_pool_id)):
             logger.error("FAIL GET INFO")
             return RESULT_TRANSACTION.FAIL
