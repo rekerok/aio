@@ -27,31 +27,32 @@ class Web3Client:
 
     async def _send_transaction(
         self,
-        data,
         from_token: Token_Info,
         to_address: str,
         amount_to_send: Token_Amount,
+        data: str = "0x",
         value=None,
     ):
-        if value is None:
-            value, value_approve = await Web3Client.get_value_and_allowance(
-                amount=amount_to_send,
-                from_native_token=await Token_Info.is_native_token(
-                    self.acc.network, token=from_token
-                ),
-            )
-            if value_approve:
-                await self.acc.approve(
-                    token_address=from_token.address,
-                    spender=to_address,
-                    amount=value_approve,
-                )
-        if not await Token_Info.is_native_token(self.acc.network, token=from_token):
+        if value is None and data != "0x":
+            # value, value_approve = await Web3Client.get_value_and_allowance(
+            #     amount=amount_to_send,
+            #     from_native_token=await Token_Info.is_native_token(
+            #         self.acc.network, token=from_token
+            #     ),
+            # )
             await self.acc.approve(
                 token_address=from_token.address,
                 spender=to_address,
                 amount=amount_to_send,
             )
+        if value is None and data == "0x":
+            if not await Token_Info.is_native_token(self.acc.network, token=from_token):
+                await self.acc.approve(
+                    token_address=from_token.address,
+                    spender=to_address,
+                    amount=amount_to_send,
+                )
+
         return await self.acc.send_transaction(
             to_address=to_address, data=data, value=value
         )

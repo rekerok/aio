@@ -22,15 +22,15 @@
 - [x] Checker balances
 - [x] Stargate
 - [x] 0x_swap
+- [x] Orbiter finance
+
 ### Modules to add
 - [ ] Bungee refuel
 - [ ] Xy.Finance
 - [ ] Uniswap
 - [ ] PancakeSwap
-- [ ] Orbiter finance
 - [ ] Rhino
 - [ ] Holograph
-
 - [ ] Woofi bridge
 - [ ] Check count transaction
 - [ ] Dmail

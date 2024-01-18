@@ -15,8 +15,10 @@ class DEX:
     ZKSWAP = ZkSwap
     BASESWAP = BaseSwap
     ZEROX = Zerox
+    ARBSWAP = ArbSwap
     ACROSS = Across
     STARGATE = Stargate
+    ORBITER = Orbiter
 
 
 class REFUEL_APP:
@@ -60,16 +62,16 @@ class TRANSFERS_SETTINGS:
 class SWAP_SETTINGS:
     PARAMS = [
         {
-            PARAMETR.NETWORK: Client_Networks.zksync,
+            PARAMETR.NETWORK: Client_Networks.arbitrum,
             PARAMETR.TYPE_TRANSACTION: TYPES_OF_TRANSACTION.PERCENT,
             PARAMETR.VALUE: (100, 100),
-            PARAMETR.FROM_TOKEN: TOKENS.ZKSYNC.USDC,
+            PARAMETR.FROM_TOKEN: TOKENS.ARBITRUM.USDC_BRIDGED,
             PARAMETR.MIN_BALANCE: 0,
             PARAMETR.MAX_BALANCE: 1000,
             PARAMETR.TO_TOKENS: [
                 {
-                    PARAMETR.TOKEN_ADDRESS: TOKENS.ZKSYNC.USDT,
-                    PARAMETR.DEXS: [DEX.IZUMI],
+                    PARAMETR.TOKEN_ADDRESS: TOKENS.ARBITRUM.ETH,
+                    PARAMETR.DEXS: [DEX.ARBSWAP],
                 },
             ],
             PARAMETR.WALLETS_FILE: "",
@@ -82,15 +84,15 @@ class SWAP_SETTINGS:
 class BRIDGE_SETTINGS:
     PARAMS = [
         {
-            PARAMETR.NETWORK: Client_Networks.polygon,
-            PARAMETR.TYPE_TRANSACTION: TYPES_OF_TRANSACTION.PERCENT,
-            PARAMETR.VALUE: (100, 100),
-            PARAMETR.FROM_TOKEN: TOKENS.POLYGON.USDC_BRIDGED,
+            PARAMETR.NETWORK: Client_Networks.arbitrum,
+            PARAMETR.TYPE_TRANSACTION: TYPES_OF_TRANSACTION.AMOUNT,
+            PARAMETR.VALUE: (1, 2),
+            PARAMETR.FROM_TOKEN: TOKENS.ARBITRUM.USDC_BRIDGED,
             PARAMETR.MIN_BALANCE: 0,
             PARAMETR.TO_TOKENS: [
                 {
-                    PARAMETR.NETWORK: Network.AVALANCHE,
-                    PARAMETR.TOKEN_ADDRESS: TOKENS.AVALANCHE.USDT,
+                    PARAMETR.NETWORK: Network.BASE,
+                    PARAMETR.TOKEN_ADDRESS: TOKENS.BASE.USDbC,
                     PARAMETR.DEXS: [DEX.STARGATE],
                 },
             ],

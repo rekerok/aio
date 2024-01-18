@@ -97,7 +97,7 @@ class Web3Bridger(Web3Client):
         )
 
         if amount_to_send.ETHER > balance.ETHER:
-            logger.info(f"BALANCE: {balance.ETHER} < {amount_to_send.ETHER} SEND")
+            logger.error(f"BALANCE: {balance.ETHER} < {amount_to_send.ETHER} SEND")
             return RESULT_TRANSACTION.FAIL
 
         logger.info(f"SEND: {amount_to_send.ETHER} {from_token.symbol}")
