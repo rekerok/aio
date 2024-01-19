@@ -16,6 +16,7 @@ class DEX:
     BASESWAP = BaseSwap
     ZEROX = Zerox
     ARBSWAP = ArbSwap
+    XY_FINANCE_SWAP = XY_finance_swap
     ACROSS = Across
     STARGATE = Stargate
     ORBITER = Orbiter
@@ -62,16 +63,16 @@ class TRANSFERS_SETTINGS:
 class SWAP_SETTINGS:
     PARAMS = [
         {
-            PARAMETR.NETWORK: Client_Networks.arbitrum,
+            PARAMETR.NETWORK: Client_Networks.polygon,
             PARAMETR.TYPE_TRANSACTION: TYPES_OF_TRANSACTION.PERCENT,
             PARAMETR.VALUE: (100, 100),
-            PARAMETR.FROM_TOKEN: TOKENS.ARBITRUM.USDC_BRIDGED,
+            PARAMETR.FROM_TOKEN: TOKENS.POLYGON.USDC,
             PARAMETR.MIN_BALANCE: 0,
             PARAMETR.MAX_BALANCE: 1000,
             PARAMETR.TO_TOKENS: [
                 {
-                    PARAMETR.TOKEN_ADDRESS: TOKENS.ARBITRUM.ETH,
-                    PARAMETR.DEXS: [DEX.ARBSWAP],
+                    PARAMETR.TOKEN_ADDRESS: TOKENS.POLYGON.MATIC,
+                    PARAMETR.DEXS: [DEX.XY_FINANCE_SWAP],
                 },
             ],
             PARAMETR.WALLETS_FILE: "",

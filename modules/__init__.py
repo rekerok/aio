@@ -26,3 +26,4 @@ from .swaps.base_swap import BaseSwap
 from .swaps.zerox import Zerox
 from .swaps.zk_swap import ZkSwap
 from .swaps.arb_swap import ArbSwap
+from .swaps.xy_finance_swap import XY_finance_swap
