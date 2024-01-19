@@ -35,19 +35,19 @@ class IzumiSwap(Web3Swapper):
         )
         self.contract_quoter = self.acc.w3.eth.contract(
             address=eth_utils.address.to_checksum_address(
-                config.IZUMI.CONTRACTS.value.get(
+                config.IZUMI.CONTRACTS.get(
                     self.acc.network.get(NETWORK_FIELDS.NAME)
                 ).get("quoter")
             ),
-            abi=config.IZUMI.ABI_QUOTER.value,
+            abi=config.IZUMI.ABI_QUOTER,
         )
         self.contract_router = self.acc.w3.eth.contract(
             address=eth_utils.address.to_checksum_address(
-                config.IZUMI.CONTRACTS.value.get(
+                config.IZUMI.CONTRACTS.get(
                     self.acc.network.get(NETWORK_FIELDS.NAME)
                 ).get("router")
             ),
-            abi=config.IZUMI.ABI_ROUTER.value,
+            abi=config.IZUMI.ABI_ROUTER,
         )
 
     # async def _get_path(self, from_token: Token_Info, to_token: Token_Info, fee: int):
@@ -70,7 +70,7 @@ class IzumiSwap(Web3Swapper):
             pool_address = await self.contract_quoter.functions.pool(
                 from_token.address, to_token.address, fee
             ).call()
-            if pool_address != config.GENERAL.ZERO_ADDRESS.value:
+            if pool_address != config.GENERAL.ZERO_ADDRESS:
                 return fee
             return await self._get_pool_fee(from_token, to_token, fee=500)
         except Exception as error:
@@ -118,7 +118,7 @@ class IzumiSwap(Web3Swapper):
             if await Token_Info.is_native_token(
                 network=self.acc.network, token=to_token
             )
-            else config.GENERAL.ZERO_ADDRESS.value
+            else config.GENERAL.ZERO_ADDRESS
         )
         data_swapAmount = await Web3Client.get_data(
             self.contract_router,

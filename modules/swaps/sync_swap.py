@@ -34,17 +34,17 @@ class SyncSwap(Web3Swapper):
         )
 
         self.contract_pool_factory = self.acc.w3.eth.contract(
-            address=config.SYNCSWAP.CONSTRACTS.value.get(
+            address=config.SYNCSWAP.CONSTRACTS.get(
                 self.acc.network.get(NETWORK_FIELDS.NAME)
             ).get("pool_factory"),
-            abi=config.SYNCSWAP.ABI_POOL_FACTORY.value,
+            abi=config.SYNCSWAP.ABI_POOL_FACTORY,
         )
 
         self.contract_router = self.acc.w3.eth.contract(
-            address=config.SYNCSWAP.CONSTRACTS.value.get(
+            address=config.SYNCSWAP.CONSTRACTS.get(
                 self.acc.network.get(NETWORK_FIELDS.NAME)
             ).get("router"),
-            abi=config.SYNCSWAP.ABI_POOL_ROUTER.value,
+            abi=config.SYNCSWAP.ABI_POOL_ROUTER,
         )
 
     async def _get_pool_address(self, from_token: Token_Info, to_token: Token_Info):
@@ -92,11 +92,11 @@ class SyncSwap(Web3Swapper):
         pool_address = await self._get_pool_address(
             from_token=from_token, to_token=to_token
         )
-        if pool_address == config.GENERAL.ZERO_ADDRESS.value or None:
+        if pool_address == config.GENERAL.ZERO_ADDRESS or None:
             logger.error(f"Pool not exists")
             return RESULT_TRANSACTION.FAIL
         contract_pool = self.acc.w3.eth.contract(
-            address=pool_address, abi=config.SYNCSWAP.ABI_POOL.value
+            address=pool_address, abi=config.SYNCSWAP.ABI_POOL
         )
         amount_in = await self._get_amount_out(
             contract=contract_pool,
@@ -116,14 +116,14 @@ class SyncSwap(Web3Swapper):
             {
                 "pool": pool_address,
                 "data": swapData,
-                "callback": config.GENERAL.ZERO_ADDRESS.value,
+                "callback": config.GENERAL.ZERO_ADDRESS,
                 "callbackData": "0x",
             }
         ]
         paths = [
             {
                 "steps": steps,
-                "tokenIn": config.GENERAL.ZERO_ADDRESS.value
+                "tokenIn": config.GENERAL.ZERO_ADDRESS
                 if from_token.symbol == "ETH"
                 else from_token.address,
                 "amountIn": amount_to_send.WEI,

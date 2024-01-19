@@ -33,11 +33,11 @@ class OdosSwap(Web3Swapper):
         )
         self.contract = self.acc.w3.eth.contract(
             address=eth_utils.address.to_checksum_address(
-                config.ODOS.CONTRACTS.value.get(
+                config.ODOS.CONTRACTS.get(
                     self.acc.network.get(NETWORK_FIELDS.NAME)
                 )
             ),
-            abi=config.ODOS.ABI.value,
+            abi=config.ODOS.ABI,
         )
 
     async def _get_quote(
@@ -77,9 +77,9 @@ class OdosSwap(Web3Swapper):
         to_token: Token_Info,
     ):
         if from_token.symbol == self.acc.network.get(NETWORK_FIELDS.NATIVE_TOKEN):
-            from_token.address = config.GENERAL.ZERO_ADDRESS.value
+            from_token.address = config.GENERAL.ZERO_ADDRESS
         if to_token.symbol == self.acc.network.get(NETWORK_FIELDS.NATIVE_TOKEN):
-            to_token.address = config.GENERAL.ZERO_ADDRESS.value
+            to_token.address = config.GENERAL.ZERO_ADDRESS
 
         quote = await self._get_quote(
             from_token=from_token, to_token=to_token, amount_to_send=amount_to_send

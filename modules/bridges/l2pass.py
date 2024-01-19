@@ -24,16 +24,16 @@ class L2Pass:
         if network:
             self.contract_l2pass = self.acc.w3.eth.contract(
                 address=eth_utils.address.to_checksum_address(
-                    L2PASS.CONTRACT.value.get(self.acc.network.get(NETWORK_FIELDS.NAME))
+                    L2PASS.CONTRACT.get(self.acc.network.get(NETWORK_FIELDS.NAME))
                 ),
-                abi=L2PASS.ABI.value,
+                abi=L2PASS.ABI,
             )
 
     async def refuel(self, amount_to_get: tuple, to_chain):
         amount_to_get: Token_Amount = Token_Amount(
             amount=random.uniform(*amount_to_get)
         )
-        to_chain_id = GENERAL.LAYERZERO_CHAINS_ID.value.get(to_chain)
+        to_chain_id = GENERAL.LAYERZERO_CHAINS_ID.get(to_chain)
         logger.warning(self.NAME)
         logger.info(f"WALLET {self.acc.address}")
         logger.info(
@@ -54,7 +54,7 @@ class L2Pass:
                 "gasRefuel",
                 args=(
                     to_chain_id,
-                    config.GENERAL.ZERO_ADDRESS.value,
+                    config.GENERAL.ZERO_ADDRESS,
                     amount_to_get.WEI,
                     self.acc.address,
                 ),
@@ -74,16 +74,16 @@ class L2Pass:
 
     @staticmethod
     async def get_fees(from_chains: list[dict]):
-        to_chains = GENERAL.LAYERZERO_CHAINS_ID.value
+        to_chains = GENERAL.LAYERZERO_CHAINS_ID
         fees = {}
         logger.debug("COLLEC INFORMATION")
         for from_chain in from_chains:
             acc = Account(network=from_chain)
             contract_l2pass = acc.w3.eth.contract(
                 address=eth_utils.address.to_checksum_address(
-                    L2PASS.CONTRACT.value.get(acc.network.get(NETWORK_FIELDS.NAME))
+                    L2PASS.CONTRACT.get(acc.network.get(NETWORK_FIELDS.NAME))
                 ),
-                abi=config.L2PASS.ABI.value,
+                abi=config.L2PASS.ABI,
             )
             fees_for_network = list()
             for to_chain_name, to_chain_id in to_chains.items():
@@ -91,7 +91,7 @@ class L2Pass:
                     continue
                 try:
                     fee = await contract_l2pass.functions.estimateGasRefuelFee(
-                        to_chain_id, 0, config.GENERAL.ZERO_ADDRESS.value, False
+                        to_chain_id, 0, config.GENERAL.ZERO_ADDRESS, False
                     ).call()
                     fee = Token_Amount(
                         amount=fee[0],

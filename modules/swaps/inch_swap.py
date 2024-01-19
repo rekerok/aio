@@ -90,7 +90,7 @@ class InchSwap(Web3Swapper):
             return RESULT_TRANSACTION.FAIL
         logger.debug("NEED SLEEP 10 SEC")
         time.sleep(10)
-        if from_token.address != config.GENERAL.NATIVE_TOKEN.value:
+        if from_token.address != config.GENERAL.NATIVE_TOKEN:
             await self.acc.approve(
                 token_address=from_token.address,
                 spender=contract_address,

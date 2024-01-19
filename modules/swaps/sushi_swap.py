@@ -32,10 +32,10 @@ class SushiSwap(Web3Swapper):
             slippage=slippage,
         )
         self.contract = self.acc.w3.eth.contract(
-            address=config.SUSHI.CONTRACTS.value.get(
+            address=config.SUSHI.CONTRACTS.get(
                 self.acc.network.get(NETWORK_FIELDS.NATIVE_TOKEN)
             ),
-            abi=config.SUSHI.ABI.value,
+            abi=config.SUSHI.ABI,
         )
 
     async def _get_amounts_out(
@@ -95,7 +95,7 @@ class SushiSwap(Web3Swapper):
         )
 
         if from_token.address == self.acc.w3.to_checksum_address(
-            config.GENERAL.WETH.value.get(self.acc.network.get(NETWORK_FIELDS.NAME))
+            config.GENERAL.WETH.get(self.acc.network.get(NETWORK_FIELDS.NAME))
         ):
             return await self._send_transaction(
                 data=data,
@@ -104,7 +104,7 @@ class SushiSwap(Web3Swapper):
                 amount_to_send=amount_to_send,
             )
         elif to_token.address == self.acc.w3.to_checksum_address(
-            config.GENERAL.WETH.value.get(self.acc.network.get(NETWORK_FIELDS.NAME))
+            config.GENERAL.WETH.get(self.acc.network.get(NETWORK_FIELDS.NAME))
         ):
             return await self._send_transaction(
                 data=await Web3Client.get_data(

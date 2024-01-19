@@ -89,7 +89,7 @@ class Stargate(Web3Bridger):
 
     async def _get_pool_id(self, chain: config.Network, token: Token_Info):
         token_address = token.address.lower()
-        for network, addresses in config.STARGATE.POOL_IDS.value.items():
+        for network, addresses in config.STARGATE.POOL_IDS.items():
             for address, data in addresses.items():
                 if address.lower() == token_address:
                     return data[PARAMETR.ID]
@@ -107,21 +107,16 @@ class Stargate(Web3Bridger):
             to_chain=to_chain, to_token_address=to_token_address
         )
         from_pool_id = await self._get_pool_id(chain=self.acc.network, token=from_token)
-        # to_pool_id = (
-        #     config.STARGATE.POOL_IDS.value.get(to_chain)
-        #     .get(to_token.symbol)
-        #     .get(PARAMETR.ID)
-        # )
         to_pool_id = await self._get_pool_id(chain=to_chain, token=to_token)
         if any(v is None for v in (to_token, from_pool_id, to_pool_id)):
             logger.error("FAIL GET INFO")
             return RESULT_TRANSACTION.FAIL
-        to_chain_id = config.GENERAL.LAYERZERO_CHAINS_ID.value.get(to_chain)
+        to_chain_id = config.GENERAL.LAYERZERO_CHAINS_ID.get(to_chain)
         contract = self.acc.w3.eth.contract(
-            address=config.STARGATE.ROUTER_CONTRACTS.value.get(
+            address=config.STARGATE.ROUTER_CONTRACTS.get(
                 self.acc.network.get(NETWORK_FIELDS.NAME)
             ),
-            abi=config.STARGATE.ROUTER_ABI.value,
+            abi=config.STARGATE.ROUTER_ABI,
         )
         fee = await self._get_lz_fee(
             contract=contract,

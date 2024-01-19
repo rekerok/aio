@@ -102,14 +102,14 @@ class Orbiter(Web3Bridger):
         to_token_address: str = "",
     ):
         from_chain_id: int = int(await self.acc.w3.eth.chain_id)
-        to_chain_id: int = int(config.GENERAL.CHAIN_IDS.value.get(to_chain))
+        to_chain_id: int = int(config.GENERAL.CHAIN_IDS.get(to_chain))
         to_token: Token_Info = await self._get_to_token(
             to_chain=to_chain, to_token_address=to_token_address
         )
         if from_token.symbol == "ETH":
-            from_token.address = config.GENERAL.ZERO_ADDRESS.value
+            from_token.address = config.GENERAL.ZERO_ADDRESS
         if to_token.symbol == "ETH":
-            to_token.address = config.GENERAL.ZERO_ADDRESS.value
+            to_token.address = config.GENERAL.ZERO_ADDRESS
         router = await self._get_router(
             from_chain_id=from_chain_id,
             to_chain_id=to_chain_id,

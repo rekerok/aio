@@ -94,7 +94,7 @@ class Across(Web3Bridger):
         to_token_address: str = "",
     ):
         from_chain_id = await self.acc.w3.eth.chain_id
-        to_chain_id: int = config.GENERAL.CHAIN_IDS.value.get(to_chain)
+        to_chain_id: int = config.GENERAL.CHAIN_IDS.get(to_chain)
 
         from_token = (
             await Token_Info.to_wrapped_token(
@@ -104,7 +104,7 @@ class Across(Web3Bridger):
 
         if to_token_address == "":
             to_token: Token_Info = Token_Info(
-                address=config.GENERAL.WETH.value.get(to_chain),
+                address=config.GENERAL.WETH.get(to_chain),
                 symbol="WETH",
                 decimals=18,
             )
@@ -166,7 +166,7 @@ class Across(Web3Bridger):
         try:
             if from_chain_id == 324:
                 contract_across = self.acc.w3.eth.contract(
-                    address=pool_address, abi=config.ACROSS.ABI_POOL.value
+                    address=pool_address, abi=config.ACROSS.ABI_POOL
                 )
                 data = self.get_data(
                     contract=contract_across, function_of_contract="deposit", args=args
@@ -178,11 +178,11 @@ class Across(Web3Bridger):
                     args.insert(0, pool_address)
                     contract_across = self.acc.w3.eth.contract(
                         address=eth_utils.address.to_checksum_address(
-                            config.ACROSS.CONTRACTS.value.get(
+                            config.ACROSS.CONTRACTS.get(
                                 self.acc.network.get(NETWORK_FIELDS.NAME)
                             )
                         ),
-                        abi=config.ACROSS.ABI_ROUTER.value,
+                        abi=config.ACROSS.ABI_ROUTER,
                     )
                     data = await self.get_data(
                         contract=contract_across,
@@ -192,7 +192,7 @@ class Across(Web3Bridger):
                 else:
                     contract_across = self.acc.w3.eth.contract(
                         address=pool_address,
-                        abi=config.ACROSS.ABI_POOL.value,
+                        abi=config.ACROSS.ABI_POOL,
                     )
                     data = await self.get_data(
                         contract=contract_across,

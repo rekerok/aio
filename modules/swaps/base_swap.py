@@ -27,6 +27,6 @@ class BaseSwap(SushiSwap):
             slippage=slippage,
         )
         self.contract = self.acc.w3.eth.contract(
-            address=config.BASESWAP.CONTRACT.value,
-            abi=config.BASESWAP.ABI.value,
+            address=config.BASESWAP.CONTRACT,
+            abi=config.BASESWAP.ABI,
         )

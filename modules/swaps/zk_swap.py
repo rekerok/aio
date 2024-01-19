@@ -28,6 +28,6 @@ class ZkSwap(SushiSwap):
             slippage=slippage,
         )
         self.contract = self.acc.w3.eth.contract(
-            address=config.ZKSWAP.CONTRACT.value,
-            abi=config.ZKSWAP.ABI.value,
+            address=config.ZKSWAP.CONTRACT,
+            abi=config.ZKSWAP.ABI,
         )

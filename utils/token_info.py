@@ -23,7 +23,7 @@ class Token_Info:
             else:
                 token_address = acc.w3.to_checksum_address(token_address)
                 contract = acc.w3.eth.contract(
-                    address=token_address, abi=config.GENERAL.ERC20_ABI.value
+                    address=token_address, abi=config.GENERAL.ERC20_ABI
                 )
                 symbol = await contract.functions.symbol().call()
             return Token_Info(
@@ -50,12 +50,12 @@ class Token_Info:
         if from_token:
             if from_token.address == "":
                 from_token.address = eth_utils.address.to_checksum_address(
-                    config.GENERAL.WETH.value.get(network.get(NETWORK_FIELDS.NAME))
+                    config.GENERAL.WETH.get(network.get(NETWORK_FIELDS.NAME))
                 )
         if to_token:
             if to_token.address == "":
                 to_token.address = eth_utils.address.to_checksum_address(
-                    config.GENERAL.WETH.value.get(network.get(NETWORK_FIELDS.NAME))
+                    config.GENERAL.WETH.get(network.get(NETWORK_FIELDS.NAME))
                 )
         return from_token, to_token
 
@@ -67,11 +67,11 @@ class Token_Info:
         if from_token:
             if from_token.address == "":
                 from_token.address = eth_utils.address.to_checksum_address(
-                    config.GENERAL.NATIVE_TOKEN.value
+                    config.GENERAL.NATIVE_TOKEN
                 )
         if to_token:
             if to_token.address == "":
                 to_token.address = eth_utils.address.to_checksum_address(
-                    config.GENERAL.NATIVE_TOKEN.value
+                    config.GENERAL.NATIVE_TOKEN
                 )
         return from_token, to_token

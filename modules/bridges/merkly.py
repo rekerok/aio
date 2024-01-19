@@ -23,9 +23,9 @@ class Merkly:
         if network:
             self.contract = self.acc.w3.eth.contract(
                 address=eth_utils.address.to_checksum_address(
-                    MERKLY.CONTRACT.value.get(self.acc.network.get(NETWORK_FIELDS.NAME))
+                    MERKLY.CONTRACT.get(self.acc.network.get(NETWORK_FIELDS.NAME))
                 ),
-                abi=MERKLY.ABI.value,
+                abi=MERKLY.ABI,
             )
 
     async def refuel(self, amount_to_get: tuple, to_chain):
@@ -34,7 +34,7 @@ class Merkly:
         )
         logger.warning(self.NAME)
         logger.info(f"WALLET {self.acc.address}")
-        to_chain_id = GENERAL.LAYERZERO_CHAINS_ID.value.get(to_chain)
+        to_chain_id = GENERAL.LAYERZERO_CHAINS_ID.get(to_chain)
         logger.info(f"{self.acc.network.get(NETWORK_FIELDS.NAME)} -> {to_chain}")
         adapter_params = await Merkly._get_adapter_params(
             contract=self.contract,
@@ -87,16 +87,16 @@ class Merkly:
 
     @staticmethod
     async def get_fees(from_chains: list[dict]):
-        to_chains = GENERAL.LAYERZERO_CHAINS_ID.value
+        to_chains = GENERAL.LAYERZERO_CHAINS_ID
         fees_list = []
         logger.debug("COLLEC INFORMATION")
         for from_chain in from_chains:
             acc = Account(network=from_chain)
             contract_merkly = acc.w3.eth.contract(
                 address=eth_utils.address.to_checksum_address(
-                    MERKLY.CONTRACT.value.get(acc.network.get(NETWORK_FIELDS.NAME))
+                    MERKLY.CONTRACT.get(acc.network.get(NETWORK_FIELDS.NAME))
                 ),
-                abi=config.MERKLY.ABI.value,
+                abi=config.MERKLY.ABI,
             )
 
             for to_chain_name, to_chain_id in to_chains.items():

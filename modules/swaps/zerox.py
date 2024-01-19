@@ -33,16 +33,16 @@ class Zerox(Web3Swapper):
             max_balance=max_balance,
             slippage=slippage,
         )
-        self.url = config.ZEROX.URLS.value.get(
+        self.url = config.ZEROX.URLS.get(
             self.acc.network.get(NETWORK_FIELDS.NAME)
         )
         self.contract = self.acc.w3.eth.contract(
             address=eth_utils.address.to_checksum_address(
-                config.ZEROX.CONTRACTS.value.get(
+                config.ZEROX.CONTRACTS.get(
                     self.acc.network.get(NETWORK_FIELDS.NAME)
                 )
             ),
-            abi=config.ZEROX.ABI.value,
+            abi=config.ZEROX.ABI,
         )
 
     async def _get_quote(

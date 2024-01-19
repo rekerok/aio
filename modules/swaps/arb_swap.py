@@ -29,9 +29,9 @@ class ArbSwap(SushiSwap):
         )
         self.contract = self.acc.w3.eth.contract(
             address=eth_utils.address.to_checksum_address(
-                config.ARBSWAP.CONTRACTS.value.get(
+                config.ARBSWAP.CONTRACTS.get(
                     self.acc.network.get(NETWORK_FIELDS.NAME)
                 )
             ),
-            abi=config.ARBSWAP.ABI.value,
+            abi=config.ARBSWAP.ABI,
         )

@@ -54,7 +54,7 @@ class Account:
             else:
                 contract_token = self.w3.eth.contract(
                     address=self.w3.to_checksum_address(token_address),
-                    abi=config.GENERAL.ERC20_ABI.value,
+                    abi=config.GENERAL.ERC20_ABI,
                 )
                 value = await contract_token.functions.balanceOf(self.address).call()
                 return Token_Amount(
@@ -107,7 +107,7 @@ class Account:
         try:
             contract = self.w3.eth.contract(
                 address=self.w3.to_checksum_address(token_address),
-                abi=config.GENERAL.ERC20_ABI.value,
+                abi=config.GENERAL.ERC20_ABI,
             )
             amount_allowance = await contract.functions.allowance(
                 self.w3.to_checksum_address(owner), self.w3.to_checksum_address(spender)
@@ -135,7 +135,7 @@ class Account:
             logger.info(f"Apptove need")
             contract = self.w3.eth.contract(
                 address=self.w3.to_checksum_address(token_address),
-                abi=config.GENERAL.ERC20_ABI.value,
+                abi=config.GENERAL.ERC20_ABI,
             )
             logger.info(
                 f"Make approve for {amount.ETHER + amount.ETHER * random.uniform(0.01,0.05)}"
@@ -162,7 +162,7 @@ class Account:
         else:
             contract = self.w3.eth.contract(
                 address=self.w3.to_checksum_address(token_address),
-                abi=config.GENERAL.ERC20_ABI.value,
+                abi=config.GENERAL.ERC20_ABI,
             )
             await self.approve(
                 token_address=token_address, spender=to_address, amount=amount

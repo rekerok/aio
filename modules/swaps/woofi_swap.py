@@ -31,10 +31,10 @@ class WoofiSwap(Web3Swapper):
             slippage=slippage,
         )
         self.contract = self.acc.w3.eth.contract(
-            address=config.WOOFI.CONTRACTS.value.get(
+            address=config.WOOFI.CONTRACTS.get(
                 self.acc.network.get(NETWORK_FIELDS.NAME)
             ),
-            abi=config.WOOFI.ABI.value,
+            abi=config.WOOFI.ABI,
         )
 
     async def _query_swap(
