@@ -69,21 +69,31 @@ class WarmUPSwaps:
             balance: Token_Amount = await acc.get_balance(
                 token_address=token.get(PARAMETR.TOKEN_ADDRESS)
             )
-            price_token = await utils.prices.get_price_token(
-                token_name=token_info.symbol
-            )
-            balance_in_usd: Token_Amount = Token_Amount(
-                amount=balance.ETHER * price_token,
-                decimals=token_info.decimals,
-            )
-            token.update(
-                {
-                    "price_usd": balance_in_usd.ETHER,
-                    "token_info": token_info,
-                    "balance": balance,
-                }
-            )
-            # Находим максимальный price_usd и его индекс
+
+            try:
+                logger.info(acc.network.get(NETWORK_FIELDS.NAME))
+                logger.info(f"{token_info.symbol} - {token_info.address}")
+                price_token = await utils.prices.get_price_token(
+                    token_name=token_info.symbol
+                )
+                logger.info(f"{price_token} USD")
+                logger.info("=" * 20)
+
+                balance_in_usd: Token_Amount = Token_Amount(
+                    amount=balance.ETHER * price_token,
+                    decimals=token_info.decimals,
+                )
+                token.update(
+                    {
+                        "price_usd": balance_in_usd.ETHER,
+                        "token_info": token_info,
+                        "balance": balance,
+                    }
+                )
+                # Находим максимальный price_usd и его индекс
+            except Exception as error:
+                logger.error(error)
+                return (None, None)
         sorted_data = sorted(tokens, key=lambda x: x["price_usd"], reverse=True)
         for token in sorted_data:
             logger.info(

@@ -88,7 +88,7 @@ class Merkly:
     @staticmethod
     async def get_fees(from_chains: list[dict]):
         to_chains = GENERAL.LAYERZERO_CHAINS_ID
-        fees_list = []
+        fees = {}
         logger.debug("COLLEC INFORMATION")
         for from_chain in from_chains:
             acc = Account(network=from_chain)
@@ -98,42 +98,33 @@ class Merkly:
                 ),
                 abi=config.MERKLY.ABI,
             )
-
+            fees_for_network = list()
             for to_chain_name, to_chain_id in to_chains.items():
-                if from_chain.get(PARAMETR.NAME) != to_chain_name:
-                    dst_chain_id = to_chain_id
-                    adapter_params = await Merkly._get_adapter_params(
-                        dst_chain_id=dst_chain_id,
-                        contract=contract_merkly,
-                        amount_to_get=Token_Amount(amount=0),
-                    )
-                    if not adapter_params:
-                        continue
-                    try:
-                        estimate_send_fee = (
-                            await contract_merkly.functions.estimateSendFee(
-                                to_chain_id, "0x", adapter_params
-                            ).call()
-                        )
-                        price = Token_Amount(
-                            amount=estimate_send_fee[0], decimals=18, wei=True
-                        )
-                        fees_list.append(
-                            {
-                                "from_chain": from_chain.get(NETWORK_FIELDS.NAME),
-                                "to_chain": to_chain_name,
-                                "to_chain_id": to_chain_id,
-                                "price": price,
-                            }
-                        )
-                    except:
-                        price = Token_Amount(amount=0)
+                if from_chain.get(PARAMETR.NAME) == to_chain_name:
+                    continue
+                dst_chain_id = to_chain_id
+                adapter_params = await Merkly._get_adapter_params(
+                    dst_chain_id=dst_chain_id,
+                    contract=contract_merkly,
+                    amount_to_get=Token_Amount(amount=0),
+                )
+                if not adapter_params:
+                    continue
 
-        # Сортировка по стоимости (от самого дешевого к самому дорогому)
-        fees_list = sorted(fees_list, key=lambda x: x["price"].ETHER)
+                try:
+                    fee = await contract_merkly.functions.estimateSendFee(
+                        to_chain_id, "0x", adapter_params
+                    ).call()
+                    fee = Token_Amount(amount=fee[0], decimals=18, wei=True)
+                    fees_for_network.append({"name": to_chain_name, "fee": fee})
+                except Exception as error:
+                    continue
 
-        # Вывод результатов
-        for fee_info in fees_list:
-            logger.info(
-                f"{fee_info['from_chain']} -> {fee_info['to_chain']} ({fee_info['to_chain_id']}) {fee_info['price'].ETHER:.10f}"
-            )
+            fees.update({from_chain.get(NETWORK_FIELDS.NAME): fees_for_network})
+        fees = {
+            key: sorted(value, key=lambda x: x["fee"].ETHER)
+            for key, value in fees.items()
+        }
+        for network, list_fees in fees.items():
+            for fee in list_fees:
+                logger.info(f"{network} -> {fee['name']} {fee['fee'].ETHER:.10f}")
