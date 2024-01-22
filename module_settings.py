@@ -20,6 +20,7 @@ class DEX:
     ACROSS = Across
     STARGATE = Stargate
     ORBITER = Orbiter
+    XY_FINANCE_BRIDGE = XY_finance_bridge
 
 
 class REFUEL_APP:

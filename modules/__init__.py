@@ -8,6 +8,7 @@ from .bridges.warmupRefuel import WarmUpRefuel
 from .bridges.across import Across
 from .bridges.stargate import Stargate
 from .bridges.orbiter import Orbiter
+from .bridges.xy_finance_bridge import XY_finance_bridge
 from .others.check_nft import Check_NFT
 from .others.transfers import Transfers
 from .others.check_balance import check_balances
