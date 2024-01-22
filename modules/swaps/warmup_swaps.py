@@ -76,9 +76,19 @@ class WarmUPSwaps:
                 amount=balance.ETHER * price_token,
                 decimals=token_info.decimals,
             )
-            token.update({"price_usd": balance_in_usd.ETHER})
+            token.update(
+                {
+                    "price_usd": balance_in_usd.ETHER,
+                    "token_info": token_info,
+                    "balance": balance,
+                }
+            )
             # Находим максимальный price_usd и его индекс
         sorted_data = sorted(tokens, key=lambda x: x["price_usd"], reverse=True)
+        for token in sorted_data:
+            logger.info(
+                f"{token['balance'].ETHER} {token['token_info'].symbol} = {token['price_usd']} USD"
+            )
         return (sorted_data[0], random.choice(sorted_data[1:]))
 
     @staticmethod

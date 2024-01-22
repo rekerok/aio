@@ -1,5 +1,6 @@
 from loguru import logger
 import config
+import settings
 import eth_utils
 from typing import Union
 from utils import aiohttp
@@ -33,9 +34,7 @@ class OdosSwap(Web3Swapper):
         )
         self.contract = self.acc.w3.eth.contract(
             address=eth_utils.address.to_checksum_address(
-                config.ODOS.CONTRACTS.get(
-                    self.acc.network.get(NETWORK_FIELDS.NAME)
-                )
+                config.ODOS.CONTRACTS.get(self.acc.network.get(NETWORK_FIELDS.NAME))
             ),
             abi=config.ODOS.ABI,
         )
@@ -54,7 +53,12 @@ class OdosSwap(Web3Swapper):
             "slippageLimitPercent": self.slippage,
             "compact": False,
         }
+
+        if settings.USE_REF:
+            data.update({"referralCode": 2334531771})
         response = await aiohttp.post_request(url=url, data=data)
+        if not response:
+            return None
         return response
 
     async def _get_assemble(self, path_id):
@@ -67,6 +71,8 @@ class OdosSwap(Web3Swapper):
         }
 
         response = await aiohttp.post_request(url=url, data=data)
+        if not response:
+            return None
         return response
 
     # https://docs.odos.xyz/

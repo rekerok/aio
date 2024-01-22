@@ -33,14 +33,10 @@ class Zerox(Web3Swapper):
             max_balance=max_balance,
             slippage=slippage,
         )
-        self.url = config.ZEROX.URLS.get(
-            self.acc.network.get(NETWORK_FIELDS.NAME)
-        )
+        self.url = config.ZEROX.URLS.get(self.acc.network.get(NETWORK_FIELDS.NAME))
         self.contract = self.acc.w3.eth.contract(
             address=eth_utils.address.to_checksum_address(
-                config.ZEROX.CONTRACTS.get(
-                    self.acc.network.get(NETWORK_FIELDS.NAME)
-                )
+                config.ZEROX.CONTRACTS.get(self.acc.network.get(NETWORK_FIELDS.NAME))
             ),
             abi=config.ZEROX.ABI,
         )
@@ -54,11 +50,21 @@ class Zerox(Web3Swapper):
             "buyToken": to_token.address,
             "sellAmount": amount_to_send.WEI,
         }
+
+        if settings.USE_REF:
+            params.update(
+                {
+                    "feeRecipient": "0x9F6cF6852b7aACF8377083b7a5D52862D0f312c7",
+                    "buyTokenPercentageFee": settings.FEE / 100,
+                }
+            )
+
         response = await utils.aiohttp.get_json_aiohttp(
             url=self.url + "/swap/v1/quote",
             headers=headers,
             params=params,
         )
+
         if not response:
             return None
         return response
@@ -81,6 +87,6 @@ class Zerox(Web3Swapper):
         return await self._send_transaction(
             data=quote.get("data"),
             from_token=from_token,
-            to_address=eth_utils.address.to_checksum_address(quote.get("to")),
+            to_address=quote.get("to"),
             amount_to_send=amount_to_send,
         )

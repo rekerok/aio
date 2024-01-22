@@ -11,6 +11,10 @@ USE_PROXY = False
 INCH_SWAP_KEY = ""
 ZEROX_KEY = ""
 
+### REFFERAL ###
+USE_REF = True
+FEE = 1
+
 
 ### НАСТРОЙКИ СЕТЕЙ ###
 class Client_Networks:
@@ -107,7 +111,7 @@ class Client_Networks:
     polygon = {
         NETWORK_FIELDS.NAME: Network.POLYGON,
         NETWORK_FIELDS.RPCS: [
-            "https://rpc.ankr.com/polygon/",
+            "https://rpc.ankr.com/polygon/6eb719a8acb9be4873e5616d579ee1dd2f1f20cd08be5f76cd50a2ce3753e260",
         ],
         NETWORK_FIELDS.EXPLORER: "https://polygonscan.com/",
         NETWORK_FIELDS.EIP1559: True,

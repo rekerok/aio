@@ -1,7 +1,5 @@
-import pprint
-import time
+import settings
 import config
-import eth_utils
 from typing import Union
 from loguru import logger
 from hexbytes import HexBytes
@@ -10,7 +8,7 @@ from modules.web3Client import Web3Client
 from utils import Token_Amount, Token_Info
 from modules.web3Swapper import Web3Swapper
 import utils
-from utils.enums import NETWORK_FIELDS, RESULT_TRANSACTION
+from utils.enums import RESULT_TRANSACTION
 
 
 class XY_finance_swap(Web3Swapper):
@@ -24,7 +22,7 @@ class XY_finance_swap(Web3Swapper):
         value: tuple[Union[int, float]] = None,
         min_balance: float = 0,
         max_balance: float = 100,
-        slippage: float = 1.0,
+        slippage: float = 5.0,
     ) -> None:
         super().__init__(
             private_key=private_key,
@@ -58,7 +56,6 @@ class XY_finance_swap(Web3Swapper):
             params=params,
         )
         if response is None or not response["success"]:
-            logger.error(response["errorMsg"])
             return None
         return response
 
@@ -86,7 +83,7 @@ class XY_finance_swap(Web3Swapper):
         url = config.XY_FINANCE.BIULD_TRANSACTION_SWAP
         params = {
             "srcChainId": chain_id,
-            "srcQuoteTokenAddress": from_token.address + "432reg",
+            "srcQuoteTokenAddress": from_token.address,
             "srcQuoteTokenAmount": amount_to_send.WEI,
             "dstChainId": chain_id,
             "dstQuoteTokenAddress": to_token.address,
@@ -95,11 +92,19 @@ class XY_finance_swap(Web3Swapper):
             "srcSwapProvider": provider,
         }
 
+        if settings.USE_REF:
+            params.update(
+                {
+                    "affiliate": "0x9F6cF6852b7aACF8377083b7a5D52862D0f312c7",
+                    "commissionRate": settings.FEE * 10000,
+                }
+            )
+
         response = await utils.aiohttp.get_json_aiohttp(
             url=url,
             params=params,
         )
-        print(response)
+        # print(response)
         if response is None or not response["success"]:
             logger.error(response["errorMsg"])
             return None

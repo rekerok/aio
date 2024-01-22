@@ -1,3 +1,4 @@
+import eth_utils
 from loguru import logger
 from modules.account import Account
 from utils.token_info import Token_Info
@@ -33,12 +34,16 @@ class Web3Client:
         data: str = None,
         value=None,
     ):
-        if not await Token_Info.is_native_token(network=self.acc.network, token=from_token):
+        if not await Token_Info.is_native_token(
+            network=self.acc.network, token=from_token
+        ):
             await self.acc.approve(
                 token_address=from_token.address,
                 spender=to_address,
                 amount=amount_to_send,
             )
+        else:
+            value = amount_to_send
         # if value is None and data == "0x":
         #     if not await Token_Info.is_native_token(self.acc.network, token=from_token):
         #         await self.acc.approve(
@@ -48,7 +53,9 @@ class Web3Client:
         #         )
 
         return await self.acc.send_transaction(
-            to_address=to_address, data=data, value=value
+            to_address=eth_utils.address.to_checksum_address(to_address),
+            data=data,
+            value=value,
         )
 
     @staticmethod

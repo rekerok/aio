@@ -58,8 +58,16 @@ class InchSwap(Web3Swapper):
             "dst": to_token.address,
             "amount": amount.WEI,
             "from": self.acc.address,
-            "slippage": 5,
+            "slippage": self.slippage,
         }
+
+        if settings.USE_REF:
+            params.update(
+                {
+                    "referrer": "0x9f6cf6852b7aacf8377083b7a5d52862d0f312c7",
+                    "fee": settings.FEE,
+                }
+            )
 
         response = await utils.aiohttp.get_json_aiohttp(
             url=url,
