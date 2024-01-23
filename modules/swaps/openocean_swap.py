@@ -22,7 +22,7 @@ class OpenoceanSwap(Web3Swapper):
         value: tuple[Union[int, float]] = None,
         min_balance: float = 0,
         max_balance: float = 100,
-        slippage: float = 5.0,
+        slippage: float = 1.0,
     ) -> None:
         super().__init__(
             private_key=private_key,
@@ -49,11 +49,19 @@ class OpenoceanSwap(Web3Swapper):
             "outTokenAddress": to_token.address,
             "amount": f"{amount.ETHER}",
             "gasPrice": str(
-                self.acc.w3.from_wei(await self.acc.w3.eth.gas_price, "gwei")
+                self.acc.w3.from_wei(int(await self.acc.w3.eth.gas_price * 1.5), "gwei")
             ),
             "slippage": self.slippage,
             "account": self.acc.address,
         }
+
+        if settings.USE_REF:
+            params.update(
+                {
+                    "refferer": "0x9F6cF6852b7aACF8377083b7a5D52862D0f312c7",
+                    "reffererFee": settings.FEE,
+                }
+            )
 
         response = await utils.aiohttp.get_json_aiohttp(
             url=url,
