@@ -111,7 +111,7 @@ class Client_Networks:
     polygon = {
         NETWORK_FIELDS.NAME: Network.POLYGON,
         NETWORK_FIELDS.RPCS: [
-            "https://rpc.ankr.com/polygon/6eb719a8acb9be4873e5616d579ee1dd2f1f20cd08be5f76cd50a2ce3753e260",
+            "wss://polygon.gateway.tenderly.co",
         ],
         NETWORK_FIELDS.EXPLORER: "https://polygonscan.com/",
         NETWORK_FIELDS.EIP1559: True,
@@ -127,5 +127,16 @@ class Client_Networks:
         NETWORK_FIELDS.EXPLORER: "https://ftmscan.com/",
         NETWORK_FIELDS.EIP1559: True,
         NETWORK_FIELDS.NATIVE_TOKEN: "FTM",
+        NETWORK_FIELDS.CHECK_GAS: False,
+    }
+
+    bsc = {
+        NETWORK_FIELDS.NAME: Network.BSC,
+        NETWORK_FIELDS.RPCS: [
+            "https://rpc.ankr.com/bsc/",
+        ],
+        NETWORK_FIELDS.EXPLORER: "https://bscscan.com/",
+        NETWORK_FIELDS.EIP1559: True,
+        NETWORK_FIELDS.NATIVE_TOKEN: "BNB",
         NETWORK_FIELDS.CHECK_GAS: False,
     }
