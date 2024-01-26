@@ -1,3 +1,4 @@
+import csv
 import ccxt
 import utils
 import random
@@ -7,7 +8,7 @@ from utils.enums import PARAMETR
 
 class OKX:
     def __init__(
-        self, apiKey: str, secret: str, password: str, proxy: str = None
+        self, apiKey: str, secret: str, password: str, proxy: str = None, attempt=15
     ) -> None:
         self.okx = ccxt.okx(
             {
@@ -18,6 +19,7 @@ class OKX:
                 "proxy": proxy,
             }
         )
+        self.count_attempt = attempt
 
     async def _get_fee(self, currency: str = None, chain: str = None):
         try:
@@ -30,11 +32,42 @@ class OKX:
             logger.error("don't get fee")
             return None
 
+    async def _wait_status_withdraw(self, id: str):
+        try:
+            attempt = 1
+            while True:
+                if attempt > self.count_attempt:
+                    raise (
+                        Exception(
+                            "[OKX] Wait for withdrawal final status attempts limit exceeded."
+                        )
+                    )
+
+                logger.info(f"ATTEMPT {attempt}/{self.count_attempt}")
+
+                status = self.okx.private_get_asset_deposit_withdraw_status(
+                    params={"wdId": id}
+                )
+
+                if "Cancellation complete" in status["data"][0]["state"]:
+                    raise Exception("f[OKX] Withdrawal cancelled")
+
+                if "Withdrawal complete" not in status["data"][0]["state"]:
+                    attempt = attempt + 1
+                    logger.debug("WAIT SEND 60 SEC")
+                    await utils.time.sleep_view((60, 60))
+                else:
+                    logger.info("[OKX] Withdraw by OKX side was completed")
+                    return True
+
+        except Exception as e:
+            raise Exception(f"[OKX] Wait for withdrawal final status error: {e}")
+
     async def withdraw(self, address: str, currency: str, chain: str, amount: float):
         try:
             await self.withdraw_from_subaccs()
             logger.info(f"start withdraw {amount} {currency}-{chain} to {address}")
-            self.okx.withdraw(
+            id = self.okx.withdraw(
                 currency,
                 amount,
                 address,
@@ -47,7 +80,8 @@ class OKX:
                     "chain": f"{currency}-{chain}",
                     "pwd": "-",
                 },
-            )
+            )["info"]["wdId"]
+            await self._wait_status_withdraw(id=id)
             logger.success(f"Withdraw {amount} {currency}-{chain} to {address}"),
         except Exception as e:
             logger.error(e)
@@ -120,6 +154,7 @@ class OKX:
             secret=settings.KEYS.get(PARAMETR.OKX_API_SECRET),
             password=settings.KEYS.get(PARAMETR.OKX_PASSWORD),
             proxy=settings.PROXY,
+            attempt=settings.ATTEMPT_WAIT_WITHDRAW,
         )
         counter = 1
         for wallet in database:
@@ -135,18 +170,18 @@ class OKX:
             counter += 1
 
 
-# def create_file_csv(okx):
-#     with open("files/okx.csv", "w") as file:
-#         writer = csv.writer(file)
-#         writer.writerow(("token", "network", "fee", "min", "max"))
-#         for token, data in okx.fetch_currencies().items():
-#             for network, date_network in data["networks"].items():
-#                 if date_network["active"]:
-#                     fee = date_network["fee"]
-#                     min_output = date_network["limits"]["withdraw"]["min"]
-#                     max_output = date_network["limits"]["withdraw"]["max"]
-#                     if network == "Avalanche C":
-#                         network = "Avalanche C-Chain"
-#                     if network == "Avalanche X":
-#                         network = "Avalanche X-Chain"
-#                     writer.writerow((token, network, fee, min_output, max_output))
+def create_file_csv(okx):
+    with open("files/okx.csv", "w") as file:
+        writer = csv.writer(file)
+        writer.writerow(("token", "network", "fee", "min", "max"))
+        for token, data in okx.fetch_currencies().items():
+            for network, date_network in data["networks"].items():
+                if date_network["active"]:
+                    fee = date_network["fee"]
+                    min_output = date_network["limits"]["withdraw"]["min"]
+                    max_output = date_network["limits"]["withdraw"]["max"]
+                    if network == "Avalanche C":
+                        network = "Avalanche C-Chain"
+                    if network == "Avalanche X":
+                        network = "Avalanche X-Chain"
+                    writer.writerow((token, network, fee, min_output, max_output))

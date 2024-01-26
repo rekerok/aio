@@ -47,6 +47,7 @@ class OKX_settings:
         },
     ]
     SLEEP: tuple[int] = (60, 200)
+    ATTEMPT_WAIT_WITHDRAW = 15
 
 
 class TRANSFERS_SETTINGS:
