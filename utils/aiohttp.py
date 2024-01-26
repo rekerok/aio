@@ -6,8 +6,6 @@ from loguru import logger
 import utils
 
 
-
-
 async def get_json_aiohttp(
     url: str,
     proxy: str = None,
@@ -45,7 +43,8 @@ async def post_request(
 
         if response.status == 200:
             response_data = await response.json()
-
             return response_data
         else:
+            logger.error(response.status)
+            logger.error(response.content)
             return None

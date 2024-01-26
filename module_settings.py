@@ -17,6 +17,7 @@ class DEX:
     ZEROX = Zerox
     ARBSWAP = ArbSwap
     XY_FINANCE_SWAP = XY_finance_swap
+    RANGO = RangoSwap
     ACROSS = Across
     STARGATE = Stargate
     ORBITER = Orbiter
