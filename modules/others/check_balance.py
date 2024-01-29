@@ -30,7 +30,13 @@ async def collect_balance(wallet, params):
                     logger.success(
                         f"{wallet} {param.get(PARAMETR.NETWORK).get(NETWORK_FIELDS.NAME)} {balance_of_wallet.ETHER} {token_info.symbol}"
                     )
-                    balances.append({token_info.symbol: balance_of_wallet.ETHER})
+                    balances.append(
+                        {
+                            token_info.symbol: str(balance_of_wallet.ETHER).replace(
+                                ".", ","
+                            )
+                        }
+                    )
                     break
         balance.append({param.get(PARAMETR.NETWORK).get(NETWORK_FIELDS.NAME): balances})
     return {wallet: balance}
@@ -40,21 +46,20 @@ async def check_balances(settings):
     wallets = await utils.files.read_file_lines("files/wallets.txt")
     results = []
     tasks = []
+    counter = 1
     for wallet in wallets:
+        logger.debug(f"OPERATION {counter}/{len(wallets)}")
         # results.append(await collect_balance(wallet=wallet, params=settings.params))
         tasks.append(
             asyncio.create_task(collect_balance(wallet=wallet, params=settings.params))
         )
-    # pprint.pprint(results)
-    done, pending = await asyncio.wait(tasks)
+        counter += 1
+    results, pending = await asyncio.wait(tasks)
+    results = [i.result() for i in results]
     with open("files/balances.csv", "w") as file:
         writer = csv.writer(file)
-        first_task = 0
-        for i in done:
-            first_task = i.result()
-            break
         header = ["№", "WALLET"]
-        for address, networks in first_task.items():
+        for address, networks in results[0].items():
             for network_info in networks:
                 for network, coins_info in network_info.items():
                     for coin_info in coins_info:
@@ -63,12 +68,11 @@ async def check_balances(settings):
         writer.writerow(header)
         count = 1
         lines = []
-        for i in done:
-            line = [count, wallet]
-            for wallet, balances in i.result().items():
+        for i in results:
+            line = [count, list(i.keys())[0]]
+            for wallet, balances in i.items():
                 for balance in balances:
                     for token in balance[list(balance.keys())[0]]:
                         line.append(token[list(token.keys())[0]])
-            lines.append(line)
             count += 1
-        writer.writerows(lines)
+            writer.writerow(line)
