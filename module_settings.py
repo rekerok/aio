@@ -17,11 +17,12 @@ class DEX:
     ZEROX = Zerox
     ARBSWAP = ArbSwap
     XY_FINANCE_SWAP = XY_finance_swap
-    RANGO = RangoSwap
+    RANGO_SWAP = RangoSwap
     ACROSS = Across
     STARGATE = Stargate
     ORBITER = Orbiter
     XY_FINANCE_BRIDGE = XY_finance_bridge
+    RANGO_BRIDGE = Rango_Bridge
 
 
 class REFUEL_APP:
@@ -69,13 +70,13 @@ class SWAP_SETTINGS:
             PARAMETR.NETWORK: Client_Networks.polygon,
             PARAMETR.TYPE_TRANSACTION: TYPES_OF_TRANSACTION.PERCENT,
             PARAMETR.VALUE: (100, 100),
-            PARAMETR.FROM_TOKEN: TOKENS.POLYGON.USDC,
+            PARAMETR.FROM_TOKEN: TOKENS.POLYGON.MATIC,
             PARAMETR.MIN_BALANCE: 0,
             PARAMETR.MAX_BALANCE: 1000,
             PARAMETR.TO_TOKENS: [
                 {
-                    PARAMETR.TOKEN_ADDRESS: TOKENS.POLYGON.MATIC,
-                    PARAMETR.DEXS: [DEX.XY_FINANCE_SWAP],
+                    PARAMETR.TOKEN_ADDRESS: TOKENS.POLYGON.USDT,
+                    PARAMETR.DEXS: [DEX.WOOFI],
                 },
             ],
             PARAMETR.WALLETS_FILE: "",
@@ -88,16 +89,16 @@ class SWAP_SETTINGS:
 class BRIDGE_SETTINGS:
     PARAMS = [
         {
-            PARAMETR.NETWORK: Client_Networks.arbitrum,
-            PARAMETR.TYPE_TRANSACTION: TYPES_OF_TRANSACTION.AMOUNT,
-            PARAMETR.VALUE: (1, 2),
-            PARAMETR.FROM_TOKEN: TOKENS.ARBITRUM.USDC_BRIDGED,
+            PARAMETR.NETWORK: Client_Networks.polygon,
+            PARAMETR.TYPE_TRANSACTION: TYPES_OF_TRANSACTION.PERCENT,
+            PARAMETR.VALUE: (30, 50),
+            PARAMETR.FROM_TOKEN: TOKENS.POLYGON.MATIC,
             PARAMETR.MIN_BALANCE: 0,
             PARAMETR.TO_TOKENS: [
                 {
                     PARAMETR.NETWORK: Network.BASE,
-                    PARAMETR.TOKEN_ADDRESS: TOKENS.BASE.USDbC,
-                    PARAMETR.DEXS: [DEX.STARGATE],
+                    PARAMETR.TOKEN_ADDRESS: TOKENS.BASE.ETH,
+                    PARAMETR.DEXS: [DEX.RANGO_BRIDGE],
                 },
             ],
             PARAMETR.WALLETS_FILE: "",
@@ -192,8 +193,8 @@ class WARMUPSWAPS_SETTINGS:
 
 class REFUEL_SETTINGS:
     CHECK_COMISSION_NETWORKS = {
-        REFUEL_APP.MERKLY: [Client_Networks.arbitrum, Client_Networks.avalanche],
-        REFUEL_APP.L2PASS: [Client_Networks.arbitrum, Client_Networks.avalanche],
+        REFUEL_APP.MERKLY: [Client_Networks.zksync,],
+        REFUEL_APP.L2PASS: [Client_Networks.zksync],
     }
     PARAMS = {
         REFUEL_APP.MERKLY: [
@@ -246,14 +247,26 @@ class CHECK_BALANCES_SETTINGS:
     params = [
         {
             PARAMETR.NETWORK: Client_Networks.arbitrum,
-            PARAMETR.TOKENS: [TOKENS.ARBITRUM.ETH, TOKENS.ARBITRUM.USDC],
+            PARAMETR.TOKENS: [
+                TOKENS.ARBITRUM.ETH,
+            ],
         },
         {
-            PARAMETR.NETWORK: Client_Networks.polygon,
+            PARAMETR.NETWORK: Client_Networks.optimism,
             PARAMETR.TOKENS: [
-                TOKENS.POLYGON.MATIC,
-                TOKENS.POLYGON.USDC,
-                TOKENS.POLYGON.USDC_BRIDGED,
+                TOKENS.OPTIMISM.ETH,
+            ],
+        },
+        {
+            PARAMETR.NETWORK: Client_Networks.base,
+            PARAMETR.TOKENS: [
+                TOKENS.BASE.ETH,
+            ],
+        },
+        {
+            PARAMETR.NETWORK: Client_Networks.zksync,
+            PARAMETR.TOKENS: [
+                TOKENS.ZKSYNC.ETH,
             ],
         },
     ]

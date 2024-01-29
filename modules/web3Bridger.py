@@ -142,7 +142,9 @@ class Web3Bridger(Web3Client):
         if not from_token:
             return RESULT_TRANSACTION.FAIL
         balance: Token_Amount = await self.acc.get_balance(from_token.address)
-
+        if balance is None:
+            logger.warning("CHECK PROXY")
+            return RESULT_TRANSACTION.FAIL
         logger.info(f"WALLET: {self.acc.address}")
         logger.info(
             f"{self.acc.network.get(NETWORK_FIELDS.NAME)} ({from_token.symbol}) -> {to_network}"
