@@ -2,8 +2,7 @@ import utils
 import random
 from loguru import logger
 from modules.account import Account
-from utils.enums import RESULT_TRANSACTION
-
+from utils.enums import NETWORK_FIELDS, PARAMETR, RESULT_TRANSACTION
 
 
 class Deployer:
@@ -20,9 +19,9 @@ class Deployer:
     async def deploy(private_key: str, network: dict, contract: dict):
         acc = Account(private_key=private_key, network=network)
         logger.info(f"FROM {acc.address}")
-        logger.info(f"NETWORK {network.get('name')}")
-        logger.info(f"Name deploy contract {contract.get('name')}")
-        deployre = Deployer(acc=acc, bytecode=contract.get("bytecode"))
+        logger.info(f"NETWORK {network.get(NETWORK_FIELDS.NAME)}")
+        logger.info(f"Name deploy contract {contract.get(PARAMETR.NAME)}")
+        deployre = Deployer(acc=acc, bytecode=contract.get(PARAMETR.BYTECODE_CONTRACT))
         return await deployre.make_deploy()
 
     @staticmethod
@@ -30,11 +29,11 @@ class Deployer:
         database: list[dict] = list()
         for param in params:
             for wallet in wallets:
-                for i in range(random.randint(*param.get("count"))):
-                    deploy_contract = random.choice(param.get("contracts"))
+                for i in range(random.randint(*param.get(PARAMETR.COUNT_TRANSACTION))):
+                    deploy_contract = random.choice(param.get(PARAMETR.CONTRACTS))
                     database.append(
                         {
-                            "network": param.get("network"),
+                            "network": param.get(PARAMETR.NETWORK),
                             "private_key": wallet,
                             "contract": deploy_contract,
                         }
@@ -60,5 +59,4 @@ class Deployer:
                 await utils.time.sleep_view(settings.SLEEP)
             else:
                 await utils.time.sleep_view((10, 15))
-            await utils.time.sleep_view(settings.SLEEP)
             counter += 1
