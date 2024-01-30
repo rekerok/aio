@@ -76,8 +76,8 @@ class WarmUPSwaps:
                 price_token = await utils.prices.get_price_token(
                     token_name=token_info.symbol
                 )
-                logger.info(f"{price_token} USD")
-                logger.info("=" * 20)
+                # logger.info(f"{price_token} USD")
+                # logger.info("=" * 20)
 
                 balance_in_usd: Token_Amount = Token_Amount(
                     amount=balance.ETHER * price_token,
