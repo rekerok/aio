@@ -122,7 +122,7 @@ class RangoSwap(Web3Swapper):
         response = await utils.aiohttp.post_request(
             url=url, data=params, headers=headers
         )
-        if not response:
+        if not response or response["result"] is None:
             return None
         return response
 
