@@ -25,6 +25,9 @@ class DEX:
     RANGO_BRIDGE = Rango_Bridge
 
 
+class LENDINGS:
+    ERALEND = Eralend
+
 class REFUEL_APP:
     MERKLY = Merkly
     L2PASS = L2Pass
@@ -101,6 +104,26 @@ class BRIDGE_SETTINGS:
                     PARAMETR.DEXS: [DEX.RANGO_BRIDGE],
                 },
             ],
+            PARAMETR.WALLETS_FILE: "",
+        },
+    ]
+    SLIPPAGE = 1
+    SLEEP = (10, 50)
+
+
+class LANDINGS_SETTINGS:
+    PARAMS = [
+        {
+            PARAMETR.NETWORK: Client_Networks.zksync,
+            PARAMETR.TYPE_TRANSACTION: TYPES_OF_TRANSACTION.PERCENT,
+            PARAMETR.VALUE: (1, 2),
+            PARAMETR.TOKENS: [
+                {
+                    PARAMETR.TOKEN_ADDRESS: TOKENS.ZKSYNC.ETH,
+                    PARAMETR.LENDINGS: [LENDINGS.ERALEND],
+                },
+            ],
+            PARAMETR.MIN_BALANCE: 0,
             PARAMETR.WALLETS_FILE: "",
         },
     ]
@@ -296,6 +319,11 @@ async def swaps():
 
 async def bridges():
     await Web3Bridger.swap_use_database(settings=BRIDGE_SETTINGS)
+
+
+async def landings():
+    await Web3Lending.landing_use_database(settings=LANDINGS_SETTINGS)
+    # pass
 
 
 async def warm_up_swaps():

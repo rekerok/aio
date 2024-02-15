@@ -34,6 +34,7 @@ class PARAMETR:
     NETWORK = auto()
     NETWORKS = auto()
     NAME_NFT = auto()
+    LENDINGS = auto()
     TO_CHAINS = auto()
     TO_TOKENS = auto()
     CONTRACTS = auto()

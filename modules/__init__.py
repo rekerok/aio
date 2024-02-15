@@ -2,6 +2,7 @@ from .account import Account
 from .web3Client import Web3Client
 from .web3Swapper import Web3Swapper
 from .web3Bridger import Web3Bridger
+from .web3Lending import Web3Lending
 from .bridges.merkly import Merkly
 from .bridges.l2pass import L2Pass
 from .bridges.warmupRefuel import WarmUpRefuel
@@ -30,3 +31,4 @@ from .swaps.zk_swap import ZkSwap
 from .swaps.arb_swap import ArbSwap
 from .swaps.xy_finance_swap import XY_finance_swap
 from .swaps.rango import RangoSwap
+from .landings.eralend import Eralend
