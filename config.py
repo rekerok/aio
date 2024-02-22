@@ -9,6 +9,7 @@ class Network(Enum):
     ZKSYNC = auto()
     LINEA = auto()
     SCROLL = auto()
+    STARKNET = auto()
     NOVA = auto()
     POLYGON_ZK = auto()
     BASE = auto()
@@ -28,7 +29,6 @@ class Network(Enum):
     METIS = auto()
     CORE = auto()
     CANTO = auto()
-    ZKERA = auto()
     MOONRIVER = auto()
     TENET = auto()
     METER = auto()
@@ -165,7 +165,7 @@ class WOOFI:
 
 class ODOS:
     ABI: str = (
-        '[{"inputs":[],"stateMutability":"nonpayable","type":"constructor"},{"anonymous":false,"inputs":[{"indexed":true,"internalType":"address","name":"previousOwner","type":"address"},{"indexed":true,"internalType":"address","name":"newOwner","type":"address"}],"name":"OwnershipTransferred","type":"event"},{"anonymous":false,"inputs":[{"indexed":false,"internalType":"address","name":"sender","type":"address"},{"indexed":false,"internalType":"uint256","name":"inputAmount","type":"uint256"},{"indexed":false,"internalType":"address","name":"inputToken","type":"address"},{"indexed":false,"internalType":"uint256","name":"amountOut","type":"uint256"},{"indexed":false,"internalType":"address","name":"outputToken","type":"address"},{"indexed":false,"internalType":"int256","name":"slippage","type":"int256"},{"indexed":false,"internalType":"uint32","name":"referralCode","type":"uint32"}],"name":"Swap","type":"event"},{"anonymous":false,"inputs":[{"indexed":false,"internalType":"address","name":"sender","type":"address"},{"indexed":false,"internalType":"uint256[]","name":"amountsIn","type":"uint256[]"},{"indexed":false,"internalType":"address[]","name":"tokensIn","type":"address[]"},{"indexed":false,"internalType":"uint256[]","name":"amountsOut","type":"uint256[]"},{"indexed":false,"internalType":"address[]","name":"tokensOut","type":"address[]"},{"indexed":false,"internalType":"uint32","name":"referralCode","type":"uint32"}],"name":"SwapMulti","type":"event"},{"inputs":[],"name":"FEE_DENOM","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"REFERRAL_WITH_FEE_THRESHOLD","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"uint256","name":"","type":"uint256"}],"name":"addressList","outputs":[{"internalType":"address","name":"","type":"address"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"owner","outputs":[{"internalType":"address","name":"","type":"address"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"uint32","name":"","type":"uint32"}],"name":"referralLookup","outputs":[{"internalType":"uint64","name":"referralFee","type":"uint64"},{"internalType":"address","name":"beneficiary","type":"address"},{"internalType":"bool","name":"registered","type":"bool"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"uint32","name":"_referralCode","type":"uint32"},{"internalType":"uint64","name":"_referralFee","type":"uint64"},{"internalType":"address","name":"_beneficiary","type":"address"}],"name":"registerReferralCode","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[],"name":"renounceOwnership","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"uint256","name":"_swapMultiFee","type":"uint256"}],"name":"setSwapMultiFee","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"components":[{"internalType":"address","name":"inputToken","type":"address"},{"internalType":"uint256","name":"inputAmount","type":"uint256"},{"internalType":"address","name":"inputReceiver","type":"address"},{"internalType":"address","name":"outputToken","type":"address"},{"internalType":"uint256","name":"outputQuote","type":"uint256"},{"internalType":"uint256","name":"outputMin","type":"uint256"},{"internalType":"address","name":"outputReceiver","type":"address"}],"internalType":"struct OdosRouterV2.swapTokenInfo","name":"tokenInfo","type":"tuple"},{"internalType":"bytes","name":"pathDefinition","type":"bytes"},{"internalType":"address","name":"executor","type":"address"},{"internalType":"uint32","name":"referralCode","type":"uint32"}],"name":"swap","outputs":[{"internalType":"uint256","name":"amountOut","type":"uint256"}],"stateMutability":"payable","type":"function"},{"inputs":[],"name":"swapCompact","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"payable","type":"function"},{"inputs":[{"components":[{"internalType":"address","name":"tokenAddress","type":"address"},{"internalType":"uint256","name":"amountIn","type":"uint256"},{"internalType":"address","name":"receiver","type":"address"}],"internalType":"struct OdosRouterV2.inputTokenInfo[]","name":"inputs","type":"tuple[]"},{"components":[{"internalType":"address","name":"tokenAddress","type":"address"},{"internalType":"uint256","name":"relativeValue","type":"uint256"},{"internalType":"address","name":"receiver","type":"address"}],"internalType":"struct OdosRouterV2.outputTokenInfo[]","name":"outputs","type":"tuple[]"},{"internalType":"uint256","name":"valueOutMin","type":"uint256"},{"internalType":"bytes","name":"pathDefinition","type":"bytes"},{"internalType":"address","name":"executor","type":"address"},{"internalType":"uint32","name":"referralCode","type":"uint32"}],"name":"swapMulti","outputs":[{"internalType":"uint256[]","name":"amountsOut","type":"uint256[]"}],"stateMutability":"payable","type":"function"},{"inputs":[],"name":"swapMultiCompact","outputs":[{"internalType":"uint256[]","name":"amountsOut","type":"uint256[]"}],"stateMutability":"payable","type":"function"},{"inputs":[],"name":"swapMultiFee","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},{"inputs":[{"components":[{"internalType":"address","name":"contractAddress","type":"address"},{"internalType":"uint256","name":"nonce","type":"uint256"},{"internalType":"uint256","name":"deadline","type":"uint256"},{"internalType":"bytes","name":"signature","type":"bytes"}],"internalType":"struct OdosRouterV2.permit2Info","name":"permit2","type":"tuple"},{"components":[{"internalType":"address","name":"tokenAddress","type":"address"},{"internalType":"uint256","name":"amountIn","type":"uint256"},{"internalType":"address","name":"receiver","type":"address"}],"internalType":"struct OdosRouterV2.inputTokenInfo[]","name":"inputs","type":"tuple[]"},{"components":[{"internalType":"address","name":"tokenAddress","type":"address"},{"internalType":"uint256","name":"relativeValue","type":"uint256"},{"internalType":"address","name":"receiver","type":"address"}],"internalType":"struct OdosRouterV2.outputTokenInfo[]","name":"outputs","type":"tuple[]"},{"internalType":"uint256","name":"valueOutMin","type":"uint256"},{"internalType":"bytes","name":"pathDefinition","type":"bytes"},{"internalType":"address","name":"executor","type":"address"},{"internalType":"uint32","name":"referralCode","type":"uint32"}],"name":"swapMultiPermit2","outputs":[{"internalType":"uint256[]","name":"amountsOut","type":"uint256[]"}],"stateMutability":"payable","type":"function"},{"inputs":[{"components":[{"internalType":"address","name":"contractAddress","type":"address"},{"internalType":"uint256","name":"nonce","type":"uint256"},{"internalType":"uint256","name":"deadline","type":"uint256"},{"internalType":"bytes","name":"signature","type":"bytes"}],"internalType":"struct OdosRouterV2.permit2Info","name":"permit2","type":"tuple"},{"components":[{"internalType":"address","name":"inputToken","type":"address"},{"internalType":"uint256","name":"inputAmount","type":"uint256"},{"internalType":"address","name":"inputReceiver","type":"address"},{"internalType":"address","name":"outputToken","type":"address"},{"internalType":"uint256","name":"outputQuote","type":"uint256"},{"internalType":"uint256","name":"outputMin","type":"uint256"},{"internalType":"address","name":"outputReceiver","type":"address"}],"internalType":"struct OdosRouterV2.swapTokenInfo","name":"tokenInfo","type":"tuple"},{"internalType":"bytes","name":"pathDefinition","type":"bytes"},{"internalType":"address","name":"executor","type":"address"},{"internalType":"uint32","name":"referralCode","type":"uint32"}],"name":"swapPermit2","outputs":[{"internalType":"uint256","name":"amountOut","type":"uint256"}],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"components":[{"internalType":"address","name":"tokenAddress","type":"address"},{"internalType":"uint256","name":"amountIn","type":"uint256"},{"internalType":"address","name":"receiver","type":"address"}],"internalType":"struct OdosRouterV2.inputTokenInfo[]","name":"inputs","type":"tuple[]"},{"components":[{"internalType":"address","name":"tokenAddress","type":"address"},{"internalType":"uint256","name":"relativeValue","type":"uint256"},{"internalType":"address","name":"receiver","type":"address"}],"internalType":"struct OdosRouterV2.outputTokenInfo[]","name":"outputs","type":"tuple[]"},{"internalType":"uint256","name":"valueOutMin","type":"uint256"},{"internalType":"bytes","name":"pathDefinition","type":"bytes"},{"internalType":"address","name":"executor","type":"address"}],"name":"swapRouterFunds","outputs":[{"internalType":"uint256[]","name":"amountsOut","type":"uint256[]"}],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"address","name":"newOwner","type":"address"}],"name":"transferOwnership","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"address[]","name":"tokens","type":"address[]"},{"internalType":"uint256[]","name":"amounts","type":"uint256[]"},{"internalType":"address","name":"dest","type":"address"}],"name":"transferRouterFunds","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"address[]","name":"addresses","type":"address[]"}],"name":"writeAddressList","outputs":[],"stateMutability":"nonpayable","type":"function"},{"stateMutability":"payable","type":"receive"}]'
+        '[{"inputs":[],"stateMutability":"nonpayable","type":"constructor"},{"anonymous":false,"inputs":[{"indexed":true,"internalType":"address","name":"previousOwner","type":"address"},{"indexed":true,"internalType":"address","name":"newOwner","type":"address"}],"name":"OwnershipTransferred","type":"event"},{"anonymous":false,"inputs":[{"indexed":false,"internalType":"address","name":"sender","type":"address"},{"indexed":false,"internalType":"uint256","name":"inputAmount","type":"uint256"},{"indexed":false,"internalType":"address","name":"inputToken","type":"address"},{"indexed":false,"internalType":"uint256","name":"amountOut","type":"uint256"},{"indexed":false,"internalType":"address","name":"outputToken","type":"address"},{"indexed":false,"internalType":"int256","name":"slippagez","type":"int256"},{"indexed":false,"internalType":"uint32","name":"referralCode","type":"uint32"}],"name":"Swap","type":"event"},{"anonymous":false,"inputs":[{"indexed":false,"internalType":"address","name":"sender","type":"address"},{"indexed":false,"internalType":"uint256[]","name":"amountsIn","type":"uint256[]"},{"indexed":false,"internalType":"address[]","name":"tokensIn","type":"address[]"},{"indexed":false,"internalType":"uint256[]","name":"amountsOut","type":"uint256[]"},{"indexed":false,"internalType":"address[]","name":"tokensOut","type":"address[]"},{"indexed":false,"internalType":"uint32","name":"referralCode","type":"uint32"}],"name":"SwapMulti","type":"event"},{"inputs":[],"name":"FEE_DENOM","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"REFERRAL_WITH_FEE_THRESHOLD","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"uint256","name":"","type":"uint256"}],"name":"addressList","outputs":[{"internalType":"address","name":"","type":"address"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"owner","outputs":[{"internalType":"address","name":"","type":"address"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"uint32","name":"","type":"uint32"}],"name":"referralLookup","outputs":[{"internalType":"uint64","name":"referralFee","type":"uint64"},{"internalType":"address","name":"beneficiary","type":"address"},{"internalType":"bool","name":"registered","type":"bool"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"uint32","name":"_referralCode","type":"uint32"},{"internalType":"uint64","name":"_referralFee","type":"uint64"},{"internalType":"address","name":"_beneficiary","type":"address"}],"name":"registerReferralCode","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[],"name":"renounceOwnership","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"uint256","name":"_swapMultiFee","type":"uint256"}],"name":"setSwapMultiFee","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"components":[{"internalType":"address","name":"inputToken","type":"address"},{"internalType":"uint256","name":"inputAmount","type":"uint256"},{"internalType":"address","name":"inputReceiver","type":"address"},{"internalType":"address","name":"outputToken","type":"address"},{"internalType":"uint256","name":"outputQuote","type":"uint256"},{"internalType":"uint256","name":"outputMin","type":"uint256"},{"internalType":"address","name":"outputReceiver","type":"address"}],"internalType":"struct OdosRouterV2.swapTokenInfo","name":"tokenInfo","type":"tuple"},{"internalType":"bytes","name":"pathDefinition","type":"bytes"},{"internalType":"address","name":"executor","type":"address"},{"internalType":"uint32","name":"referralCode","type":"uint32"}],"name":"swap","outputs":[{"internalType":"uint256","name":"amountOut","type":"uint256"}],"stateMutability":"payable","type":"function"},{"inputs":[],"name":"swapCompact","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"payable","type":"function"},{"inputs":[{"components":[{"internalType":"address","name":"tokenAddress","type":"address"},{"internalType":"uint256","name":"amountIn","type":"uint256"},{"internalType":"address","name":"receiver","type":"address"}],"internalType":"struct OdosRouterV2.inputTokenInfo[]","name":"inputs","type":"tuple[]"},{"components":[{"internalType":"address","name":"tokenAddress","type":"address"},{"internalType":"uint256","name":"relativeValue","type":"uint256"},{"internalType":"address","name":"receiver","type":"address"}],"internalType":"struct OdosRouterV2.outputTokenInfo[]","name":"outputs","type":"tuple[]"},{"internalType":"uint256","name":"valueOutMin","type":"uint256"},{"internalType":"bytes","name":"pathDefinition","type":"bytes"},{"internalType":"address","name":"executor","type":"address"},{"internalType":"uint32","name":"referralCode","type":"uint32"}],"name":"swapMulti","outputs":[{"internalType":"uint256[]","name":"amountsOut","type":"uint256[]"}],"stateMutability":"payable","type":"function"},{"inputs":[],"name":"swapMultiCompact","outputs":[{"internalType":"uint256[]","name":"amountsOut","type":"uint256[]"}],"stateMutability":"payable","type":"function"},{"inputs":[],"name":"swapMultiFee","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},{"inputs":[{"components":[{"internalType":"address","name":"contractAddress","type":"address"},{"internalType":"uint256","name":"nonce","type":"uint256"},{"internalType":"uint256","name":"deadline","type":"uint256"},{"internalType":"bytes","name":"signature","type":"bytes"}],"internalType":"struct OdosRouterV2.permit2Info","name":"permit2","type":"tuple"},{"components":[{"internalType":"address","name":"tokenAddress","type":"address"},{"internalType":"uint256","name":"amountIn","type":"uint256"},{"internalType":"address","name":"receiver","type":"address"}],"internalType":"struct OdosRouterV2.inputTokenInfo[]","name":"inputs","type":"tuple[]"},{"components":[{"internalType":"address","name":"tokenAddress","type":"address"},{"internalType":"uint256","name":"relativeValue","type":"uint256"},{"internalType":"address","name":"receiver","type":"address"}],"internalType":"struct OdosRouterV2.outputTokenInfo[]","name":"outputs","type":"tuple[]"},{"internalType":"uint256","name":"valueOutMin","type":"uint256"},{"internalType":"bytes","name":"pathDefinition","type":"bytes"},{"internalType":"address","name":"executor","type":"address"},{"internalType":"uint32","name":"referralCode","type":"uint32"}],"name":"swapMultiPermit2","outputs":[{"internalType":"uint256[]","name":"amountsOut","type":"uint256[]"}],"stateMutability":"payable","type":"function"},{"inputs":[{"components":[{"internalType":"address","name":"contractAddress","type":"address"},{"internalType":"uint256","name":"nonce","type":"uint256"},{"internalType":"uint256","name":"deadline","type":"uint256"},{"internalType":"bytes","name":"signature","type":"bytes"}],"internalType":"struct OdosRouterV2.permit2Info","name":"permit2","type":"tuple"},{"components":[{"internalType":"address","name":"inputToken","type":"address"},{"internalType":"uint256","name":"inputAmount","type":"uint256"},{"internalType":"address","name":"inputReceiver","type":"address"},{"internalType":"address","name":"outputToken","type":"address"},{"internalType":"uint256","name":"outputQuote","type":"uint256"},{"internalType":"uint256","name":"outputMin","type":"uint256"},{"internalType":"address","name":"outputReceiver","type":"address"}],"internalType":"struct OdosRouterV2.swapTokenInfo","name":"tokenInfo","type":"tuple"},{"internalType":"bytes","name":"pathDefinition","type":"bytes"},{"internalType":"address","name":"executor","type":"address"},{"internalType":"uint32","name":"referralCode","type":"uint32"}],"name":"swapPermit2","outputs":[{"internalType":"uint256","name":"amountOut","type":"uint256"}],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"components":[{"internalType":"address","name":"tokenAddress","type":"address"},{"internalType":"uint256","name":"amountIn","type":"uint256"},{"internalType":"address","name":"receiver","type":"address"}],"internalType":"struct OdosRouterV2.inputTokenInfo[]","name":"inputs","type":"tuple[]"},{"components":[{"internalType":"address","name":"tokenAddress","type":"address"},{"internalType":"uint256","name":"relativeValue","type":"uint256"},{"internalType":"address","name":"receiver","type":"address"}],"internalType":"struct OdosRouterV2.outputTokenInfo[]","name":"outputs","type":"tuple[]"},{"internalType":"uint256","name":"valueOutMin","type":"uint256"},{"internalType":"bytes","name":"pathDefinition","type":"bytes"},{"internalType":"address","name":"executor","type":"address"}],"name":"swapRouterFunds","outputs":[{"internalType":"uint256[]","name":"amountsOut","type":"uint256[]"}],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"address","name":"newOwner","type":"address"}],"name":"transferOwnership","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"address[]","name":"tokens","type":"address[]"},{"internalType":"uint256[]","name":"amounts","type":"uint256[]"},{"internalType":"address","name":"dest","type":"address"}],"name":"transferRouterFunds","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"address[]","name":"addresses","type":"address[]"}],"name":"writeAddressList","outputs":[],"stateMutability":"nonpayable","type":"function"},{"stateMutability":"payable","type":"receive"}]'
     )
     CONTRACTS: dict = {
         Network.ETHEREUM: "0xCf5540fFFCdC3d510B18bFcA6d2b9987b0772559",
@@ -516,3 +516,192 @@ class ERALEND:
         "0x3355df6D4c9C3035724Fd0e3914dE96A5a83aaf4": "0x90973213E2a230227BD7CCAfB30391F4a52439ee",
     }
     COLLATERAL = "0xc955d5fa053d88e7338317cc6589635cd5b2cf09"
+
+
+class TOKEN:
+    def __init__(
+        self, address: str, network: str = None, exchange_name: str | None = None
+    ):
+        self.ADDRESS = address
+        self.NETWORK = network
+        self.EXCHANGE_NAME = exchange_name
+
+    def __str__(self) -> str:
+        return self.ADDRESS
+
+
+class TOKENS:
+    class OPTIMISM:
+        ETH = TOKEN(
+            address="",
+            network="Optimism",
+            exchange_name="ETH",
+        )
+        WETH = TOKEN(address="0x4200000000000000000000000000000000000006")
+        USDT = TOKEN(
+            address="0x94b008aA00579c1307B0EF2c499aD98a8ce58e58",
+            network="Optimism",
+            exchange_name="USDT",
+        )
+        USDC = TOKEN(
+            address="0x0b2C639c533813f4Aa9D7837CAf62653d097Ff85",
+            network="Optimism",
+            exchange_name="USDC",
+        )
+        USDC_BRIDGED = TOKEN(
+            address="0x7F5c764cBc14f9669B88837ca1490cCa17c31607",
+            network="Optimism (Bridged)",
+            exchange_name="ETH",
+        )
+        DAI = TOKEN(address="0xDA10009cBd5D07dd0CeCc66161FC93D7c9000da1")
+        WBTC = TOKEN(address="0x68f180fcCe6836688e9084f035309E29Bf0A2095")
+        OP = TOKEN(
+            address="0x4200000000000000000000000000000000000042",
+            network="Optimism",
+            exchange_name="USDC",
+        )
+
+    class ARBITRUM:
+        ETH = TOKEN(address="", network="Arbitrum One", exchange_name="ETH")
+        WETH = TOKEN(
+            address="0x82aF49447D8a07e3bd95BD0d56f35241523fBab1",
+        )
+        USDT = TOKEN(
+            address="0xFd086bC7CD5C481DCC9C85ebE478A1C0b69FCbb9",
+            network="Arbitrum One",
+            exchange_name="USDT",
+        )
+        USDC = TOKEN(
+            address="0xaf88d065e77c8cC2239327C5EDb3A432268e5831",
+            network="Arbitrum One",
+            exchange_name="USDC",
+        )
+        USDC_BRIDGED = TOKEN(
+            address="0xFF970A61A04b1cA14834A43f5dE4533eBDDB5CC8",
+        )
+        WBTC = TOKEN(
+            address="0x2f2a2543B76A4166549F7aaB2e75Bef0aefC5B0f",
+        )
+        ARB = TOKEN(
+            address="0x912CE59144191C1204E64559FE8253a0e49E6548",
+            network="Arbitrum One",
+            exchange_name="ARB",
+        )
+
+    class ZKSYNC:
+        ETH = TOKEN(
+            address="",
+            network="zkSync Era",
+            exchange_name="ETH",
+        )
+        WETH = TOKEN(
+            address="0xf00DAD97284D0c6F06dc4Db3c32454D4292c6813",
+        )
+        USDT = TOKEN(
+            address="0x493257fD37EDB34451f62EDf8D2a0C418852bA4C",
+        )
+        USDC = TOKEN(
+            address="0x3355df6D4c9C3035724Fd0e3914dE96A5a83aaf4",
+        )
+        DAI = TOKEN(
+            address="0x4B9eb6c0b6ea15176BBF62841C6B2A8a398cb656",
+        )
+        WBTC = TOKEN(
+            address="0xBBeB516fb02a01611cBBE0453Fe3c580D7281011",
+        )
+
+    class LINEA:
+        ETH = TOKEN(address="", exchange_name="ETH")
+        WETH = TOKEN(
+            address="0x2C1b868d6596a18e32E61B901E4060C872647b6C",
+            network="Linea",
+            exchange_name="ETH",
+        )
+        USDT = TOKEN(
+            address="0x2C1b868d6596a18e32E61B901E4060C872647b6C", exchange_name="ETH"
+        )
+        USDC = TOKEN(
+            address="0x176211869cA2b568f2A7D4EE941E073a821EE1ff", exchange_name="ETH"
+        )
+        DAI = TOKEN(
+            address="0x4AF15ec2A0BD43Db75dd04E62FAA3B8EF36b00d5", exchange_name="ETH"
+        )
+        WBTC = TOKEN(
+            address="0x3aAB2285ddcDdaD8edf438C1bAB47e1a9D05a9b4", exchange_name="ETH"
+        )
+
+    class SCROLL:
+        ETH = TOKEN(address="")
+        WETH = TOKEN(address="0x5300000000000000000000000000000000000004")
+        USDT = TOKEN(address="0xf55BEC9cafDbE8730f096Aa55dad6D22d44099Df")
+        USDC = TOKEN(address="0x06eFdBFf2a14a7c8E15944D1F4A48F9F95F663A4")
+        DAI = TOKEN(address="0xcA77eB3fEFe3725Dc33bccB54eDEFc3D9f764f97")
+        WBTC = TOKEN(address="0x3C1BCa5a656e69edCD0D4E36BEbb3FcDAcA60Cf1")
+
+    class NOVA:
+        ETH = TOKEN(address="")
+        WETH = TOKEN(address="0x722E8BdD2ce80A4422E880164f2079488e115365")
+        DAI = TOKEN(address="0xDA10009cBd5D07dd0CeCc66161FC93D7c9000da1")
+        ARB = TOKEN(address="0xf823C3cD3CeBE0a1fA952ba88Dc9EEf8e0Bf46AD")
+
+    class BASE:
+        ETH = TOKEN(address="", exchange_name="ETH")
+        WETH = TOKEN(address="0x4200000000000000000000000000000000000006")
+        USDC = TOKEN(address="0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913")
+        USDbC = TOKEN(address="0xd9aaec86b65d86f6a7b5b1b0c42ffa531710b6ca")
+        DAI = TOKEN(address="0x50c5725949A6F0c72E6C4a641F24049A917DB0Cb")
+
+    class BSC:
+        BNB = TOKEN(
+            address="",
+            network="BSC",
+            exchange_name="BNB",
+        )
+        WBNB = TOKEN(address="0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c")
+        ETH = TOKEN(address="0x2170Ed0880ac9A755fd29B2688956BD959F933F8")
+        USDT = TOKEN(address="0x55d398326f99059fF775485246999027B3197955")
+        USDC = TOKEN(address="0x8AC76a51cc950d9822D68b83fE1Ad97B32Cd580d")
+
+    class POLYGON:
+        MATIC = TOKEN(
+            address="",
+            network="Polygon",
+            exchange_name="MATIC",
+        )
+        WMATIC = TOKEN(address="0x0d500B1d8E8eF31E21C99d1Db9A6444d3ADf1270")
+        WETH = TOKEN(address="0x7ceB23fD6bC0adD59E62ac25578270cFf1b9f619")
+        USDT = TOKEN(
+            address="0xc2132D05D31c914a87C6611C10748AEb04B58e8F",
+            network="Polygon",
+            exchange_name="USDT",
+        )
+        USDC = TOKEN(
+            address="0x3c499c542cEF5E3811e1192ce70d8cC03d5c3359",
+            network="Polygon",
+            exchange_name="USDC",
+        )
+        USDC_BRIDGED = TOKEN(
+            address="0x2791Bca1f2de4661ED88A30C99A7a9449Aa84174",
+            network="Polygon (Bridged)",
+            exchange_name="USDC",
+        )
+        WBTC = TOKEN(address="0x1BFD67037B42Cf73acF2047067bd4F2C47D9BfD6")
+
+    class AVALANCHE:
+        AVAX = TOKEN(
+            address="",
+            network="Avalanche C-Chain",
+            exchange_name="AVAX",
+        )
+        WAVAX = TOKEN(address="0xb31f66aa3c1e785363f0875a1b74e27b85fd66c7")
+        USDT = TOKEN(
+            address="0x9702230A8Ea53601f5cD2dc00fDBc13d4dF4A8c7",
+            network="Avalanche C-Chain",
+            exchange_name="USDT",
+        )
+        USDC = TOKEN(
+            address="0xB97EF9Ef8734C71904D8002F8b6Bc66Dd9c48a6E",
+            network="Avalanche C-Chain",
+            exchange_name="USDC",
+        )
+        BTC_B = TOKEN(address="0x152b9d0FdC40C096757F570A51E494bd4b943E50")

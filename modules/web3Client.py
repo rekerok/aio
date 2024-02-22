@@ -30,7 +30,7 @@ class Web3Client:
         self,
         from_token: Token_Info,
         to_address: str,
-        amount_to_send: Token_Amount,
+        amount_to_send: Token_Amount = None,
         data: str = None,
         value=None,
     ):

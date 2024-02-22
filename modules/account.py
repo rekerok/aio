@@ -63,7 +63,7 @@ class Account:
                     wei=True,
                 )
         except Exception as error:
-            logger.error(error)
+            # logger.error(error)
             return None
 
     async def change_connection(self, change_rpc=True):
@@ -156,7 +156,7 @@ class Account:
         self, to_address: str, amount: Token_Amount, token_address: str = None
     ):
         logger.info("START TRANSFER MODULE")
-        logger.info(f"WILL SEND {amount.ETHER} to {to_address}")
+        # logger.info(f"WILL SEND {amount.ETHER} to {to_address}")
         if token_address is None or token_address == "":
             return await self.send_transaction(to_address=to_address, value=amount)
         else:

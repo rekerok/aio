@@ -5,6 +5,7 @@ from typing import Union
 from loguru import logger
 from modules.web3Client import Web3Client
 import utils
+import config
 from utils.enums import (
     NETWORK_FIELDS,
     PARAMETR,
@@ -105,9 +106,9 @@ class Web3Lending(Web3Client):
         else:
             return self._make_deposit_amount
 
-    async def deposit(self, token_to_deposit: str):
+    async def deposit(self, token_to_deposit: config.TOKEN):
         token_to_deposit: Token_Info = await Token_Info.get_info_token(
-            acc=self.acc, token_address=token_to_deposit
+            acc=self.acc, token_address=token_to_deposit.ADDRESS
         )
         if token_to_deposit is None:
             return RESULT_TRANSACTION.FAIL
@@ -129,9 +130,9 @@ class Web3Lending(Web3Client):
             balance=balance,
         )
 
-    async def withdraw(self, token_to_withdraw: str):
+    async def withdraw(self, token_to_withdraw: config.TOKEN):
         token_to_withdraw: Token_Info = await Token_Info.get_info_token(
-            acc=self.acc, token_address=token_to_withdraw
+            acc=self.acc, token_address=token_to_withdraw.ADDRESS
         )
         if token_to_withdraw is None:
             return RESULT_TRANSACTION.FAIL
@@ -164,7 +165,7 @@ class Web3Lending(Web3Client):
                         "private_key": wallet,
                         "network": param.get(PARAMETR.NETWORK),
                         "value": param.get(PARAMETR.VALUE),
-                        "token": token.get(PARAMETR.TOKEN_ADDRESS),
+                        "token": token.get(PARAMETR.TOKEN),
                         "app": random.choice(token.get(PARAMETR.LENDINGS)),
                         "type_lending": param.get(PARAMETR.TYPE_TRANSACTION),
                         "min_balance": param.get(PARAMETR.MIN_BALANCE),
@@ -192,9 +193,9 @@ class Web3Lending(Web3Client):
             app = app_class(
                 private_key=data.get("private_key"),
                 network=data.get("network"),
-                # value=data.get("value"),
-                # type_lending=data.get("type_lending"),
-                # min_balance=data.get("min_balance"),
+                value=data.get("value"),
+                type_lending=data.get("type_lending"),
+                min_balance=data.get("min_balance"),
             )
             result = await app.withdraw(token_to_withdraw=data.get("token"))
             if result == RESULT_TRANSACTION.SUCCESS:

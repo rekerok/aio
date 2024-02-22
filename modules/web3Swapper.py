@@ -1,5 +1,6 @@
 import utils
 import random
+import config
 from typing import Union
 from loguru import logger
 from abc import abstractmethod
@@ -101,12 +102,14 @@ class Web3Swapper(Web3Client):
     ):
         pass
 
-    async def swap(self, from_token_address: str = None, to_token_address: str = None):
+    async def swap(
+        self, from_token: config.TOKEN = None, to_token: config.TOKEN = None
+    ):
         from_token: Token_Info = await Token_Info.get_info_token(
-            acc=self.acc, token_address=from_token_address
+            acc=self.acc, token_address=from_token.ADDRESS
         )
         to_token: Token_Info = await Token_Info.get_info_token(
-            acc=self.acc, token_address=to_token_address
+            acc=self.acc, token_address=to_token.ADDRESS
         )
         if not from_token or not to_token:
             return RESULT_TRANSACTION.FAIL
@@ -151,7 +154,7 @@ class Web3Swapper(Web3Client):
                         "from_token": param.get(PARAMETR.FROM_TOKEN),
                         "min_balance": param.get(PARAMETR.MIN_BALANCE),
                         "max_balance": param.get(PARAMETR.MAX_BALANCE),
-                        "to_token": to_token.get(PARAMETR.TOKEN_ADDRESS),
+                        "to_token": to_token.get(PARAMETR.TO_TOKEN),
                     }
                 )
         return database
@@ -181,8 +184,8 @@ class Web3Swapper(Web3Client):
                 max_balance=data.get("max_balance"),
             )
             result = await dex.swap(
-                from_token_address=data.get("from_token"),
-                to_token_address=data.get("to_token"),
+                from_token=data.get("from_token"),
+                to_token=data.get("to_token"),
             )
             if result == RESULT_TRANSACTION.SUCCESS:
                 await utils.time.sleep_view(settings.SLEEP)

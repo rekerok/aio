@@ -26,11 +26,11 @@ class Token_Info:
                     address=token_address, abi=config.GENERAL.ERC20_ABI
                 )
                 symbol = await contract.functions.symbol().call()
-            return Token_Info(
-                address=token_address,
-                symbol=symbol.upper(),
-                decimals=await contract.functions.decimals().call(),
-            )
+                return Token_Info(
+                    address=token_address,
+                    symbol=symbol.upper(),
+                    decimals=await contract.functions.decimals().call(),
+                )
         except Exception as error:
             logger.error(error)
             return None

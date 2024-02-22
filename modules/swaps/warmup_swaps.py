@@ -41,7 +41,7 @@ class WarmUPSwaps:
         from_token = None
         for token in tokens:
             balance = await acc.get_balance(
-                token_address=token.get(PARAMETR.TOKEN_ADDRESS)
+                token_address=token.get(PARAMETR.TOKEN).ADDRESS
             )
             if balance.ETHER > token.get(PARAMETR.MIN_BALANCE):
                 from_token = token
@@ -53,8 +53,7 @@ class WarmUPSwaps:
             [
                 token
                 for token in tokens
-                if token.get(PARAMETR.TOKEN_ADDRESS)
-                != from_token.get(PARAMETR.TOKEN_ADDRESS)
+                if token.get(PARAMETR.TOKEN) != from_token.get(PARAMETR.TOKEN)
             ]
         )
         return (from_token, to_token)
@@ -62,17 +61,17 @@ class WarmUPSwaps:
     async def _get_pair_with_max_for_swap(tokens: list, acc: Account):
         if len(tokens) == 0 or len(tokens) == 1:
             return (None, None)
+        logger.info(acc.network.get(NETWORK_FIELDS.NAME))
         for token in tokens:
             token_info: Token_Info = await Token_Info.get_info_token(
-                acc=acc, token_address=token.get(PARAMETR.TOKEN_ADDRESS)
+                acc=acc, token_address=token.get(PARAMETR.TOKEN).ADDRESS
             )
             balance: Token_Amount = await acc.get_balance(
-                token_address=token.get(PARAMETR.TOKEN_ADDRESS)
+                token_address=token_info.addressœ
             )
 
             try:
-                logger.info(acc.network.get(NETWORK_FIELDS.NAME))
-                logger.info(f"{token_info.symbol} - {token_info.address}")
+                # logger.info(f"{token_info.symbol} - {token_info.address}")
                 price_token = await utils.prices.get_price_token(
                     token_name=token_info.symbol
                 )
@@ -150,8 +149,8 @@ class WarmUPSwaps:
                 slippage=settings.SLIPPAGE,
             )
             result = await dex.swap(
-                from_token_address=pair_tokens[0].get(PARAMETR.TOKEN_ADDRESS),
-                to_token_address=pair_tokens[1].get(PARAMETR.TOKEN_ADDRESS),
+                from_token=pair_tokens[0].get(PARAMETR.TOKEN),
+                to_token=pair_tokens[1].get(PARAMETR.TOKEN),
             )
             if result == RESULT_TRANSACTION.SUCCESS:
                 await utils.time.sleep_view(settings.SLEEP)

@@ -17,16 +17,15 @@ async def collect_balance(wallet, params):
         for token in param.get(PARAMETR.TOKENS):
             while True:
                 token_info = await Token_Info.get_info_token(
-                    acc=acc, token_address=token
+                    acc=acc, token_address=token.ADDRESS
                 )
-                balance_of_wallet = await acc.get_balance(token_address=token)
-                if balance_of_wallet is None or token_info is None:
-                    logger.error(
-                        f"ОШИБКА ПОДКЛЮЧЕНИЯ К РПЦ В СЕТИ {param.get(PARAMETR.NETWORK).get(NETWORK_FIELDS.NAME)}"
-                    )
-                    logger.warning("МЕНЯЮ РПЦ")
+                if token_info is None:
                     await acc.change_connection()
-                else:
+                    continue
+                balance_of_wallet = await acc.get_balance(
+                    token_address=token_info.address
+                )
+                if not balance_of_wallet is None:
                     logger.success(
                         f"{wallet} {param.get(PARAMETR.NETWORK).get(NETWORK_FIELDS.NAME)} {balance_of_wallet.ETHER} {token_info.symbol}"
                     )
@@ -43,7 +42,7 @@ async def collect_balance(wallet, params):
 
 
 async def check_balances(settings):
-    wallets = await utils.files.read_file_lines("files/wallets.txt")
+    wallets = await utils.files.read_file_lines("files/addresses.txt")
     results = []
     tasks = []
     counter = 1

@@ -1,7 +1,7 @@
 from modules import *
-from config import Network
+from config import Network, TOKENS
 from settings import Client_Networks
-from utils import TYPES_OF_TRANSACTION, PARAMETR, TOKENS
+from utils import TYPES_OF_TRANSACTION, PARAMETR
 
 
 class DEX:
@@ -15,7 +15,6 @@ class DEX:
     ZKSWAP = ZkSwap
     BASESWAP = BaseSwap
     ZEROX = Zerox
-    ARBSWAP = ArbSwap
     XY_FINANCE_SWAP = XY_finance_swap
     RANGO_SWAP = RangoSwap
     ACROSS = Across
@@ -27,6 +26,7 @@ class DEX:
 
 class LENDINGS:
     ERALEND = Eralend
+
 
 class REFUEL_APP:
     MERKLY = Merkly
@@ -43,10 +43,9 @@ class OKX_settings:
     }
     PARAMS: list[dict] = [
         {
-            PARAMETR.NETWORK: "Linea",
-            PARAMETR.SYMBOL: "ETH",
-            PARAMETR.VALUE: (0.01494673, 0.02241770),
-            PARAMETR.ROUND: (3, 5),
+            PARAMETR.TOKEN: TOKENS.AVALANCHE.AVAX,
+            PARAMETR.VALUE: (0.1, 0.1),
+            PARAMETR.ROUND: (1, 1),
             PARAMETR.WALLETS_FILE: "",
         },
     ]
@@ -57,10 +56,10 @@ class OKX_settings:
 class TRANSFERS_SETTINGS:
     PARAMS: list[dict] = [
         {
-            PARAMETR.NETWORK: Client_Networks.arbitrum,
-            PARAMETR.TOKEN_ADDRESS: "",
+            PARAMETR.NETWORK: Client_Networks.avalanche,
+            PARAMETR.TOKEN: TOKENS.AVALANCHE.AVAX,
             PARAMETR.TYPE_TRANSACTION: TYPES_OF_TRANSACTION.PERCENT,
-            PARAMETR.VALUE: (1, 1),
+            PARAMETR.VALUE: (20, 50),
             PARAMETR.MIN_BALANCE: 0.0001,
         },
     ]
@@ -70,44 +69,59 @@ class TRANSFERS_SETTINGS:
 class SWAP_SETTINGS:
     PARAMS = [
         {
-            PARAMETR.NETWORK: Client_Networks.polygon,
+            PARAMETR.NETWORK: Client_Networks.avalanche,
             PARAMETR.TYPE_TRANSACTION: TYPES_OF_TRANSACTION.PERCENT,
             PARAMETR.VALUE: (100, 100),
-            PARAMETR.FROM_TOKEN: TOKENS.POLYGON.MATIC,
+            PARAMETR.FROM_TOKEN: TOKENS.AVALANCHE.USDC,
             PARAMETR.MIN_BALANCE: 0,
             PARAMETR.MAX_BALANCE: 1000,
             PARAMETR.TO_TOKENS: [
                 {
-                    PARAMETR.TOKEN_ADDRESS: TOKENS.POLYGON.USDT,
-                    PARAMETR.DEXS: [DEX.WOOFI],
+                    PARAMETR.TO_TOKEN: TOKENS.AVALANCHE.AVAX,
+                    PARAMETR.DEXS: [DEX.OPENOCEAN, DEX.ODOS],
+                },
+            ],
+            PARAMETR.WALLETS_FILE: "",
+        },
+        {
+            PARAMETR.NETWORK: Client_Networks.avalanche,
+            PARAMETR.TYPE_TRANSACTION: TYPES_OF_TRANSACTION.PERCENT,
+            PARAMETR.VALUE: (100, 100),
+            PARAMETR.FROM_TOKEN: TOKENS.AVALANCHE.USDT,
+            PARAMETR.MIN_BALANCE: 0,
+            PARAMETR.MAX_BALANCE: 1000,
+            PARAMETR.TO_TOKENS: [
+                {
+                    PARAMETR.TO_TOKEN: TOKENS.AVALANCHE.AVAX,
+                    PARAMETR.DEXS: [DEX.OPENOCEAN, DEX.ODOS],
                 },
             ],
             PARAMETR.WALLETS_FILE: "",
         },
     ]
     SLIPPAGE = 1
-    SLEEP = (10, 50)
+    SLEEP = (100, 100)
 
 
 class BRIDGE_SETTINGS:
     PARAMS = [
         {
-            PARAMETR.NETWORK: Client_Networks.polygon,
+            PARAMETR.NETWORK: Client_Networks.optimism,
             PARAMETR.TYPE_TRANSACTION: TYPES_OF_TRANSACTION.PERCENT,
-            PARAMETR.VALUE: (30, 50),
-            PARAMETR.FROM_TOKEN: TOKENS.POLYGON.MATIC,
+            PARAMETR.VALUE: (50, 50),
+            PARAMETR.FROM_TOKEN: TOKENS.OPTIMISM.USDC_BRIDGED,
             PARAMETR.MIN_BALANCE: 0,
             PARAMETR.TO_TOKENS: [
                 {
-                    PARAMETR.NETWORK: Network.BASE,
-                    PARAMETR.TOKEN_ADDRESS: TOKENS.BASE.ETH,
-                    PARAMETR.DEXS: [DEX.RANGO_BRIDGE],
+                    PARAMETR.NETWORK: Network.POLYGON,
+                    PARAMETR.TO_TOKEN: TOKENS.POLYGON.USDC_BRIDGED,
+                    PARAMETR.DEXS: [DEX.XY_FINANCE_BRIDGE],
                 },
             ],
             PARAMETR.WALLETS_FILE: "",
         },
     ]
-    SLIPPAGE = 1
+    SLIPPAGE = 5
     SLEEP = (10, 50)
 
 
@@ -119,7 +133,7 @@ class LANDINGS_SETTINGS:
             PARAMETR.VALUE: (1, 2),
             PARAMETR.TOKENS: [
                 {
-                    PARAMETR.TOKEN_ADDRESS: TOKENS.ZKSYNC.ETH,
+                    PARAMETR.TOKEN: TOKENS.ZKSYNC.ETH,
                     PARAMETR.LENDINGS: [LENDINGS.ERALEND],
                 },
             ],
@@ -160,63 +174,58 @@ class CHECK_NFT_SETTINGS:
 
 class WARMUPSWAPS_SETTINGS:
     PARAMS = {
-        DEX.ONE_INCH: [
+        DEX.ODOS: [
             {
-                PARAMETR.NETWORK: Client_Networks.zksync,
+                PARAMETR.NETWORK: Client_Networks.polygon,
                 PARAMETR.TOKENS: [
                     {
-                        PARAMETR.TOKEN_ADDRESS: TOKENS.ZKSYNC.DAI,
-                        PARAMETR.MIN_BALANCE: 10,
+                        PARAMETR.TOKEN: TOKENS.POLYGON.USDT,
+                        PARAMETR.MIN_BALANCE: 1,
                         PARAMETR.MAX_BALANCE: 1000,
                     },
                     {
-                        PARAMETR.TOKEN_ADDRESS: TOKENS.ZKSYNC.USDC,
-                        PARAMETR.MIN_BALANCE: 10,
-                        PARAMETR.MAX_BALANCE: 1000,
-                    },
-                    {
-                        PARAMETR.TOKEN_ADDRESS: TOKENS.ZKSYNC.USDT,
-                        PARAMETR.MIN_BALANCE: 10,
+                        PARAMETR.TOKEN: TOKENS.POLYGON.USDC_BRIDGED,
+                        PARAMETR.MIN_BALANCE: 1,
                         PARAMETR.MAX_BALANCE: 1000,
                     },
                 ],
-                PARAMETR.COUNT_TRANSACTION: (0, 0),
-                PARAMETR.VALUE: (100, 100),
-            },
-        ],
-        DEX.SYNCSWAP: [
-            {
-                PARAMETR.NETWORK: Client_Networks.zksync,
-                PARAMETR.TOKENS: [
-                    {
-                        PARAMETR.TOKEN_ADDRESS: TOKENS.ZKSYNC.USDC,
-                        PARAMETR.MIN_BALANCE: 10,
-                        PARAMETR.MAX_BALANCE: 1000,
-                    },
-                    {
-                        PARAMETR.TOKEN_ADDRESS: TOKENS.ZKSYNC.USDT,
-                        PARAMETR.MIN_BALANCE: 10,
-                        PARAMETR.MAX_BALANCE: 1000,
-                    },
-                    {
-                        PARAMETR.TOKEN_ADDRESS: TOKENS.ZKSYNC.ETH,
-                        PARAMETR.MIN_BALANCE: 0,
-                        PARAMETR.MAX_BALANCE: 1000,
-                    },
-                ],
-                PARAMETR.COUNT_TRANSACTION: (10, 11),
-                PARAMETR.VALUE: (100, 100),
+                PARAMETR.COUNT_TRANSACTION: (2, 3),
+                PARAMETR.VALUE: (20, 30),
             },
         ],
     }
-    USE_MAX_BALANCE = True
-    SLIPPAGE = 3
-    SLEEP = (100, 200)
+    USE_MAX_BALANCE = False
+    SLIPPAGE = 5
+    SLEEP = (20, 30)
+
+
+class WARMPUSTARGATE_SETTINGS:
+    USE_OKX = True
+    PARAMS = [
+        {
+            PARAMETR.NETWORK: Client_Networks.polygon,
+            PARAMETR.TOKENS: [TOKENS.POLYGON.USDT],
+            PARAMETR.TO_TOKENS: [
+                {
+                    PARAMETR.NETWORK: Network.AVALANCHE,
+                    PARAMETR.TO_TOKEN: TOKENS.AVALANCHE.USDT,
+                },
+                {
+                    PARAMETR.NETWORK: Network.OPTIMISM,
+                    PARAMETR.TO_TOKEN: TOKENS.OPTIMISM.USDC,
+                },
+            ],
+        }
+    ]
+    VALUE = (1, 4)
+    MAX_FEES = {}
 
 
 class REFUEL_SETTINGS:
     CHECK_COMISSION_NETWORKS = {
-        REFUEL_APP.MERKLY: [Client_Networks.zksync,],
+        REFUEL_APP.MERKLY: [
+            Client_Networks.zksync,
+        ],
         REFUEL_APP.L2PASS: [Client_Networks.zksync],
     }
     PARAMS = {
@@ -256,14 +265,24 @@ class DEPLOY_SETTINGS:
             PARAMETR.NETWORK: Client_Networks.polygon,
             PARAMETR.CONTRACTS: [
                 {
-                    PARAMETR.NAME: "merkly",
-                    PARAMETR.BYTECODE_CONTRACT: "0x60806040526000805461ffff1916905534801561001b57600080fd5b5060fb8061002a6000396000f3fe6080604052348015600f57600080fd5b506004361060325760003560e01c80630c55699c146037578063b49004e914605b575b600080fd5b60005460449061ffff1681565b60405161ffff909116815260200160405180910390f35b60616063565b005b60008054600191908190607a90849061ffff166096565b92506101000a81548161ffff021916908361ffff160217905550565b61ffff81811683821601908082111560be57634e487b7160e01b600052601160045260246000fd5b509291505056fea2646970667358221220666c87ec501268817295a4ca1fc6e3859faf241f38dd688f145135970920009264736f6c63430008120033",
-                }
+                    PARAMETR.NAME: "clear",
+                    PARAMETR.BYTECODE_CONTRACT: "0x",
+                },
             ],
-            "count": (1, 1),
-        }
+            PARAMETR.COUNT_TRANSACTION: (1, 1),
+        },
+        {
+            PARAMETR.NETWORK: Client_Networks.zksync,
+            PARAMETR.CONTRACTS: [
+                {
+                    PARAMETR.NAME: "clear",
+                    PARAMETR.BYTECODE_CONTRACT: "0x",
+                },
+            ],
+            PARAMETR.COUNT_TRANSACTION: (1, 1),
+        },
     ]
-    SLEEP = (100, 200)
+    SLEEP = (5, 10)
 
 
 class CHECK_BALANCES_SETTINGS:
@@ -272,25 +291,56 @@ class CHECK_BALANCES_SETTINGS:
             PARAMETR.NETWORK: Client_Networks.arbitrum,
             PARAMETR.TOKENS: [
                 TOKENS.ARBITRUM.ETH,
+                TOKENS.ARBITRUM.USDC,
+                TOKENS.ARBITRUM.USDC_BRIDGED,
+                TOKENS.ARBITRUM.USDT,
             ],
         },
         {
             PARAMETR.NETWORK: Client_Networks.optimism,
             PARAMETR.TOKENS: [
                 TOKENS.OPTIMISM.ETH,
-            ],
-        },
-        {
-            PARAMETR.NETWORK: Client_Networks.base,
-            PARAMETR.TOKENS: [
-                TOKENS.BASE.ETH,
+                TOKENS.OPTIMISM.USDC,
+                TOKENS.OPTIMISM.USDC_BRIDGED,
+                TOKENS.OPTIMISM.USDT,
             ],
         },
         {
             PARAMETR.NETWORK: Client_Networks.zksync,
             PARAMETR.TOKENS: [
                 TOKENS.ZKSYNC.ETH,
+                TOKENS.ZKSYNC.USDC,
+                TOKENS.ZKSYNC.USDT,
+                TOKENS.ZKSYNC.DAI,
             ],
+        },
+        {
+            PARAMETR.NETWORK: Client_Networks.base,
+            PARAMETR.TOKENS: [TOKENS.BASE.ETH, TOKENS.BASE.USDbC],
+        },
+        {
+            PARAMETR.NETWORK: Client_Networks.scroll,
+            PARAMETR.TOKENS: [TOKENS.SCROLL.ETH],
+        },
+        {
+            PARAMETR.NETWORK: Client_Networks.avalanche,
+            PARAMETR.TOKENS: [
+                TOKENS.AVALANCHE.AVAX,
+                TOKENS.AVALANCHE.USDC,
+                TOKENS.AVALANCHE.USDT,
+            ],
+        },
+        {
+            PARAMETR.NETWORK: Client_Networks.polygon,
+            PARAMETR.TOKENS: [
+                TOKENS.POLYGON.MATIC,
+                TOKENS.POLYGON.USDC,
+                TOKENS.POLYGON.USDT,
+            ],
+        },
+        {
+            PARAMETR.NETWORK: Client_Networks.bsc,
+            PARAMETR.TOKENS: [TOKENS.BSC.BNB, TOKENS.BSC.USDT],
         },
     ]
 

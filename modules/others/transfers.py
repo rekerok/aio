@@ -1,5 +1,6 @@
 import utils
 import random
+import config
 from typing import Union
 from loguru import logger
 from modules.account import Account
@@ -20,14 +21,14 @@ class Transfers:
         value: tuple[Union[int, float]],
         type_transfer: TYPES_OF_TRANSACTION,
         to_address: str = None,
-        token_address: str = None,
+        token: config.TOKEN = None,
         min_balance: float = 0,
     ) -> None:
         self.acc = Account(private_key=private_key, network=network)
         self.value = value
         self.type_transfer = type_transfer
         self.to_address = to_address
-        self.token_adress = token_address
+        self.token = token
         self.min_balance = min_balance
 
     async def _make_tranfer_percent(
@@ -45,7 +46,7 @@ class Transfers:
         return await self.acc.transfer(
             to_address=self.to_address,
             amount=amount_to_send,
-            token_address=self.token_adress,
+            token_address=token_info.address,
         )
 
     async def _make_tranfer_all_amount(
@@ -83,11 +84,13 @@ class Transfers:
             token_address=self.token_adress,
         )
 
-    async def make_transfer(self):
+    async def make_transfer(
+        self,
+    ):
         token_info: Token_Info = await Token_Info.get_info_token(
-            acc=self.acc, token_address=self.token_adress
+            acc=self.acc, token_address=self.token.ADDRESS
         )
-        balance: Token_Amount = await self.acc.get_balance(self.token_adress)
+        balance: Token_Amount = await self.acc.get_balance(token_info.address)
         logger.info(f"FROM: {self.acc.address}")
         logger.info(f"TO: {self.to_address}")
         logger.info(f"NETWORK: {self.acc.network.get(NETWORK_FIELDS.NAME)}")
@@ -118,7 +121,7 @@ class Transfers:
                         "private_key": wallet[0],
                         "recipient": wallet[1],
                         "network": param.get(PARAMETR.NETWORK),
-                        "token_address": param.get(PARAMETR.TOKEN_ADDRESS),
+                        "token": param.get(PARAMETR.TOKEN),
                         "min_balance": param.get(PARAMETR.MIN_BALANCE),
                         "type_transfer": param.get(PARAMETR.TYPE_TRANSACTION),
                         "value": param.get(PARAMETR.VALUE),
@@ -144,7 +147,7 @@ class Transfers:
                 network=data.get("network"),
                 type_transfer=data.get("type_transfer"),
                 to_address=data.get("recipient"),
-                token_address=data.get("token_address"),
+                token=data.get("token"),
                 value=data.get("value"),
                 min_balance=data.get("min_balance"),
             )

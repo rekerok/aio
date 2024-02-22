@@ -47,9 +47,6 @@ class Client_Networks:
         NETWORK_FIELDS.NAME: Network.OPTIMISM,
         NETWORK_FIELDS.RPCS: [
             "https://rpc.ankr.com/optimism",
-            "https://optimism.llamarpc.com",
-            "https://optimism.blockpi.network/v1/rpc/public",
-            "https://optimism-mainnet.public.blastapi.io",
         ],
         NETWORK_FIELDS.EXPLORER: "https://optimistic.etherscan.io/",
         NETWORK_FIELDS.EIP1559: True,

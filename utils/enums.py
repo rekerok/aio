@@ -22,17 +22,19 @@ class NETWORK_FIELDS(Enum):
     NATIVE_TOKEN = auto()
 
 
-class PARAMETR:
+class PARAMETR(Enum):
     ID = auto()
     DEXS = auto()
     NFTS = auto()
     NAME = auto()
     ROUND = auto()
+    TOKEN = auto()
     VALUE = auto()
     TOKENS = auto()
     SYMBOL = auto()
     NETWORK = auto()
     NETWORKS = auto()
+    TO_TOKEN = auto()
     NAME_NFT = auto()
     LENDINGS = auto()
     TO_CHAINS = auto()

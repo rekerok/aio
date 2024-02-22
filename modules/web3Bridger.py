@@ -36,7 +36,7 @@ class Web3Bridger(Web3Client):
     async def _make_bridge_percent(
         self,
         from_token: Token_Info,
-        to_token_address: str,
+        to_token: str,
         to_network: config.Network,
         balance: Token_Amount,
     ):
@@ -52,13 +52,13 @@ class Web3Bridger(Web3Client):
             amount_to_send=amount_to_send,
             from_token=from_token,
             to_chain=to_network,
-            to_token_address=to_token_address,
+            to_token_address=to_token,
         )
 
     async def _make_bridge_all_balance(
         self,
         from_token: Token_Info,
-        to_token_address: str,
+        to_token: str,
         to_network: config.Network,
         balance: Token_Amount,
     ):
@@ -81,13 +81,13 @@ class Web3Bridger(Web3Client):
             amount_to_send=amount_to_send,
             from_token=from_token,
             to_chain=to_network,
-            to_token_address=to_token_address,
+            to_token_address=to_token,
         )
 
     async def _make_bridge_amount(
         self,
         from_token: Token_Info,
-        to_token_address: str,
+        to_token: str,
         to_network: config.Network,
         balance: Token_Amount,
     ):
@@ -106,7 +106,7 @@ class Web3Bridger(Web3Client):
             amount_to_send=amount_to_send,
             from_token=from_token,
             to_chain=to_network,
-            to_token_address=to_token_address,
+            to_token_address=to_token,
         )
 
     @abstractmethod
@@ -115,7 +115,7 @@ class Web3Bridger(Web3Client):
         amount_to_send: Token_Amount,
         from_token: Token_Info,
         to_chain: config.Network,
-        to_token_address: str = "",
+        to_token: config.TOKEN = None,
     ):
         pass
 
@@ -131,12 +131,12 @@ class Web3Bridger(Web3Client):
 
     async def bridge(
         self,
-        from_token_address: str,
-        to_token_address: str,
+        from_token: config.TOKEN,
+        to_token: config.TOKEN,
         to_network: config.Network,
     ):
         from_token: Token_Info = await Token_Info.get_info_token(
-            acc=self.acc, token_address=from_token_address
+            acc=self.acc, token_address=from_token.ADDRESS
         )
 
         if not from_token:
@@ -157,7 +157,7 @@ class Web3Bridger(Web3Client):
 
         return await func_bridge(
             from_token=from_token,
-            to_token_address=to_token_address,
+            to_token=to_token.ADDRESS,
             to_network=to_network,
             balance=balance,
         )
@@ -182,7 +182,7 @@ class Web3Bridger(Web3Client):
                         "from_token": param.get(PARAMETR.FROM_TOKEN),
                         "min_balance": param.get(PARAMETR.MIN_BALANCE),
                         "to_network": to_token.get(PARAMETR.NETWORK),
-                        "to_token": to_token.get(PARAMETR.TOKEN_ADDRESS),
+                        "to_token": to_token.get(PARAMETR.TO_TOKEN),
                     }
                 )
         return database
@@ -209,10 +209,11 @@ class Web3Bridger(Web3Client):
                 type_transfer=data.get("type_swap"),
                 value=data.get("value"),
                 min_balance=data.get("min_balance"),
+                slippage=settings.SLIPPAGE,
             )
             result = await dex.bridge(
-                from_token_address=data.get("from_token"),
-                to_token_address=data.get("to_token"),
+                from_token=data.get("from_token"),
+                to_token=data.get("to_token"),
                 to_network=data.get("to_network"),
             )
             if result == RESULT_TRANSACTION.SUCCESS:

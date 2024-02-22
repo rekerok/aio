@@ -132,8 +132,7 @@ class OKX:
                 database.append(
                     {
                         "address": wallet,
-                        "network": param[PARAMETR.NETWORK],
-                        "ccy": param[PARAMETR.SYMBOL],
+                        "token": param[PARAMETR.TOKEN],
                         "amount": amount,
                     }
                 )
@@ -141,7 +140,7 @@ class OKX:
 
     @staticmethod
     async def withdraw_use_database(settings):
-        wallets = await utils.files.read_file_lines("files/wallets.txt")
+        wallets = await utils.files.read_file_lines("files/recipients.txt")
         database = await OKX.create_database(wallets=wallets, params=settings.PARAMS)
 
         random.shuffle(database)
@@ -162,8 +161,8 @@ class OKX:
             await okx.withdraw(
                 address=wallet["address"],
                 amount=wallet["amount"],
-                chain=wallet["network"],
-                currency=wallet["ccy"],
+                chain=wallet["token"].NETWORK,
+                currency=wallet["token"].EXCHANGE_NAME,
             )
             await utils.time.sleep_view(settings.SLEEP)
             logger.info("------------------------------------")

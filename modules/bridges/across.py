@@ -199,11 +199,11 @@ class Across(Web3Bridger):
                         function_of_contract="deposit",
                         args=args,
                     )
-                    data = await self.get_data(
-                        contract=contract_across,
-                        function_of_contract="multicall",
-                        args=[data],
-                    )
+                    # data = await self.get_data(
+                    #     contract=contract_across,
+                    #     function_of_contract="multicall",
+                    #     args=(data,),
+                    # )
             return await self._send_transaction(
                 data=data,
                 from_token=from_token,
