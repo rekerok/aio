@@ -3,7 +3,9 @@ import config
 from typing import Union
 from loguru import logger
 from abc import abstractmethod
+from modules.account import Account
 from modules.web3Client import Web3Client
+from settings import Client_Networks
 from utils import Token_Amount, Token_Info
 import utils
 from utils.enums import (
@@ -32,6 +34,29 @@ class Web3Bridger(Web3Client):
         self.value = value
         self.min_balance = min_balance
         self.slippage = slippage
+
+    async def _get_to_token(
+        self, to_chain: config.Network, to_token_address: str
+    ) -> Token_Info:
+        found_variable = None
+        for network_name, network_dict in Client_Networks.__dict__.items():
+            if (
+                isinstance(network_dict, dict)
+                and network_dict.get(NETWORK_FIELDS.NAME) == to_chain
+            ):
+                found_variable = network_name
+                break
+        network_dict = getattr(Client_Networks, found_variable)
+        if network_dict:
+            to_token = await Token_Info.get_info_token(
+                acc=Account(network=network_dict), token_address=to_token_address
+            )
+            if to_token:
+                return to_token
+            else:
+                return None
+        else:
+            return None
 
     async def _make_bridge_percent(
         self,

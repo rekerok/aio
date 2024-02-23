@@ -64,36 +64,15 @@ class Stargate(Web3Bridger):
             logger.error(error)
             return None
 
-    async def _get_to_token(
-        self, to_chain: config.Network, to_token_address: str
-    ) -> Token_Info:
-        found_variable = None
-        for network_name, network_dict in Client_Networks.__dict__.items():
-            if (
-                isinstance(network_dict, dict)
-                and network_dict.get(NETWORK_FIELDS.NAME) == to_chain
-            ):
-                found_variable = network_name
-                break
-        network_dict = getattr(Client_Networks, found_variable)
-        if network_dict:
-            to_token = await Token_Info.get_info_token(
-                acc=Account(network=network_dict), token_address=to_token_address
-            )
-            if to_token:
-                return to_token
-            else:
-                return None
-        else:
-            return None
-
     async def _get_pool_id(self, chain: config.Network, token: Token_Info):
-        token_address = token.address.lower()
-        for network, addresses in config.STARGATE.POOL_IDS.items():
-            for address, data in addresses.items():
-                if address.lower() == token_address:
-                    return data[PARAMETR.ID]
-        return None
+        try:
+            token_address = token.address.lower()
+            for network, addresses in config.STARGATE.POOL_IDS.items():
+                for address, data in addresses.items():
+                    if address.lower() == token_address:
+                        return data[PARAMETR.ID]
+        except Exception as error:
+            return None
 
     # https://teletype.in/@cppmyk/stargate-bridger
     async def _perform_bridge(
