@@ -34,8 +34,8 @@ class Client_Networks:
         NETWORK_FIELDS.RPCS: [
             "https://rpc.ankr.com/arbitrum",
             "https://arbitrum.llamarpc.com",
+            "wss://arbitrum-one.publicnode.com",
             "https://arbitrum-one.public.blastapi.io",
-            "https://arb-mainnet-public.unifra.io",
         ],
         NETWORK_FIELDS.EXPLORER: "https://arbiscan.io/",
         NETWORK_FIELDS.EIP1559: True,
@@ -47,6 +47,9 @@ class Client_Networks:
         NETWORK_FIELDS.NAME: Network.OPTIMISM,
         NETWORK_FIELDS.RPCS: [
             "https://rpc.ankr.com/optimism",
+            "wss://optimism.publicnode.com",
+            "https://rpc.optimism.gateway.fm",
+            "https://optimism.blockpi.network/v1/rpc/public",
         ],
         NETWORK_FIELDS.EXPLORER: "https://optimistic.etherscan.io/",
         NETWORK_FIELDS.EIP1559: True,
@@ -56,7 +59,12 @@ class Client_Networks:
 
     base = {
         NETWORK_FIELDS.NAME: Network.BASE,
-        NETWORK_FIELDS.RPCS: ["https://rpc.ankr.com/base"],
+        NETWORK_FIELDS.RPCS: [
+            "https://rpc.ankr.com/base",
+            "https://base.llamarpc.com",
+            "https://mainnet.base.org",
+            "https://base.gateway.tenderly.co",
+        ],
         NETWORK_FIELDS.EXPLORER: "https://basescan.org/",
         NETWORK_FIELDS.EIP1559: True,
         NETWORK_FIELDS.NATIVE_TOKEN: "ETH",
@@ -67,8 +75,8 @@ class Client_Networks:
         NETWORK_FIELDS.NAME: Network.ZKSYNC,
         NETWORK_FIELDS.RPCS: [
             "https://rpc.ankr.com/zksync_era",
+            "https://mainnet.era.zksync.io",
             "https://1rpc.io/zksync2-era",
-            "https://zksync.meowrpc.com",
         ],
         NETWORK_FIELDS.EXPLORER: "https://explorer.zksync.io/",
         NETWORK_FIELDS.EIP1559: False,
@@ -83,6 +91,20 @@ class Client_Networks:
         ],
         NETWORK_FIELDS.EXPLORER: "https://scrollscan.com/",
         NETWORK_FIELDS.EIP1559: False,
+        NETWORK_FIELDS.NATIVE_TOKEN: "ETH",
+        NETWORK_FIELDS.CHECK_GAS: False,
+    }
+
+    nova = {
+        NETWORK_FIELDS.NAME: Network.NOVA,
+        NETWORK_FIELDS.RPCS: [
+            "https://rpc.ankr.com/arbitrumnova",
+            "https://arbitrum-nova.public.blastapi.io",
+            "https://arbitrum-nova.publicnode.com",
+            "https://arbitrum-nova.blockpi.network/v1/rpc/public",
+        ],
+        NETWORK_FIELDS.EXPLORER: "https://nova.arbiscan.io/",
+        NETWORK_FIELDS.EIP1559: True,
         NETWORK_FIELDS.NATIVE_TOKEN: "ETH",
         NETWORK_FIELDS.CHECK_GAS: False,
     }
@@ -103,9 +125,9 @@ class Client_Networks:
         NETWORK_FIELDS.NAME: Network.AVALANCHE,
         NETWORK_FIELDS.RPCS: [
             "https://rpc.ankr.com/avalanche",
-            "https://avalanche.drpc.org",
+            "https://ava-mainnet.public.blastapi.io/ext/bc/C/rpc",
+            "https://avalanche.blockpi.network/v1/rpc/public",
             "https://1rpc.io/avax/c",
-            "https://avax.meowrpc.com",
         ],
         NETWORK_FIELDS.EXPLORER: "https://snowtrace.io/",
         NETWORK_FIELDS.EIP1559: True,
@@ -116,8 +138,8 @@ class Client_Networks:
     polygon = {
         NETWORK_FIELDS.NAME: Network.POLYGON,
         NETWORK_FIELDS.RPCS: [
+            "https://rpc.ankr.com/polygon",
             "wss://polygon.gateway.tenderly.co",
-            "https://polygon.llamarpc.com",
             "wss://polygon-bor.publicnode.com",
             "https://polygon-bor.publicnode.com",
         ],
@@ -131,9 +153,6 @@ class Client_Networks:
         NETWORK_FIELDS.NAME: Network.FANTOM,
         NETWORK_FIELDS.RPCS: [
             "https://rpc.ankr.com/fantom/",
-            "https://rpcapi.fantom.network",
-            "https://rpc2.fantom.network",
-            "https://fantom.blockpi.network/v1/rpc/public",
         ],
         NETWORK_FIELDS.EXPLORER: "https://ftmscan.com/",
         NETWORK_FIELDS.EIP1559: True,
@@ -145,9 +164,8 @@ class Client_Networks:
         NETWORK_FIELDS.NAME: Network.BSC,
         NETWORK_FIELDS.RPCS: [
             "https://rpc.ankr.com/bsc/",
-            "https://bsc-dataseed1.ninicoin.io",
-            "https://bsc-dataseed1.defibit.io",
-            "https://1rpc.io/bnb",
+            "wss://bsc.publicnode.com",
+            "https://bsc-dataseed.bnbchain.org",
         ],
         NETWORK_FIELDS.EXPLORER: "https://bscscan.com/",
         NETWORK_FIELDS.EIP1559: True,

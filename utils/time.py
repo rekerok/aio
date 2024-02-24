@@ -1,4 +1,4 @@
-import tqdm
+from tqdm import trange
 import time
 import random
 import asyncio
@@ -9,7 +9,7 @@ from web3.middleware import async_geth_poa_middleware
 
 
 async def sleep_view(sleep: tuple):
-    for i in tqdm.tqdm(range(random.randint(sleep[0], sleep[1]))):
+    for i in trange(random.randint(*sleep), ncols=70):
         time.sleep(1)
 
 

@@ -20,6 +20,7 @@ class DEX:
     ACROSS = Across
     STARGATE = Stargate
     ORBITER = Orbiter
+    NITRO = Nitro
     XY_FINANCE_BRIDGE = XY_finance_bridge
     RANGO_BRIDGE = Rango_Bridge
 
@@ -50,6 +51,7 @@ class OKX_settings:
         },
     ]
     SLEEP: tuple[int] = (60, 200)
+    WAIT_TO_SEND = True
     ATTEMPT_WAIT_WITHDRAW = 15
 
 
@@ -69,30 +71,30 @@ class TRANSFERS_SETTINGS:
 class SWAP_SETTINGS:
     PARAMS = [
         {
-            PARAMETR.NETWORK: Client_Networks.avalanche,
+            PARAMETR.NETWORK: Client_Networks.zksync,
             PARAMETR.TYPE_TRANSACTION: TYPES_OF_TRANSACTION.PERCENT,
             PARAMETR.VALUE: (100, 100),
-            PARAMETR.FROM_TOKEN: TOKENS.AVALANCHE.USDC,
+            PARAMETR.FROM_TOKEN: TOKENS.ZKSYNC.USDC,
             PARAMETR.MIN_BALANCE: 0,
             PARAMETR.MAX_BALANCE: 1000,
             PARAMETR.TO_TOKENS: [
                 {
-                    PARAMETR.TO_TOKEN: TOKENS.AVALANCHE.AVAX,
+                    PARAMETR.TO_TOKEN: TOKENS.ZKSYNC.ETH,
                     PARAMETR.DEXS: [DEX.OPENOCEAN, DEX.ODOS],
                 },
             ],
             PARAMETR.WALLETS_FILE: "",
         },
         {
-            PARAMETR.NETWORK: Client_Networks.avalanche,
+            PARAMETR.NETWORK: Client_Networks.zksync,
             PARAMETR.TYPE_TRANSACTION: TYPES_OF_TRANSACTION.PERCENT,
             PARAMETR.VALUE: (100, 100),
-            PARAMETR.FROM_TOKEN: TOKENS.AVALANCHE.USDT,
+            PARAMETR.FROM_TOKEN: TOKENS.ZKSYNC.USDT,
             PARAMETR.MIN_BALANCE: 0,
             PARAMETR.MAX_BALANCE: 1000,
             PARAMETR.TO_TOKENS: [
                 {
-                    PARAMETR.TO_TOKEN: TOKENS.AVALANCHE.AVAX,
+                    PARAMETR.TO_TOKEN: TOKENS.ZKSYNC.ETH,
                     PARAMETR.DEXS: [DEX.OPENOCEAN, DEX.ODOS],
                 },
             ],
@@ -108,14 +110,19 @@ class BRIDGE_SETTINGS:
         {
             PARAMETR.NETWORK: Client_Networks.optimism,
             PARAMETR.TYPE_TRANSACTION: TYPES_OF_TRANSACTION.PERCENT,
-            PARAMETR.VALUE: (50, 50),
+            PARAMETR.VALUE: (100, 100),
             PARAMETR.FROM_TOKEN: TOKENS.OPTIMISM.USDC_BRIDGED,
             PARAMETR.MIN_BALANCE: 0,
             PARAMETR.TO_TOKENS: [
                 {
-                    PARAMETR.NETWORK: Network.POLYGON,
-                    PARAMETR.TO_TOKEN: TOKENS.POLYGON.USDC_BRIDGED,
-                    PARAMETR.DEXS: [DEX.XY_FINANCE_BRIDGE],
+                    PARAMETR.NETWORK: Network.AVALANCHE,
+                    PARAMETR.TO_TOKEN: TOKENS.AVALANCHE.USDC,
+                    PARAMETR.DEXS: [DEX.STARGATE],
+                },
+                {
+                    PARAMETR.NETWORK: Network.AVALANCHE,
+                    PARAMETR.TO_TOKEN: TOKENS.AVALANCHE.USDT,
+                    PARAMETR.DEXS: [DEX.STARGATE],
                 },
             ],
             PARAMETR.WALLETS_FILE: "",
@@ -317,6 +324,10 @@ class CHECK_BALANCES_SETTINGS:
         {
             PARAMETR.NETWORK: Client_Networks.base,
             PARAMETR.TOKENS: [TOKENS.BASE.ETH, TOKENS.BASE.USDbC],
+        },
+        {
+            PARAMETR.NETWORK: Client_Networks.nova,
+            PARAMETR.TOKENS: [TOKENS.NOVA.ETH],
         },
         {
             PARAMETR.NETWORK: Client_Networks.scroll,

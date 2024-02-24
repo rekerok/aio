@@ -20,6 +20,7 @@ async def collect_balance(wallet, params):
                     acc=acc, token_address=token.ADDRESS
                 )
                 if token_info is None:
+                    logger.warning("CHANGE RPC")
                     await acc.change_connection()
                     continue
                 balance_of_wallet = await acc.get_balance(
@@ -37,6 +38,8 @@ async def collect_balance(wallet, params):
                         }
                     )
                     break
+                logger.warning("CHANGE RPC")
+                await acc.change_connection()
         balance.append({param.get(PARAMETR.NETWORK).get(NETWORK_FIELDS.NAME): balances})
     return {wallet: balance}
 
