@@ -27,6 +27,7 @@ class DEX:
 
 class LENDINGS:
     ERALEND = Eralend
+    LAYERBANK = Layerbank
 
 
 class REFUEL_APP:

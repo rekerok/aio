@@ -107,6 +107,7 @@ class Web3Lending(Web3Client):
             return self._make_deposit_amount
 
     async def deposit(self, token_to_deposit: config.TOKEN):
+        logger.info("DEPOSIT")
         token_to_deposit: Token_Info = await Token_Info.get_info_token(
             acc=self.acc, token_address=token_to_deposit.ADDRESS
         )
@@ -131,6 +132,7 @@ class Web3Lending(Web3Client):
         )
 
     async def withdraw(self, token_to_withdraw: config.TOKEN):
+        logger.info("WITHDRAW")
         token_to_withdraw: Token_Info = await Token_Info.get_info_token(
             acc=self.acc, token_address=token_to_withdraw.ADDRESS
         )
@@ -169,6 +171,7 @@ class Web3Lending(Web3Client):
                         "app": random.choice(token.get(PARAMETR.LENDINGS)),
                         "type_lending": param.get(PARAMETR.TYPE_TRANSACTION),
                         "min_balance": param.get(PARAMETR.MIN_BALANCE),
+                        "deposit": param.get(PARAMETR.LENDING_DEPOSIT),
                         # "max_balance": param.get(PARAMETR.MAX_BALANCE),
                     }
                 )
@@ -197,7 +200,10 @@ class Web3Lending(Web3Client):
                 type_lending=data.get("type_lending"),
                 min_balance=data.get("min_balance"),
             )
-            result = await app.withdraw(token_to_withdraw=data.get("token"))
+            if data.get("deposit") == True:
+                result = await app.deposit(token_to_deposit=data.get("token"))
+            else:
+                result = await app.withdraw(token_to_withdraw=data.get("token"))
             if result == RESULT_TRANSACTION.SUCCESS:
                 await utils.time.sleep_view(settings.SLEEP)
             else:

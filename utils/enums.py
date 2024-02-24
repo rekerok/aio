@@ -49,6 +49,7 @@ class PARAMETR(Enum):
     POOL_ADDRESS = auto()
     TOKEN_ADDRESS = auto()
     OKX_API_SECRET = auto()
+    LENDING_DEPOSIT = auto()
     TYPE_TRANSACTION = auto()
     BYTECODE_CONTRACT = auto()
     COUNT_TRANSACTION = auto()
