@@ -34,3 +34,4 @@ from .swaps.xy_finance_swap import XY_finance_swap
 from .swaps.rango import RangoSwap
 from .landings.eralend import Eralend
 from .landings.layerbank import Layerbank
+from .landings.aave import Aave
