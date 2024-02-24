@@ -110,19 +110,14 @@ class BRIDGE_SETTINGS:
         {
             PARAMETR.NETWORK: Client_Networks.optimism,
             PARAMETR.TYPE_TRANSACTION: TYPES_OF_TRANSACTION.PERCENT,
-            PARAMETR.VALUE: (100, 100),
-            PARAMETR.FROM_TOKEN: TOKENS.OPTIMISM.USDC_BRIDGED,
+            PARAMETR.VALUE: (10, 15),
+            PARAMETR.FROM_TOKEN: TOKENS.OPTIMISM.ETH,
             PARAMETR.MIN_BALANCE: 0,
             PARAMETR.TO_TOKENS: [
                 {
-                    PARAMETR.NETWORK: Network.AVALANCHE,
-                    PARAMETR.TO_TOKEN: TOKENS.AVALANCHE.USDC,
-                    PARAMETR.DEXS: [DEX.STARGATE],
-                },
-                {
-                    PARAMETR.NETWORK: Network.AVALANCHE,
-                    PARAMETR.TO_TOKEN: TOKENS.AVALANCHE.USDT,
-                    PARAMETR.DEXS: [DEX.STARGATE],
+                    PARAMETR.NETWORK: Network.SCROLL,
+                    PARAMETR.TO_TOKEN: TOKENS.SCROLL.ETH,
+                    PARAMETR.DEXS: [DEX.XY_FINANCE_BRIDGE],
                 },
             ],
             PARAMETR.WALLETS_FILE: "",
@@ -138,6 +133,8 @@ class LANDINGS_SETTINGS:
             PARAMETR.NETWORK: Client_Networks.zksync,
             PARAMETR.TYPE_TRANSACTION: TYPES_OF_TRANSACTION.PERCENT,
             PARAMETR.VALUE: (1, 2),
+            PARAMETR.LENDING_DEPOSIT: False,
+            PARAMETR.MIN_BALANCE: 0,
             PARAMETR.TOKENS: [
                 {
                     PARAMETR.TOKEN: TOKENS.ZKSYNC.ETH,

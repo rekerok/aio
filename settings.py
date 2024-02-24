@@ -92,7 +92,7 @@ class Client_Networks:
         NETWORK_FIELDS.EXPLORER: "https://scrollscan.com/",
         NETWORK_FIELDS.EIP1559: False,
         NETWORK_FIELDS.NATIVE_TOKEN: "ETH",
-        NETWORK_FIELDS.CHECK_GAS: False,
+        NETWORK_FIELDS.CHECK_GAS: True,
     }
 
     nova = {
