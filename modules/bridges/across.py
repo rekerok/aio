@@ -168,7 +168,7 @@ class Across(Web3Bridger):
                 contract_across = self.acc.w3.eth.contract(
                     address=pool_address, abi=config.ACROSS.ABI_POOL
                 )
-                data = self.get_data(
+                data = await self.get_data(
                     contract=contract_across, function_of_contract="deposit", args=args
                 )
             else:
