@@ -8,7 +8,13 @@ from utils.enums import PARAMETR
 
 class OKX:
     def __init__(
-        self, apiKey: str, secret: str, password: str, proxy: str = None, attempt=15
+        self,
+        apiKey: str,
+        secret: str,
+        password: str,
+        check_send,
+        proxy: str = None,
+        attempt=15,
     ) -> None:
         self.okx = ccxt.okx(
             {
@@ -20,6 +26,7 @@ class OKX:
             }
         )
         self.count_attempt = attempt
+        self.check_send = check_send
 
     async def _get_fee(self, currency: str = None, chain: str = None):
         try:
@@ -81,7 +88,8 @@ class OKX:
                     "pwd": "-",
                 },
             )["info"]["wdId"]
-            await self._wait_status_withdraw(id=id)
+            if self.check_send:
+                await self._wait_status_withdraw(id=id)
             logger.success(f"Withdraw {amount} {currency}-{chain} to {address}"),
         except Exception as e:
             logger.error(e)
@@ -132,7 +140,7 @@ class OKX:
                 database.append(
                     {
                         "address": wallet,
-                        "token": param[PARAMETR.TOKEN],
+                        "token": random.choice(param[PARAMETR.TOKENS]),
                         "amount": amount,
                     }
                 )
@@ -154,6 +162,7 @@ class OKX:
             password=settings.KEYS.get(PARAMETR.OKX_PASSWORD),
             proxy=settings.PROXY,
             attempt=settings.ATTEMPT_WAIT_WITHDRAW,
+            check_send=settings.WAIT_TO_SEND,
         )
         counter = 1
         for wallet in database:

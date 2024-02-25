@@ -50,14 +50,14 @@ class OKX_settings:
     }
     PARAMS: list[dict] = [
         {
-            PARAMETR.TOKEN: TOKENS.AVALANCHE.AVAX,
+            PARAMETR.TOKENS: [TOKENS.AVALANCHE.AVAX],
             PARAMETR.VALUE: (0.1, 0.1),
-            PARAMETR.ROUND: (1, 1),
+            PARAMETR.ROUND: (0, 3),
             PARAMETR.WALLETS_FILE: "",
         },
     ]
     SLEEP: tuple[int] = (60, 200)
-    WAIT_TO_SEND = True
+    WAIT_TO_SEND = False
     ATTEMPT_WAIT_WITHDRAW = 15
 
 
