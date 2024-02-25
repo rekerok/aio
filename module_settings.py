@@ -31,6 +31,10 @@ class LENDINGS:
     AAVE = Aave
 
 
+class NFTS:
+    L2PASS = L2pass_NFT
+
+
 class REFUEL_APP:
     MERKLY = Merkly
     L2PASS = L2Pass
@@ -141,6 +145,24 @@ class LANDINGS_SETTINGS:
                 {
                     PARAMETR.TOKEN: TOKENS.SCROLL.ETH,
                     PARAMETR.LENDINGS: [LENDINGS.AAVE],
+                },
+            ],
+            PARAMETR.MIN_BALANCE: 0,
+            PARAMETR.WALLETS_FILE: "",
+        },
+    ]
+    SLIPPAGE = 1
+    SLEEP = (10, 50)
+
+
+class MINT_NFT_SETTINGS:
+    PARAMS = [
+        {
+            PARAMETR.NETWORK: Client_Networks.scroll,
+            PARAMETR.NFTS: [
+                {
+                    PARAMETR.DEX: NFTS.L2PASS,
+                    PARAMETR.CONTRACTS: ["0x0000049F63Ef0D60aBE49fdD8BEbfa5a68822222"],
                 },
             ],
             PARAMETR.MIN_BALANCE: 0,
@@ -383,6 +405,11 @@ async def bridges():
 
 async def landings():
     await Web3Lending.landing_use_database(settings=LANDINGS_SETTINGS)
+    # pass
+
+
+async def mint_nfts():
+    await Web3Nft.mint_use_database(settings=MINT_NFT_SETTINGS)
     # pass
 
 
