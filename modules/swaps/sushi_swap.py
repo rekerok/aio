@@ -33,7 +33,7 @@ class SushiSwap(Web3Swapper):
         )
         self.contract = self.acc.w3.eth.contract(
             address=config.SUSHI.CONTRACTS.get(
-                self.acc.network.get(NETWORK_FIELDS.NATIVE_TOKEN)
+                self.acc.network.get(NETWORK_FIELDS.NAME)
             ),
             abi=config.SUSHI.ABI,
         )
@@ -47,7 +47,10 @@ class SushiSwap(Web3Swapper):
         try:
             amounts_out = await self.contract.functions.getAmountsOut(
                 amountIn.WEI,
-                [from_token.address, to_token.address],
+                [
+                    from_token.address,
+                    to_token.address,
+                ],
             ).call()
             return amounts_out
         except Exception as error:
