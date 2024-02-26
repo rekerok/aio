@@ -115,7 +115,7 @@ class IzumiSwap(Web3Swapper):
             return RESULT_TRANSACTION.FAIL
         recipient = (
             self.acc.address
-            if await Token_Info.is_native_token(
+            if not await Token_Info.is_native_token(
                 network=self.acc.network, token=to_token
             )
             else config.GENERAL.ZERO_ADDRESS
@@ -140,6 +140,7 @@ class IzumiSwap(Web3Swapper):
                 function_of_contract="refundETH",
                 args=[],
             )
+
             data_multicall = await Web3Client.get_data(
                 contract=self.contract_router,
                 function_of_contract="multicall",
