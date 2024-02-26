@@ -647,24 +647,16 @@ class TOKENS:
         )
 
     class LINEA:
-        ETH = TOKEN(address="", exchange_name="ETH")
-        WETH = TOKEN(
-            address="0x2C1b868d6596a18e32E61B901E4060C872647b6C",
+        ETH = TOKEN(
+            address="",
             network="Linea",
             exchange_name="ETH",
         )
-        USDT = TOKEN(
-            address="0x2C1b868d6596a18e32E61B901E4060C872647b6C", exchange_name="ETH"
-        )
-        USDC = TOKEN(
-            address="0x176211869cA2b568f2A7D4EE941E073a821EE1ff", exchange_name="ETH"
-        )
-        DAI = TOKEN(
-            address="0x4AF15ec2A0BD43Db75dd04E62FAA3B8EF36b00d5", exchange_name="ETH"
-        )
-        WBTC = TOKEN(
-            address="0x3aAB2285ddcDdaD8edf438C1bAB47e1a9D05a9b4", exchange_name="ETH"
-        )
+        WETH = TOKEN(address="0x2C1b868d6596a18e32E61B901E4060C872647b6C")
+        USDT = TOKEN(address="0x2C1b868d6596a18e32E61B901E4060C872647b6C")
+        USDC = TOKEN(address="0x176211869cA2b568f2A7D4EE941E073a821EE1ff")
+        DAI = TOKEN(address="0x4AF15ec2A0BD43Db75dd04E62FAA3B8EF36b00d5")
+        WBTC = TOKEN(address="0x3aAB2285ddcDdaD8edf438C1bAB47e1a9D05a9b4")
 
     class SCROLL:
         ETH = TOKEN(address="")
