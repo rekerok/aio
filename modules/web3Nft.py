@@ -22,7 +22,7 @@ class Web3Nft(Web3Client):
         logger.info(f"WALLET: {self.acc.address}")
         logger.info(f"NETWORK: {self.acc.network.get(NETWORK_FIELDS.NAME)}")
         logger.info(f"DEX: {self.NAME} ")
-        await self._perform_mint(nft_contract_address=nft_contract_address)
+        return await self._perform_mint(nft_contract_address=nft_contract_address)
 
     @staticmethod
     async def _create_database(wallets: list[str], params):
