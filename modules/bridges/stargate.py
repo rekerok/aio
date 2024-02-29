@@ -35,7 +35,7 @@ class Stargate(Web3Bridger):
             type_transfer=type_transfer,
             value=value,
             min_balance=min_balance,
-            slippage=slippage,
+            slippage=0.5,
         )
 
     async def _get_lz_fee(
@@ -45,7 +45,10 @@ class Stargate(Web3Bridger):
         to_chain_id: int,
     ) -> Token_Amount:
         try:
-            dst_address = eth_utils.address.to_checksum_address(dst_address)
+            if dst_address == "":
+                dst_address = "0x"
+            else:
+                dst_address = eth_utils.address.to_checksum_address(dst_address)
             data = (
                 await contract.functions.quoteLayerZeroFee(
                     to_chain_id,  # destination chainId
@@ -97,6 +100,7 @@ class Stargate(Web3Bridger):
             ),
             abi=config.STARGATE.ROUTER_ABI,
         )
+
         fee = await self._get_lz_fee(
             contract=contract,
             dst_address=to_token.address,
@@ -112,32 +116,63 @@ class Stargate(Web3Bridger):
             amount=amount_to_send.ETHER * (1 - self.slippage / 100),
             decimals=amount_to_send.DECIMAL,
         )
-        args = (
-            to_chain_id,  # destination chainId
-            from_pool_id,  # source poolId
-            to_pool_id,  # destination poolId
-            self.acc.address,  # refund address. extra gas (if any) is returned to this address
-            amount_to_send.WEI,  # quantity to swap
-            min_received_amount.WEI,  # the min qty you would accept on the destination
-            [
-                0,  # extra gas, if calling smart contract
-                0,  # amount of dust dropped in destination wallet
-                "0x",  # destination wallet for dust
-            ],
-            self.acc.address,  # the address to send the tokens to on the destination
-            "0x",  # "fee" is the native gas to pay for the cross chain message fee
-        )
+        if from_token.symbol == "ETH":
+            contract = self.acc.w3.eth.contract(
+                address=config.STARGATE.ROUTER_CONTRACTS_ETH.get(
+                    self.acc.network.get(NETWORK_FIELDS.NAME)
+                ),
+                abi=config.STARGATE.ROUTER_ABI_ETH,
+            )
+            args = (
+                to_chain_id,
+                self.acc.address,
+                self.acc.address,
+                amount_to_send.WEI,
+                min_received_amount.WEI,
+            )
+            data = await Web3Client.get_data(
+                contract=contract, function_of_contract="swapETH", args=args
+            )
+            if data is None:
+                logger.error("DON'T GET DATA FOR BRIDGE")
+                return RESULT_TRANSACTION.FAIL
+            return await self._send_transaction(
+                data=data,
+                from_token=from_token,
+                to_address=contract.address,
+                amount_to_send=Token_Amount(
+                    amount=amount_to_send.WEI + fee.WEI * 1.05,
+                    decimals=amount_to_send.DECIMAL,
+                    wei=True,
+                ),
+            )
+        else:
+            args = (
+                to_chain_id,  # destination chainId
+                from_pool_id,  # source poolId
+                to_pool_id,  # destination poolId
+                self.acc.address,  # refund address. extra gas (if any) is returned to this address
+                amount_to_send.WEI,  # quantity to swap
+                min_received_amount.WEI,  # the min qty you would accept on the destination
+                [
+                    0,  # extra gas, if calling smart contract
+                    0,  # amount of dust dropped in destination wallet
+                    "0x",  # destination wallet for dust
+                ],
+                self.acc.address,  # the address to send the tokens to on the destination
+                "0x",  # "fee" is the native gas to pay for the cross chain message fee
+            )
 
-        data = await Web3Client.get_data(
-            contract=contract, function_of_contract="swap", args=args
-        )
-        if data is None:
-            logger.error("DON'T GET DATA FOR BRIDGE")
-            return RESULT_TRANSACTION.FAIL
-        return await self._send_transaction(
-            data=data,
-            from_token=from_token,
-            to_address=contract.address,
-            amount_to_send=amount_to_send,
-            value=fee,
-        )
+            data = await Web3Client.get_data(
+                contract=contract, function_of_contract="swap", args=args
+            )
+            if data is None:
+                logger.error("DON'T GET DATA FOR BRIDGE")
+                return RESULT_TRANSACTION.FAIL
+            return await self._send_transaction(
+                data=data,
+                from_token=from_token,
+                to_address=contract.address,
+                amount_to_send=amount_to_send,
+                value=fee,
+            )
