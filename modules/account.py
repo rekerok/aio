@@ -137,16 +137,19 @@ class Account:
                 address=self.w3.to_checksum_address(token_address),
                 abi=config.GENERAL.ERC20_ABI,
             )
-            logger.info(
-                f"Make approve for {amount.ETHER + amount.ETHER * random.uniform(0.01,0.05)}"
+            value_approove = Token_Amount(
+                amount=amount.WEI + amount.WEI * random.uniform(0.01, 0.05),
+                decimals=amount.DECIMAL,
+                wei=True,
             )
+            logger.info(f"Make approve for {value_approove.ETHER}")
             await self.send_transaction(
                 to_address=token_address,
                 data=contract.encodeABI(
                     "approve",
                     args=(
                         self.w3.to_checksum_address(spender),
-                        int(amount.WEI + amount.WEI * 0.1),
+                        int(value_approove.WEI),
                     ),
                 ),
             )

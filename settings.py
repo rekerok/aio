@@ -1,10 +1,10 @@
 from config import Network
 from utils.enums import NETWORK_FIELDS
 
-LIMIT_GWEI = 35
+LIMIT_GWEI = 30
 GAS_MULTIPLAY = 1.3
-COUNT_CHECK_GAS = 1000
-SLEEP_AFTER_APPROOVE = (40, 60)
+COUNT_CHECK_GAS = 10000
+SLEEP_AFTER_APPROOVE = (50, 70)
 USE_PROXY = False
 
 ### API KEYS ###
@@ -12,7 +12,7 @@ INCH_SWAP_KEY = ""
 ZEROX_KEY = ""
 
 ### REFFERAL ###
-USE_REF = True
+USE_REF = False
 FEE = 1
 
 

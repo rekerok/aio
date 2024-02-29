@@ -38,12 +38,15 @@ async def wait_gas(w3):
             logger.error(f"Gas Receiving Error")
             continue
         if gas_now > LIMIT_GWEI:
-            logger.info(f"Check GAS Try {i+1}/{COUNT_CHECK_GAS}")
-            logger.info(f"GAS NOW {gas_now} > {LIMIT_GWEI}")
+            logger.info(
+                f"Check GAS {i+1}/{COUNT_CHECK_GAS} GAS = {gas_now} > {LIMIT_GWEI}"
+            )
             sleep_time = round(random.uniform(30, 60), 3)
             logger.info(f"SLEEP {sleep_time} sec")
             await asyncio.sleep(random.uniform(30, 60))
         else:
-            logger.success(f"GAS NOW {gas_now} < {LIMIT_GWEI}")
+            logger.success(
+                f"Check GAS {i+1}/{COUNT_CHECK_GAS} GAS = {gas_now} < {LIMIT_GWEI}"
+            )
             return True
     return False

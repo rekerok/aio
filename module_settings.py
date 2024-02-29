@@ -316,65 +316,65 @@ class DEPLOY_SETTINGS:
 
 class CHECK_BALANCES_SETTINGS:
     params = [
-        # {
-        #     PARAMETR.NETWORK: Client_Networks.arbitrum,
-        #     PARAMETR.TOKENS: [
-        #         TOKENS.ARBITRUM.ETH,
-        #         TOKENS.ARBITRUM.USDC,
-        #         TOKENS.ARBITRUM.USDC_BRIDGED,
-        #         TOKENS.ARBITRUM.USDT,
-        #     ],
-        # },
-        # {
-        #     PARAMETR.NETWORK: Client_Networks.optimism,
-        #     PARAMETR.TOKENS: [
-        #         TOKENS.OPTIMISM.ETH,
-        #         TOKENS.OPTIMISM.USDC,
-        #         TOKENS.OPTIMISM.USDC_BRIDGED,
-        #         TOKENS.OPTIMISM.USDT,
-        #     ],
-        # },
-        # {
-        #     PARAMETR.NETWORK: Client_Networks.zksync,
-        #     PARAMETR.TOKENS: [
-        #         TOKENS.ZKSYNC.ETH,
-        #         TOKENS.ZKSYNC.USDC,
-        #         TOKENS.ZKSYNC.USDT,
-        #         TOKENS.ZKSYNC.DAI,
-        #     ],
-        # },
-        # {
-        #     PARAMETR.NETWORK: Client_Networks.base,
-        #     PARAMETR.TOKENS: [TOKENS.BASE.ETH, TOKENS.BASE.USDbC],
-        # },
-        # {
-        #     PARAMETR.NETWORK: Client_Networks.nova,
-        #     PARAMETR.TOKENS: [TOKENS.NOVA.ETH],
-        # },
+        {
+            PARAMETR.NETWORK: Client_Networks.arbitrum,
+            PARAMETR.TOKENS: [
+                TOKENS.ARBITRUM.ETH,
+                TOKENS.ARBITRUM.USDC,
+                TOKENS.ARBITRUM.USDC_BRIDGED,
+                TOKENS.ARBITRUM.USDT,
+            ],
+        },
+        {
+            PARAMETR.NETWORK: Client_Networks.optimism,
+            PARAMETR.TOKENS: [
+                TOKENS.OPTIMISM.ETH,
+                TOKENS.OPTIMISM.USDC,
+                TOKENS.OPTIMISM.USDC_BRIDGED,
+                TOKENS.OPTIMISM.USDT,
+            ],
+        },
+        {
+            PARAMETR.NETWORK: Client_Networks.zksync,
+            PARAMETR.TOKENS: [
+                TOKENS.ZKSYNC.ETH,
+                TOKENS.ZKSYNC.USDC,
+                TOKENS.ZKSYNC.USDT,
+                TOKENS.ZKSYNC.DAI,
+            ],
+        },
+        {
+            PARAMETR.NETWORK: Client_Networks.base,
+            PARAMETR.TOKENS: [TOKENS.BASE.ETH, TOKENS.BASE.USDbC],
+        },
+        {
+            PARAMETR.NETWORK: Client_Networks.nova,
+            PARAMETR.TOKENS: [TOKENS.NOVA.ETH],
+        },
         {
             PARAMETR.NETWORK: Client_Networks.scroll,
             PARAMETR.TOKENS: [TOKENS.SCROLL.ETH],
         },
-        # {
-        #     PARAMETR.NETWORK: Client_Networks.avalanche,
-        #     PARAMETR.TOKENS: [
-        #         TOKENS.AVALANCHE.AVAX,
-        #         TOKENS.AVALANCHE.USDC,
-        #         TOKENS.AVALANCHE.USDT,
-        #     ],
-        # },
-        # {
-        #     PARAMETR.NETWORK: Client_Networks.polygon,
-        #     PARAMETR.TOKENS: [
-        #         TOKENS.POLYGON.MATIC,
-        #         TOKENS.POLYGON.USDC,
-        #         TOKENS.POLYGON.USDT,
-        #     ],
-        # },
-        # {
-        #     PARAMETR.NETWORK: Client_Networks.bsc,
-        #     PARAMETR.TOKENS: [TOKENS.BSC.BNB, TOKENS.BSC.USDT],
-        # },
+        {
+            PARAMETR.NETWORK: Client_Networks.avalanche,
+            PARAMETR.TOKENS: [
+                TOKENS.AVALANCHE.AVAX,
+                TOKENS.AVALANCHE.USDC,
+                TOKENS.AVALANCHE.USDT,
+            ],
+        },
+        {
+            PARAMETR.NETWORK: Client_Networks.polygon,
+            PARAMETR.TOKENS: [
+                TOKENS.POLYGON.MATIC,
+                TOKENS.POLYGON.USDC,
+                TOKENS.POLYGON.USDT,
+            ],
+        },
+        {
+            PARAMETR.NETWORK: Client_Networks.bsc,
+            PARAMETR.TOKENS: [TOKENS.BSC.BNB, TOKENS.BSC.USDT],
+        },
     ]
 
 
