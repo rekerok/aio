@@ -140,7 +140,7 @@ class Web3Lending(Web3Client):
             return RESULT_TRANSACTION.FAIL
         logger.info(f"WALLET: {self.acc.address}")
         logger.info(f"NETWORK: {self.acc.network.get(NETWORK_FIELDS.NAME)}")
-        await self._perform_withdraw(token_to_withdraw=token_to_withdraw)
+        return await self._perform_withdraw(token_to_withdraw=token_to_withdraw)
 
     @abstractmethod
     async def _perform_deposit(
