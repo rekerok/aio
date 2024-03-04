@@ -167,6 +167,7 @@ class OKX:
         counter = 1
         for wallet in database:
             logger.info(f"OPERATION {counter}/{len(database)}")
+            print(wallet["token"].NETWORK)
             await okx.withdraw(
                 address=wallet["address"],
                 amount=wallet["amount"],

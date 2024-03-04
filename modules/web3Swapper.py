@@ -182,6 +182,7 @@ class Web3Swapper(Web3Client):
                 value=data.get("value"),
                 min_balance=data.get("min_balance"),
                 max_balance=data.get("max_balance"),
+                slippage=settings.SLIPPAGE,
             )
             result = await dex.swap(
                 from_token=data.get("from_token"),
