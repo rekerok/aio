@@ -53,29 +53,76 @@ class IzumiSwap(Web3Swapper):
     # async def _get_path(self, from_token: Token_Info, to_token: Token_Info, fee: int):
     #     return f"{from_token.address[2:]}{fee:x}{to_token.address[2:]}"
 
-    async def _get_path(self, from_token: Token_Info, to_token: Token_Info, fee: int):
-        try:
-            from_token_bytes = HexBytes(from_token.address).rjust(20, b"\0")
-            to_token_bytes = HexBytes(to_token.address).rjust(20, b"\0")
-            fee_bytes = fee.to_bytes(3, "big")
-            return from_token_bytes + fee_bytes + to_token_bytes
-        except Exception as error:
-            logger.error(error)
-            return None
+    async def _get_pool_fee(self, from_token: Token_Info, to_token: Token_Info):
+        pairs = (
+            f"{from_token.symbol}/{to_token.symbol}",
+            f"{to_token.symbol}/{from_token.symbol}",
+        )
+        fees = config.IZUMI.CONTRACTS.get(
+            self.acc.network.get(NETWORK_FIELDS.NAME)
+        ).get("pairs")
+        fee = None
+        for pair in pairs:
+            fee = fees.get(pair)
+            if fee is not None:
+                break
+        return fee
 
-    async def _get_pool_fee(
-        self, from_token: Token_Info, to_token: Token_Info, fee: int = 400
-    ):
-        try:
-            pool_address = await self.contract_quoter.functions.pool(
-                from_token.address, to_token.address, fee
-            ).call()
-            if pool_address != config.GENERAL.ZERO_ADDRESS:
-                return fee
-            return await self._get_pool_fee(from_token, to_token, fee=500)
-        except Exception as error:
-            logger.error(error)
-            return None
+    async def _get_usdc_address(self):
+        if self.acc.network.get(NETWORK_FIELDS.NAME) == config.Network.ZKSYNC:
+            return eth_utils.address.to_checksum_address(
+                "0x3355df6D4c9C3035724Fd0e3914dE96A5a83aaf4"
+            )
+        elif self.acc.network.get(NETWORK_FIELDS.NAME) == config.Network.LINEA:
+            return eth_utils.address.to_checksum_address(
+                "0x176211869cA2b568f2A7D4EE941E073a821EE1ff"
+            )
+        else:
+            return eth_utils.address.to_checksum_address(
+                "0x06eFdBFf2a14a7c8E15944D1F4A48F9F95F663A4"
+            )
+
+    async def _get_path(self, from_token: Token_Info, to_token: Token_Info):
+        if not (from_token.symbol == "USDT" or to_token.symbol == "USDT"):
+            try:
+                fee = await self._get_pool_fee(from_token=from_token, to_token=to_token)
+                if fee is None:
+                    return None
+                from_token_bytes = HexBytes(from_token.address).rjust(20, b"\0")
+                to_token_bytes = HexBytes(to_token.address).rjust(20, b"\0")
+                fee_bytes = fee.to_bytes(3, "big")
+                return from_token_bytes + fee_bytes + to_token_bytes
+            except Exception as error:
+                logger.error(error)
+                return None
+        else:
+            try:
+                from_token_bytes = HexBytes(from_token.address).rjust(20, b"\0")
+                fee1 = await self._get_pool_fee(
+                    from_token=from_token,
+                    to_token=Token_Info(address="", symbol="USDC", decimals=6),
+                )
+                fee_bytes_1 = fee1.to_bytes(3, "big")
+                middle_token_bytes = HexBytes(await self._get_usdc_address()).rjust(
+                    20, b"\0"
+                )
+                fee2 = await self._get_pool_fee(
+                    from_token=Token_Info(address="", symbol="USDC", decimals=6),
+                    to_token=to_token,
+                )
+                fee_bytes_2 = fee2.to_bytes(3, "big")
+                to_token_bytes = HexBytes(to_token.address).rjust(20, b"\0")
+                return (
+                    from_token_bytes
+                    + fee_bytes_1
+                    + middle_token_bytes
+                    + fee_bytes_2
+                    + to_token_bytes
+                )
+
+            except Exception as error:
+                logger.error(error)
+                return None
 
     async def _get_amount_in(self, path: str, amount_to_send: Token_Amount):
         try:
@@ -97,12 +144,9 @@ class IzumiSwap(Web3Swapper):
         from_token, to_token = await Token_Info.to_wrapped_token(
             network=self.acc.network, from_token=from_token, to_token=to_token
         )
-        fee = await self._get_pool_fee(to_token=to_token, from_token=from_token)
-        if not fee:
-            return RESULT_TRANSACTION.FAIL
-        deadline = int(time.time()) + 1000000
-        path = await self._get_path(from_token=from_token, to_token=to_token, fee=fee)
+        path = await self._get_path(from_token=from_token, to_token=to_token)
         if not path:
+            logger.error("FAIL GET PATH")
             return RESULT_TRANSACTION.FAIL
         amount_in = await self._get_amount_in(path=path, amount_to_send=amount_to_send)
         if not amount_in:
@@ -120,6 +164,8 @@ class IzumiSwap(Web3Swapper):
             )
             else config.GENERAL.ZERO_ADDRESS
         )
+        deadline = int(time.time()) + 10000
+
         data_swapAmount = await Web3Client.get_data(
             self.contract_router,
             "swapAmount",
