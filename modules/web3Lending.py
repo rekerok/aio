@@ -133,6 +133,8 @@ class Web3Lending(Web3Client):
 
     async def withdraw(self, token_to_withdraw: config.TOKEN):
         logger.info("WITHDRAW")
+        logger.info(f"DEX: {self.NAME} ")
+
         token_to_withdraw: Token_Info = await Token_Info.get_info_token(
             acc=self.acc, token_address=token_to_withdraw.ADDRESS
         )

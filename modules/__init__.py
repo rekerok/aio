@@ -35,7 +35,7 @@ from .swaps.arb_swap import ArbSwap
 from .swaps.xy_finance_swap import XY_finance_swap
 from .swaps.rango import RangoSwap
 from .swaps.skydrome_swap import Skydrome
-from .landings.eralend import Eralend
-from .landings.layerbank import Layerbank
-from .landings.aave import Aave
+from .lendings.eralend import Eralend
+from .lendings.layerbank import Layerbank
+from .lendings.aave import Aave
 from .nft.l2pass import L2pass_NFT

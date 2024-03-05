@@ -34,6 +34,8 @@ class Aave(Web3Lending):
             address=eth_utils.address.to_checksum_address(config.AAVE.CONTRACT),
             abi=config.AAVE.ABI,
         )
+        self.weth_token = eth_utils.address.to_checksum_address(config.AAVE.WETH)
+        self.pool = eth_utils.address.to_checksum_address(config.AAVE.POOL)
 
     async def _perform_deposit(
         self, amount_to_deposit: Token_Amount, token_to_deposit: Token_Info
@@ -42,7 +44,7 @@ class Aave(Web3Lending):
             self.contract,
             function_of_contract="depositETH",
             args=(
-                eth_utils.address.to_checksum_address(config.AAVE.POOL),
+                eth_utils.address.to_checksum_address(self.pool),
                 self.acc.address,
                 0,
             ),
@@ -58,12 +60,12 @@ class Aave(Web3Lending):
         )
 
     async def _perform_withdraw(self, token_to_withdraw: Token_Info):
-        amount_to_deposited = await self.acc.get_balance(token_address=config.AAVE.WETH)
+        amount_to_deposited = await self.acc.get_balance(self.weth_token)
         if amount_to_deposited.WEI == 0:
             logger.error("DEPOSIT = 0")
             return RESULT_TRANSACTION.FAIL
         await self.acc.approve(
-            token_address=config.AAVE.WETH,
+            token_address=self.weth_token,
             spender=self.contract.address,
             amount=amount_to_deposited,
         )
@@ -71,7 +73,7 @@ class Aave(Web3Lending):
             self.contract,
             function_of_contract="withdrawETH",
             args=(
-                eth_utils.address.to_checksum_address(config.AAVE.POOL),
+                eth_utils.address.to_checksum_address(self.weth_token),
                 amount_to_deposited.WEI,
                 self.acc.address,
             ),
