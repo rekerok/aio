@@ -38,4 +38,5 @@ from .swaps.skydrome_swap import Skydrome
 from .lendings.eralend import Eralend
 from .lendings.layerbank import Layerbank
 from .lendings.aave import Aave
+from .lendings.zeroland import ZeroLend
 from .nft.l2pass import L2pass_NFT
