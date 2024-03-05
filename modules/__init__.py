@@ -40,4 +40,5 @@ from .lendings.layerbank import Layerbank
 from .lendings.aave import Aave
 from .lendings.basilisk import Basilisk
 from .lendings.zeroland import ZeroLend
+from .lendings.reactor_fusion import Reactor_Fusion
 from .nft.l2pass import L2pass_NFT
