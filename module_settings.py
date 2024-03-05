@@ -30,6 +30,9 @@ class LENDINGS:
     ERALEND = Eralend
     LAYERBANK = Layerbank
     AAVE = Aave
+    BASILISK = Basilisk
+    ZEROLEND = ZeroLend
+    REACTOR_FUSION = Reactor_Fusion
 
 
 class NFTS:
@@ -41,28 +44,65 @@ class REFUEL_APP:
     L2PASS = L2Pass
 
 
+class MODULES:
+    OKX_WITHDRAW = OKX.withdraw_use_database
+    TRANSFER = Transfers.transfer_use_database
+    SWAPS = Web3Swapper.swap_use_database
+    BRIDGES = Web3Bridger.swap_use_database
+    LENDINGS = Web3Lending.landing_use_database
+    MINT_NFT = Web3Nft.mint_use_database
+    WARMUP_SWAPS = WarmUPSwaps.warmup
+    WARMUP_REFUEL = WarmUpRefuel.warm_up_refuel
+    DEPLOY_CONTRACTS = Deployer.deploy_with_database
+
+
 class OKX_settings:
-    # PROXY: str = "http://user:pass@ip:port"
-    PROXY: str = ""
+    SLEEP: tuple[int] = (60, 200)
+    WAIT_TO_SEND = False
+    ATTEMPT_WAIT_WITHDRAW = 15
+    PROXY: str = ""  # "http://user:pass@ip:port"
+
     KEYS: dict = {
         PARAMETR.OKX_API_KEY: "",
         PARAMETR.OKX_API_SECRET: "",
         PARAMETR.OKX_PASSWORD: "",
     }
+
     PARAMS: list[dict] = [
         {
-            PARAMETR.TOKENS: [TOKENS.AVALANCHE.AVAX],
+            PARAMETR.TOKENS: [TOKENS.ARBITRUM.ETH, TOKENS.OPTIMISM.ETH],
             PARAMETR.VALUE: (0.1, 0.1),
             PARAMETR.ROUND: (0, 3),
-            PARAMETR.WALLETS_FILE: "",
+            PARAMETR.RECIPIENTS_FILE: "",
         },
     ]
-    SLEEP: tuple[int] = (60, 200)
-    WAIT_TO_SEND = False
-    ATTEMPT_WAIT_WITHDRAW = 15
+
+    ######### NOT CHANGE #########
+    def __init__(
+        self,
+        SLEEP: tuple[int] = None,
+        WAIT_TO_SEND: bool = None,
+        ATTEMPT_WAIT_WITHDRAW: int = None,
+        KEYS: dict = None,
+        PARAMS: list[dict] = None,
+    ) -> None:
+        if SLEEP is not None:
+            self.SLEEP = SLEEP
+        if WAIT_TO_SEND is not None:
+            self.WAIT_TO_SEND = WAIT_TO_SEND
+        if ATTEMPT_WAIT_WITHDRAW is not None:
+            self.ATTEMPT_WAIT_WITHDRAW = ATTEMPT_WAIT_WITHDRAW
+        if KEYS is not None:
+            self.KEYS = KEYS
+        if PARAMS is not None:
+            self.PARAMS = PARAMS
 
 
 class TRANSFERS_SETTINGS:
+    SLEEP: tuple[int] = (1000, 4000)
+    WALLETS_FILE: str = ""  # DEFAULT files/wallets.txt
+    RECIPIENTS_FILE: str = ""  # DEFAULT files/recipients.txt
+
     PARAMS: list[dict] = [
         {
             PARAMETR.NETWORK: Client_Networks.avalanche,
@@ -72,10 +112,29 @@ class TRANSFERS_SETTINGS:
             PARAMETR.MIN_BALANCE: 0.0001,
         },
     ]
-    SLEEP: tuple[int] = (1000, 4000)
+
+    ######### NOT CHANGE #########
+    def __init__(
+        self,
+        SLEEP: int = None,
+        WALLETS_FILE: str = None,
+        RECIPIENTS_FILE: str = None,
+        PARAMS: list[dict] = None,
+    ) -> None:
+        if SLEEP is not None:
+            self.SLEEP = SLEEP
+        if WALLETS_FILE is not None:
+            self.WALLETS_FILE = WALLETS_FILE
+        if RECIPIENTS_FILE is not None:
+            self.RECIPIENTS_FILE = RECIPIENTS_FILE
+        if PARAMS is not None:
+            self.PARAMS = PARAMS
 
 
 class SWAP_SETTINGS:
+    SLEEP = (50, 50)
+    SLIPPAGE = 1
+
     PARAMS = [
         {
             PARAMETR.NETWORK: Client_Networks.zksync,
@@ -87,76 +146,101 @@ class SWAP_SETTINGS:
             PARAMETR.TO_TOKENS: [
                 {
                     PARAMETR.TO_TOKEN: TOKENS.ZKSYNC.ETH,
-                    PARAMETR.DEXS: [DEX.OPENOCEAN, DEX.ODOS],
-                },
-            ],
-            PARAMETR.WALLETS_FILE: "",
-        },
-        {
-            PARAMETR.NETWORK: Client_Networks.zksync,
-            PARAMETR.TYPE_TRANSACTION: TYPES_OF_TRANSACTION.PERCENT,
-            PARAMETR.VALUE: (100, 100),
-            PARAMETR.FROM_TOKEN: TOKENS.ZKSYNC.USDT,
-            PARAMETR.MIN_BALANCE: 0,
-            PARAMETR.MAX_BALANCE: 1000,
-            PARAMETR.TO_TOKENS: [
-                {
-                    PARAMETR.TO_TOKEN: TOKENS.ZKSYNC.ETH,
-                    PARAMETR.DEXS: [DEX.OPENOCEAN, DEX.ODOS],
+                    PARAMETR.DEXS: [DEX.IZUMI],
                 },
             ],
             PARAMETR.WALLETS_FILE: "",
         },
     ]
-    SLIPPAGE = 1
-    SLEEP = (100, 100)
+
+    ######### NOT CHANGE #########
+    def __init__(
+        self,
+        SLEEP: int = None,
+        SLIPPAGE: int = None,
+        PARAMS: list[dict] = None,
+    ) -> None:
+        if SLEEP is not None:
+            self.SLEEP = SLEEP
+        if SLIPPAGE is not None:
+            self.SLIPPAGE = SLIPPAGE
+        if PARAMS is not None:
+            self.PARAMS = PARAMS
 
 
 class BRIDGE_SETTINGS:
+    SLEEP = (100, 200)
+    SLIPPAGE = 5
+
     PARAMS = [
         {
-            PARAMETR.NETWORK: Client_Networks.optimism,
-            PARAMETR.TYPE_TRANSACTION: TYPES_OF_TRANSACTION.PERCENT,
-            PARAMETR.VALUE: (10, 15),
-            PARAMETR.FROM_TOKEN: TOKENS.OPTIMISM.ETH,
+            PARAMETR.NETWORK: Client_Networks.avalanche,
+            PARAMETR.TYPE_TRANSACTION: TYPES_OF_TRANSACTION.AMOUNT,
+            PARAMETR.VALUE: (1.5, 1.5),
+            PARAMETR.FROM_TOKEN: TOKENS.AVALANCHE.USDC,
             PARAMETR.MIN_BALANCE: 0,
             PARAMETR.TO_TOKENS: [
                 {
-                    PARAMETR.NETWORK: Network.SCROLL,
-                    PARAMETR.TO_TOKEN: TOKENS.SCROLL.ETH,
-                    PARAMETR.DEXS: [DEX.XY_FINANCE_BRIDGE],
+                    PARAMETR.NETWORK: Network.ZKSYNC,
+                    PARAMETR.TO_TOKEN: TOKENS.ZKSYNC.USDC,
+                    PARAMETR.DEXS: [DEX.NITRO],
                 },
             ],
             PARAMETR.WALLETS_FILE: "",
         },
     ]
-    SLIPPAGE = 5
-    SLEEP = (10, 50)
+
+    ######### NOT CHANGE #########
+    def __init__(
+        self,
+        SLEEP: int = None,
+        SLIPPAGE: int = None,
+        PARAMS: list[dict] = None,
+    ) -> None:
+        if SLEEP is not None:
+            self.SLEEP = SLEEP
+        if SLIPPAGE is not None:
+            self.SLIPPAGE = SLIPPAGE
+        if PARAMS is not None:
+            self.PARAMS = PARAMS
 
 
 class LANDINGS_SETTINGS:
+    SLEEP = (100, 100)
+
     PARAMS = [
         {
-            PARAMETR.NETWORK: Client_Networks.scroll,
+            PARAMETR.NETWORK: Client_Networks.zksync,
             PARAMETR.TYPE_TRANSACTION: TYPES_OF_TRANSACTION.PERCENT,
-            PARAMETR.VALUE: (1, 2),
+            PARAMETR.VALUE: (10, 10),
             PARAMETR.LENDING_DEPOSIT: False,
             PARAMETR.MIN_BALANCE: 0,
             PARAMETR.TOKENS: [
                 {
-                    PARAMETR.TOKEN: TOKENS.SCROLL.ETH,
-                    PARAMETR.LENDINGS: [LENDINGS.AAVE],
+                    PARAMETR.TOKEN: TOKENS.ZKSYNC.ETH,
+                    PARAMETR.LENDINGS: [LENDINGS.ERALEND],
                 },
             ],
             PARAMETR.MIN_BALANCE: 0,
             PARAMETR.WALLETS_FILE: "",
         },
     ]
-    SLIPPAGE = 1
-    SLEEP = (10, 50)
+
+    ######### NOT CHANGE #########
+    def __init__(
+        self,
+        SLEEP: int = None,
+        PARAMS: list[dict] = None,
+    ) -> None:
+        if SLEEP is not None:
+            self.SLEEP = SLEEP
+        if PARAMS is not None:
+            self.PARAMS = PARAMS
 
 
 class MINT_NFT_SETTINGS:
+    SLEEP = (100, 200)
+
     PARAMS = [
         {
             PARAMETR.NETWORK: Client_Networks.scroll,
@@ -170,38 +254,24 @@ class MINT_NFT_SETTINGS:
             PARAMETR.WALLETS_FILE: "",
         },
     ]
-    SLIPPAGE = 1
-    SLEEP = (10, 50)
 
-
-class CHECK_NFT_SETTINGS:
-    PARAMS = [
-        {
-            PARAMETR.NETWORK: Client_Networks.polygon,
-            PARAMETR.NFTS: [
-                {
-                    PARAMETR.TOKEN_ADDRESS: "0x6D6768A0b24299bEdE0492A4571D79F535c330D8",
-                    PARAMETR.NAME: "How Far We've Come",
-                },
-                {
-                    PARAMETR.TOKEN_ADDRESS: "0xB6432d111bc2A022048b9aEA7C11b2d627184bdD",
-                    PARAMETR.NAME: "azure",
-                },
-            ],
-        },
-        {
-            PARAMETR.NETWORK: Client_Networks.avalanche,
-            PARAMETR.NFTS: [
-                {
-                    PARAMETR.TOKEN_ADDRESS: "0xB6432d111bc2A022048b9aEA7C11b2d627184bdD",
-                    PARAMETR.NAME: "azure",
-                },
-            ],
-        },
-    ]
+    ######### NOT CHANGE #########
+    def __init__(
+        self,
+        SLEEP: int = None,
+        PARAMS: list[dict] = None,
+    ) -> None:
+        if SLEEP is not None:
+            self.SLEEP = SLEEP
+        if PARAMS is not None:
+            self.PARAMS = PARAMS
 
 
 class WARMUPSWAPS_SETTINGS:
+    SLEEP = (20, 30)
+    SLIPPAGE = 3
+    USE_MAX_BALANCE = False
+    WALLETS_FILE = ""  # DEFAULT files/wallets.txt
     PARAMS = {
         DEX.ODOS: [
             {
@@ -223,34 +293,30 @@ class WARMUPSWAPS_SETTINGS:
             },
         ],
     }
-    USE_MAX_BALANCE = False
-    SLIPPAGE = 5
-    SLEEP = (20, 30)
 
-
-class WARMPUSTARGATE_SETTINGS:
-    USE_OKX = True
-    PARAMS = [
-        {
-            PARAMETR.NETWORK: Client_Networks.polygon,
-            PARAMETR.TOKENS: [TOKENS.POLYGON.USDT],
-            PARAMETR.TO_TOKENS: [
-                {
-                    PARAMETR.NETWORK: Network.AVALANCHE,
-                    PARAMETR.TO_TOKEN: TOKENS.AVALANCHE.USDT,
-                },
-                {
-                    PARAMETR.NETWORK: Network.OPTIMISM,
-                    PARAMETR.TO_TOKEN: TOKENS.OPTIMISM.USDC,
-                },
-            ],
-        }
-    ]
-    VALUE = (1, 4)
-    MAX_FEES = {}
+    ######### NOT CHANGE #########
+    def __init__(
+        self,
+        SLEEP: tuple[int] = None,
+        SLIPPAGE: int = None,
+        USE_MAX_BALANCE: bool = None,
+        WALLETS_FILE: str = None,
+        PARAMS: list[dict] = None,
+    ) -> None:
+        if SLEEP is not None:
+            self.SLEEP = SLEEP
+        if SLIPPAGE is not None:
+            self.SLIPPAGE = SLIPPAGE
+        if USE_MAX_BALANCE is not None:
+            self.USE_MAX_BALANCE = USE_MAX_BALANCE
+        if WALLETS_FILE is not None:
+            self.WALLETS_FILE = WALLETS_FILE
+        if PARAMS is not None:
+            self.PARAMS = PARAMS
 
 
 class REFUEL_SETTINGS:
+    SLEEP = (150, 200)
     CHECK_COMISSION_NETWORKS = {
         REFUEL_APP.MERKLY: [
             Client_Networks.zksync,
@@ -285,11 +351,22 @@ class REFUEL_SETTINGS:
             }
         ],
     }
-    SLEEP = (50, 100)
+
+    ######### NOT CHANGE #########
+    def __init__(
+        self,
+        SLEEP: tuple[int] = None,
+        PARAMS: list[dict] = None,
+    ) -> None:
+        if SLEEP is not None:
+            self.SLEEP = SLEEP
+        if PARAMS is not None:
+            self.PARAMS = PARAMS
 
 
 class DEPLOY_SETTINGS:
-    params = [
+    SLEEP = (5, 10)
+    PARAMS = [
         {
             PARAMETR.NETWORK: Client_Networks.polygon,
             PARAMETR.CONTRACTS: [
@@ -300,18 +377,45 @@ class DEPLOY_SETTINGS:
             ],
             PARAMETR.COUNT_TRANSACTION: (1, 1),
         },
+    ]
+
+    ######### NOT CHANGE #########
+    def __init__(
+        self,
+        SLEEP: tuple[int] = None,
+        PARAMS: list[dict] = None,
+    ) -> None:
+        if SLEEP is not None:
+            self.SLEEP = SLEEP
+        if PARAMS is not None:
+            self.PARAMS = PARAMS
+
+
+class CHECK_NFT_SETTINGS:
+    PARAMS = [
         {
-            PARAMETR.NETWORK: Client_Networks.zksync,
-            PARAMETR.CONTRACTS: [
+            PARAMETR.NETWORK: Client_Networks.polygon,
+            PARAMETR.NFTS: [
                 {
-                    PARAMETR.NAME: "clear",
-                    PARAMETR.BYTECODE_CONTRACT: "0x",
+                    PARAMETR.TOKEN_ADDRESS: "0x6D6768A0b24299bEdE0492A4571D79F535c330D8",
+                    PARAMETR.NAME: "How Far We've Come",
+                },
+                {
+                    PARAMETR.TOKEN_ADDRESS: "0xB6432d111bc2A022048b9aEA7C11b2d627184bdD",
+                    PARAMETR.NAME: "azure",
                 },
             ],
-            PARAMETR.COUNT_TRANSACTION: (1, 1),
+        },
+        {
+            PARAMETR.NETWORK: Client_Networks.avalanche,
+            PARAMETR.NFTS: [
+                {
+                    PARAMETR.TOKEN_ADDRESS: "0xB6432d111bc2A022048b9aEA7C11b2d627184bdD",
+                    PARAMETR.NAME: "azure",
+                },
+            ],
         },
     ]
-    SLEEP = (5, 10)
 
 
 class CHECK_BALANCES_SETTINGS:
@@ -319,68 +423,123 @@ class CHECK_BALANCES_SETTINGS:
         {
             PARAMETR.NETWORK: Client_Networks.arbitrum,
             PARAMETR.TOKENS: [
-                TOKENS.ARBITRUM.ETH,
+                # TOKENS.ARBITRUM.ETH,
                 TOKENS.ARBITRUM.USDC,
-                TOKENS.ARBITRUM.USDC_BRIDGED,
-                TOKENS.ARBITRUM.USDT,
+                # TOKENS.ARBITRUM.USDC_BRIDGED,
+                # TOKENS.ARBITRUM.USDT,
             ],
         },
         {
             PARAMETR.NETWORK: Client_Networks.optimism,
             PARAMETR.TOKENS: [
-                TOKENS.OPTIMISM.ETH,
+                # TOKENS.OPTIMISM.ETH,
                 TOKENS.OPTIMISM.USDC,
                 TOKENS.OPTIMISM.USDC_BRIDGED,
-                TOKENS.OPTIMISM.USDT,
+                # TOKENS.OPTIMISM.USDT,
             ],
         },
         {
             PARAMETR.NETWORK: Client_Networks.zksync,
             PARAMETR.TOKENS: [
-                TOKENS.ZKSYNC.ETH,
+                # TOKENS.ZKSYNC.ETH,
                 TOKENS.ZKSYNC.USDC,
-                TOKENS.ZKSYNC.USDT,
-                TOKENS.ZKSYNC.DAI,
+                # TOKENS.ZKSYNC.USDT,
+                # TOKENS.ZKSYNC.DAI,
             ],
         },
-        {
-            PARAMETR.NETWORK: Client_Networks.base,
-            PARAMETR.TOKENS: [TOKENS.BASE.ETH, TOKENS.BASE.USDbC],
-        },
-        {
-            PARAMETR.NETWORK: Client_Networks.nova,
-            PARAMETR.TOKENS: [TOKENS.NOVA.ETH],
-        },
-        {
-            PARAMETR.NETWORK: Client_Networks.scroll,
-            PARAMETR.TOKENS: [TOKENS.SCROLL.ETH],
-        },
+        # {
+        #     PARAMETR.NETWORK: Client_Networks.base,
+        #     PARAMETR.TOKENS: [TOKENS.BASE.ETH, TOKENS.BASE.USDbC],
+        # },
+        # {
+        #     PARAMETR.NETWORK: Client_Networks.nova,
+        #     PARAMETR.TOKENS: [TOKENS.NOVA.ETH],
+        # },
+        # {
+        #     PARAMETR.NETWORK: Client_Networks.scroll,
+        #     PARAMETR.TOKENS: [
+        #         TOKENS.SCROLL.ETH,
+        #         TOKENS.SCROLL.USDC,
+        #         TOKENS.SCROLL.USDT,
+        #     ],
+        # },
         {
             PARAMETR.NETWORK: Client_Networks.avalanche,
             PARAMETR.TOKENS: [
-                TOKENS.AVALANCHE.AVAX,
+                # TOKENS.AVALANCHE.AVAX,
                 TOKENS.AVALANCHE.USDC,
-                TOKENS.AVALANCHE.USDT,
+                # TOKENS.AVALANCHE.USDT,
             ],
         },
         {
             PARAMETR.NETWORK: Client_Networks.polygon,
             PARAMETR.TOKENS: [
-                TOKENS.POLYGON.MATIC,
+                # TOKENS.POLYGON.MATIC,
+                TOKENS.POLYGON.USDC_BRIDGED,
                 TOKENS.POLYGON.USDC,
-                TOKENS.POLYGON.USDT,
+                # TOKENS.POLYGON.USDT,
             ],
         },
-        {
-            PARAMETR.NETWORK: Client_Networks.bsc,
-            PARAMETR.TOKENS: [TOKENS.BSC.BNB, TOKENS.BSC.USDT],
-        },
+        # {
+        #     PARAMETR.NETWORK: Client_Networks.bsc,
+        #     PARAMETR.TOKENS: [TOKENS.BSC.BNB, TOKENS.BSC.USDT],
+        # },
     ]
 
 
 class CREATE_WALLETS_SETTIGS:
     COUNT = 10
     FILE = "wallest.csv"
+
+
+class MULTITASKS_SETTINGS:
+    SLEEP_BETWEEN_MODULES = (30, 60)
+    TASKS = [
+        {
+            PARAMETR.MODULE: MODULES.LENDINGS,
+            PARAMETR.SETTINGS: LANDINGS_SETTINGS(
+                PARAMS=[
+                    {
+                        PARAMETR.NETWORK: Client_Networks.zksync,
+                        PARAMETR.TYPE_TRANSACTION: TYPES_OF_TRANSACTION.PERCENT,
+                        PARAMETR.VALUE: (10, 10),
+                        PARAMETR.LENDING_DEPOSIT: True,
+                        PARAMETR.MIN_BALANCE: 0,
+                        PARAMETR.TOKENS: [
+                            {
+                                PARAMETR.TOKEN: TOKENS.ZKSYNC.ETH,
+                                PARAMETR.LENDINGS: [LENDINGS.ERALEND],
+                            },
+                        ],
+                        PARAMETR.MIN_BALANCE: 0,
+                        PARAMETR.WALLETS_FILE: "",
+                    },
+                ]
+            ),
+        },
+        {
+            PARAMETR.MODULE: MODULES.LENDINGS,
+            PARAMETR.SETTINGS: LANDINGS_SETTINGS(
+                PARAMS=[
+                    {
+                        PARAMETR.NETWORK: Client_Networks.zksync,
+                        PARAMETR.TYPE_TRANSACTION: TYPES_OF_TRANSACTION.PERCENT,
+                        PARAMETR.VALUE: (10, 10),
+                        PARAMETR.LENDING_DEPOSIT: False,
+                        PARAMETR.MIN_BALANCE: 0,
+                        PARAMETR.TOKENS: [
+                            {
+                                PARAMETR.TOKEN: TOKENS.ZKSYNC.ETH,
+                                PARAMETR.LENDINGS: [LENDINGS.ERALEND],
+                            },
+                        ],
+                        PARAMETR.MIN_BALANCE: 0,
+                        PARAMETR.WALLETS_FILE: "",
+                    },
+                ]
+            ),
+        },
+    ]
 
 
 ### NOT CHANGE ###
@@ -406,12 +565,10 @@ async def bridges():
 
 async def landings():
     await Web3Lending.landing_use_database(settings=LANDINGS_SETTINGS)
-    # pass
 
 
 async def mint_nfts():
     await Web3Nft.mint_use_database(settings=MINT_NFT_SETTINGS)
-    # pass
 
 
 async def warm_up_swaps():
@@ -424,6 +581,10 @@ async def warm_up_refuel():
 
 async def get_fees_refuel():
     await WarmUpRefuel.get_fees(apps=REFUEL_SETTINGS.CHECK_COMISSION_NETWORKS)
+
+
+async def multitasks():
+    await start_multitasks(settings=MULTITASKS_SETTINGS)
 
 
 async def deploy_contracts():

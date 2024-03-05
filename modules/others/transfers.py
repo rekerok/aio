@@ -132,8 +132,20 @@ class Transfers:
     @staticmethod
     async def transfer_use_database(settings):
         wallets = await utils.files.get_wallets_recipients(
-            wallets_path="files/wallets.txt", recipients_path="files/recipients.txt"
+            wallets_path=(
+                "files/wallets.txt"
+                if settings.WALLETS_FILE == ""
+                else settings.WALLETS_FILE
+            ),
+            recipients_path=(
+                "files/recipients.txt"
+                if settings.RECIPIENTS_FILE == ""
+                else settings.RECIPIENTS_FILE
+            ),
         )
+        if wallets is None:
+            logger.error("FAIL GET WALLETS")
+            return
         database = await Transfers.create_database(wallets=wallets, settings=settings)
         random.shuffle(database)
         random.shuffle(database)

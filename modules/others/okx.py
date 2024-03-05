@@ -129,7 +129,7 @@ class OKX:
         for param in params:
             for wallet in (
                 wallets
-                if param[PARAMETR.WALLETS_FILE] == ""
+                if param[PARAMETR.RECIPIENTS_FILE] == ""
                 else await utils.files.read_file_lines(param[PARAMETR.WALLETS_FILE])
             ):
                 round_number = random.randint(*param[PARAMETR.ROUND])

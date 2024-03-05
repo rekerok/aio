@@ -103,7 +103,11 @@ class WarmUPSwaps:
     @staticmethod
     async def warmup(settings):
         wallets = await utils.files.read_file_lines(
-            path="files/wallets.txt",
+            path=(
+                "files/wallets.txt"
+                if settings.WALLETS_FILE == ""
+                else settings.WALLETS_FILE
+            ),
         )
         database = await WarmUPSwaps._create_database(
             wallets=wallets, params=settings.PARAMS

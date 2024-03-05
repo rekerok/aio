@@ -4,6 +4,7 @@ from .web3Swapper import Web3Swapper
 from .web3Bridger import Web3Bridger
 from .web3Lending import Web3Lending
 from .web3Nft import Web3Nft
+from .multitasks import start_multitasks
 from .bridges.merkly import Merkly
 from .bridges.l2pass import L2Pass
 from .bridges.warmupRefuel import WarmUpRefuel
