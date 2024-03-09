@@ -34,6 +34,7 @@ class Layerbank(Web3Lending):
             address=eth_utils.address.to_checksum_address(config.LAYERBANK.CONTRACT),
             abi=config.LAYERBANK.ABI,
         )
+        self.weth_token = eth_utils.address.to_checksum_address(config.LAYERBANK.WETH)
 
     async def _perform_deposit(
         self, amount_to_deposit: Token_Amount, token_to_deposit: Token_Info
@@ -59,14 +60,11 @@ class Layerbank(Web3Lending):
     async def _perform_withdraw(self, token_to_withdraw: Token_Info):
         try:
             amount_to_deposited = await self.acc.get_balance(
-                token_address=config.LAYERBANK.WETH
+                token_address=self.weth_token
             )
-            min_balance = Token_Amount(
-                    amount=self.min_balance,
-                )
-            if amount_to_deposited.WEI < min_balance.WEI:
-                    logger.error(f"DEPOSIT < {min_balance.ETHER}")
-                    return RESULT_TRANSACTION.FAIL
+            if amount_to_deposited.ETHER < self.min_balance:
+                logger.error(f"DEPOSIT < {self.min_balance}")
+                return RESULT_TRANSACTION.FAIL
         except Exception as error:
             logger.error(error)
             return RESULT_TRANSACTION.FAIL

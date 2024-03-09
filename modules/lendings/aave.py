@@ -62,11 +62,9 @@ class Aave(Web3Lending):
     async def _perform_withdraw(self, token_to_withdraw: Token_Info):
         try:
             amount_to_withdraw = await self.acc.get_balance(self.weth_token)
-            min_balance = Token_Amount(
-                amount=self.min_balance,
-            )
-            if amount_to_withdraw.WEI > min_balance.WEI:
-                logger.error(f"DEPOSIT < {min_balance.ETHER}")
+            # min_balance = await self.acc.get_balance(self.weth_token)
+            if amount_to_withdraw.ETHER < self.min_balance:
+                logger.error(f"DEPOSIT < {self.min_balance}")
                 return RESULT_TRANSACTION.FAIL
 
         except Exception as error:

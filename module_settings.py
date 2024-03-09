@@ -223,7 +223,6 @@ class LANDINGS_SETTINGS:
                     PARAMETR.LENDINGS: [LENDINGS.ERALEND],
                 },
             ],
-            PARAMETR.MIN_BALANCE: 0,
             PARAMETR.WALLETS_FILE: "",
         },
     ]
@@ -514,50 +513,78 @@ class CREATE_WALLETS_SETTIGS:
 
 
 class MULTITASKS_SETTINGS:
-    SLEEP_BETWEEN_MODULES = (30, 60)
+    SLEEP_BETWEEN_MODULES = (60 * 10, 60 * 20)
+
     TASKS = [
         {
             PARAMETR.MODULE: MODULES.LENDINGS,
             PARAMETR.SETTINGS: LANDINGS_SETTINGS(
+                SLEEP=(60 * 30, 60 * 60),
                 PARAMS=[
                     {
-                        PARAMETR.NETWORK: Client_Networks.zksync,
+                        PARAMETR.NETWORK: Client_Networks.scroll,
                         PARAMETR.TYPE_TRANSACTION: TYPES_OF_TRANSACTION.PERCENT,
-                        PARAMETR.VALUE: (10, 10),
+                        PARAMETR.VALUE: (80, 95),
                         PARAMETR.LENDING_DEPOSIT: True,
                         PARAMETR.MIN_BALANCE: 0,
                         PARAMETR.TOKENS: [
                             {
                                 PARAMETR.TOKEN: TOKENS.ZKSYNC.ETH,
-                                PARAMETR.LENDINGS: [LENDINGS.ERALEND],
+                                PARAMETR.LENDINGS: [LENDINGS.AAVE, LENDINGS.LAYERBANK],
                             },
                         ],
-                        PARAMETR.MIN_BALANCE: 0,
                         PARAMETR.WALLETS_FILE: "",
                     },
-                ]
+                ],
             ),
         },
         {
             PARAMETR.MODULE: MODULES.LENDINGS,
             PARAMETR.SETTINGS: LANDINGS_SETTINGS(
+                SLEEP=(60 * 30, 60 * 80),
                 PARAMS=[
                     {
-                        PARAMETR.NETWORK: Client_Networks.zksync,
+                        PARAMETR.NETWORK: Client_Networks.scroll,
                         PARAMETR.TYPE_TRANSACTION: TYPES_OF_TRANSACTION.PERCENT,
-                        PARAMETR.VALUE: (10, 10),
+                        PARAMETR.VALUE: (80, 95),
                         PARAMETR.LENDING_DEPOSIT: False,
                         PARAMETR.MIN_BALANCE: 0,
                         PARAMETR.TOKENS: [
                             {
                                 PARAMETR.TOKEN: TOKENS.ZKSYNC.ETH,
-                                PARAMETR.LENDINGS: [LENDINGS.ERALEND],
+                                PARAMETR.LENDINGS: [LENDINGS.LAYERBANK],
                             },
                         ],
                         PARAMETR.MIN_BALANCE: 0,
                         PARAMETR.WALLETS_FILE: "",
                     },
-                ]
+                ],
+            ),
+        },
+        {
+            PARAMETR.MODULE: MODULES.MINT_NFT,
+            PARAMETR.SETTINGS: MINT_NFT_SETTINGS(SLEEP=(60 * 20, 60 * 40)),
+        },
+        {
+            PARAMETR.MODULE: MODULES.LENDINGS,
+            PARAMETR.SETTINGS: LANDINGS_SETTINGS(
+                SLEEP=(60 * 30, 60 * 80),
+                PARAMS=[
+                    {
+                        PARAMETR.NETWORK: Client_Networks.scroll,
+                        PARAMETR.TYPE_TRANSACTION: TYPES_OF_TRANSACTION.PERCENT,
+                        PARAMETR.VALUE: (80, 95),
+                        PARAMETR.LENDING_DEPOSIT: False,
+                        PARAMETR.MIN_BALANCE: 0,
+                        PARAMETR.TOKENS: [
+                            {
+                                PARAMETR.TOKEN: TOKENS.ZKSYNC.ETH,
+                                PARAMETR.LENDINGS: [LENDINGS.AAVE],
+                            },
+                        ],
+                        PARAMETR.WALLETS_FILE: "",
+                    },
+                ],
             ),
         },
     ]
