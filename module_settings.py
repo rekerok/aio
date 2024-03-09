@@ -24,6 +24,7 @@ class DEX:
     NITRO = Nitro
     XY_FINANCE_BRIDGE = XY_finance_bridge
     RANGO_BRIDGE = Rango_Bridge
+    RUBYSCORE_VOTE = rubyscore
 
 
 class LENDINGS:
@@ -54,6 +55,7 @@ class MODULES:
     WARMUP_SWAPS = WarmUPSwaps.warmup
     WARMUP_REFUEL = WarmUpRefuel.warm_up_refuel
     DEPLOY_CONTRACTS = Deployer.deploy_with_database
+    RUBYSCORE_VOTE = rubyscore
 
 
 class OKX_settings:
@@ -390,6 +392,25 @@ class DEPLOY_SETTINGS:
         if PARAMS is not None:
             self.PARAMS = PARAMS
 
+class RYBYSCORE_VOTE_SETTINGS:
+    SLEEP = (60 * 10, 60 * 20)
+    COUNT = (1, 2)
+    WALLETS_FILE: str = ""
+
+    ######### NOT CHANGE #########
+    def __init__(
+        self,
+        SLEEP: tuple[int] = None,
+        COUNT: tuple[int] = None,
+        WALLETS_FILE: str = None,
+    ) -> None:
+        if SLEEP is not None:
+            self.SLEEP = SLEEP
+        if COUNT is not None:
+            self.COUNT = COUNT
+        if WALLETS_FILE is not None:
+            self.WALLETS_FILE = WALLETS_FILE
+
 
 class CHECK_NFT_SETTINGS:
     PARAMS = [
@@ -585,6 +606,10 @@ async def get_fees_refuel():
 
 async def multitasks():
     await start_multitasks(settings=MULTITASKS_SETTINGS)
+
+
+async def rubyscore_vote():
+    await rubyscore(settings=RYBYSCORE_VOTE_SETTINGS)
 
 
 async def deploy_contracts():

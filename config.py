@@ -582,6 +582,11 @@ class ZEROLEND:
     POOL = "0x4d9429246EA989C9CeE203B43F6d1C7D83e3B8F8"
 
 
+class RUBYSCORE:
+    ABI = '[{"stateMutability":"payable","type":"fallback"},{"inputs":[],"name":"vote","outputs":[],"stateMutability":"payable","type":"function"}]'
+    CONTRACT = "0xe10Add2ad591A7AC3CA46788a06290De017b9fB4"
+
+
 class TOKEN:
     def __init__(
         self, address: str, network: str = None, exchange_name: str | None = None
