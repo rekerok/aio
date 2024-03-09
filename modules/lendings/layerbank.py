@@ -57,12 +57,21 @@ class Layerbank(Web3Lending):
         )
 
     async def _perform_withdraw(self, token_to_withdraw: Token_Info):
-        amount_to_deposited = await self.acc.get_balance(
-            token_address=config.LAYERBANK.WETH
-        )
-        if amount_to_deposited.WEI == 0:
-            logger.error("DEPOSIT = 0")
+        try:
+            amount_to_deposited = await self.acc.get_balance(
+                token_address=config.LAYERBANK.WETH
+            )
+            min_balance = Token_Amount(
+                    amount=self.min_balance,
+                )
+            if amount_to_deposited.WEI < min_balance.WEI:
+                    logger.error(f"DEPOSIT < {min_balance.ETHER}")
+                    return RESULT_TRANSACTION.FAIL
+        except Exception as error:
+            logger.error(error)
             return RESULT_TRANSACTION.FAIL
+        logger.info(f"WITHDRAW {amount_to_deposited.ETHER} {token_to_withdraw.symbol}")
+
         await self.acc.approve(
             token_address=config.LAYERBANK.WETH,
             spender=self.contract.address,

@@ -60,21 +60,30 @@ class Aave(Web3Lending):
         )
 
     async def _perform_withdraw(self, token_to_withdraw: Token_Info):
-        amount_to_deposited = await self.acc.get_balance(self.weth_token)
-        if amount_to_deposited.WEI == 0:
-            logger.error("DEPOSIT = 0")
+        try:
+            amount_to_withdraw = await self.acc.get_balance(self.weth_token)
+            min_balance = Token_Amount(
+                amount=self.min_balance,
+            )
+            if amount_to_withdraw.WEI > min_balance.WEI:
+                logger.error(f"DEPOSIT < {min_balance.ETHER}")
+                return RESULT_TRANSACTION.FAIL
+
+        except Exception as error:
+            logger.error(error)
             return RESULT_TRANSACTION.FAIL
+        logger.info(f"WITHDRAW {amount_to_withdraw.ETHER} {token_to_withdraw.symbol}")
         await self.acc.approve(
             token_address=self.weth_token,
             spender=self.contract.address,
-            amount=amount_to_deposited,
+            amount=amount_to_withdraw,
         )
         data = await self.get_data(
             self.contract,
             function_of_contract="withdrawETH",
             args=(
                 eth_utils.address.to_checksum_address(self.weth_token),
-                amount_to_deposited.WEI,
+                amount_to_withdraw.WEI,
                 self.acc.address,
             ),
         )
