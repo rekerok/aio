@@ -80,39 +80,35 @@ class Skydrome(SushiSwap):
             amount=amount_in, decimals=to_token.decimals, wei=True
         )  # Сколько токенов получаю
         deadline = int(time.time()) + 10000
-
+        args = (
+            amount_in.WEI,
+            [[from_token.address, to_token.address, swap_type]],
+            self.acc.address,
+            deadline,
+        )
         if await Token_Info.is_native_token(network=self.acc.network, token=from_token):
             data = await self.get_data(
                 contract=self.contract,
                 function_of_contract="swapExactETHForTokens",
-                args=(
-                    amount_in.WEI,
-                    [[from_token.address, to_token.address, swap_type]],
-                    self.acc.address,
-                    deadline,
-                ),
+                args=args,
             )
-
-            if data is None:
-                logger.error("FAIL GET DATA")
-                return RESULT_TRANSACTION.FAIL
 
         elif await Token_Info.is_native_token(network=self.acc.network, token=to_token):
             data = await self.get_data(
                 contract=self.contract,
                 function_of_contract="swapExactTokensForETH",
-                args=(
-                    amount_to_send.WEI,
-                    amount_in.WEI,
-                    [[from_token.address, to_token.address, swap_type]],
-                    self.acc.address,
-                    deadline,
-                ),
+                args=(amount_to_send.WEI, *args),
             )
 
-            if data is None:
-                logger.error("FAIL GET DATA")
-                return RESULT_TRANSACTION.FAIL
+        else:
+            data = await self.get_data(
+                contract=self.contract,
+                function_of_contract="swapExactTokensForTokens",
+                args=(amount_to_send.WEI, *args),
+            )
+        if data is None:
+            logger.error("FAIL GET DATA")
+            return RESULT_TRANSACTION.FAIL
 
         return await self._send_transaction(
             data=data,
