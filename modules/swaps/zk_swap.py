@@ -1,3 +1,4 @@
+import eth_utils
 import config
 from typing import Union
 from loguru import logger
@@ -26,8 +27,9 @@ class ZkSwap(SushiSwap):
             min_balance=min_balance,
             max_balance=max_balance,
             slippage=slippage,
+            contract=None,
         )
         self.contract = self.acc.w3.eth.contract(
-            address=config.ZKSWAP.CONTRACT,
+            address=eth_utils.address.to_checksum_address(config.ZKSWAP.CONTRACT),
             abi=config.ZKSWAP.ABI,
         )

@@ -1,4 +1,6 @@
 import time
+
+import eth_utils
 import config
 from typing import Union
 from loguru import logger
@@ -21,6 +23,7 @@ class SushiSwap(Web3Swapper):
         min_balance: float = 0,
         max_balance: float = 100,
         slippage: float = 5.0,
+        contract: bool = True,
     ) -> None:
         super().__init__(
             private_key=private_key,
@@ -31,12 +34,15 @@ class SushiSwap(Web3Swapper):
             max_balance=max_balance,
             slippage=slippage,
         )
-        self.contract = self.acc.w3.eth.contract(
-            address=config.SUSHI.CONTRACTS.get(
-                self.acc.network.get(NETWORK_FIELDS.NAME)
-            ),
-            abi=config.SUSHI.ABI,
-        )
+        if contract is not None:
+            self.contract = self.acc.w3.eth.contract(
+                address=eth_utils.address.to_checksum_address(
+                    config.SUSHI.CONTRACTS.get(
+                        self.acc.network.get(NETWORK_FIELDS.NAME)
+                    )
+                ),
+                abi=config.SUSHI.ABI,
+            )
 
     async def _get_amounts_out(
         self,
@@ -91,42 +97,33 @@ class SushiSwap(Web3Swapper):
         to = self.acc.address
         deadline = int(time.time()) + 10000
 
-        data = await Web3Client.get_data(
-            contract=self.contract,
-            function_of_contract="swapExactETHForTokens",
-            args=(amount_in.WEI, path, to, deadline),
-        )
+        if await Token_Info.is_native_token(network=self.acc.network, token=from_token):
+            data = await Web3Client.get_data(
+                contract=self.contract,
+                function_of_contract="swapExactETHForTokens",
+                args=(amount_in.WEI, path, to, deadline),
+            )
 
-        if from_token.address == self.acc.w3.to_checksum_address(
-            config.GENERAL.WETH.get(self.acc.network.get(NETWORK_FIELDS.NAME))
-        ):
-            return await self._send_transaction(
-                data=data,
-                to_address=self.contract.address,
-                from_token=from_token,
-                amount_to_send=amount_to_send,
+        elif await Token_Info.is_native_token(network=self.acc.network, token=to_token):
+            data = await Web3Client.get_data(
+                contract=self.contract,
+                function_of_contract="swapExactTokensForETH",
+                args=(amount_out.WEI, amount_in.WEI, path, to, deadline),
             )
-        elif to_token.address == self.acc.w3.to_checksum_address(
-            config.GENERAL.WETH.get(self.acc.network.get(NETWORK_FIELDS.NAME))
-        ):
-            return await self._send_transaction(
-                data=await Web3Client.get_data(
-                    contract=self.contract,
-                    function_of_contract="swapExactTokensForETH",
-                    args=(amount_out.WEI, amount_in.WEI, path, to, deadline),
-                ),
-                from_token=from_token,
-                to_address=self.contract.address,
-                amount_to_send=amount_to_send,
-            )
+
         else:
-            return await self._send_transaction(
-                data=await Web3Client.get_data(
-                    contract=self.contract,
-                    function_of_contract="swapExactTokensForTokens",
-                    args=(amount_out.WEI, amount_in.WEI, path, to, deadline),
-                ),
-                from_token=from_token,
-                to_address=self.contract.address,
-                amount_to_send=amount_to_send,
+            data = await Web3Client.get_data(
+                contract=self.contract,
+                function_of_contract="swapExactTokensForTokens",
+                args=(amount_out.WEI, amount_in.WEI, path, to, deadline),
             )
+
+        if data is None:
+            logger.error("FAIL GET DATA")
+            return RESULT_TRANSACTION.FAIL
+        return await self._send_transaction(
+            data=data,
+            from_token=from_token,
+            to_address=self.contract.address,
+            amount_to_send=amount_to_send,
+        )

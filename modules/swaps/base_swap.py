@@ -1,3 +1,4 @@
+import eth_utils
 import config
 from typing import Union
 from utils import TYPES_OF_TRANSACTION
@@ -25,8 +26,9 @@ class BaseSwap(SushiSwap):
             min_balance=min_balance,
             max_balance=max_balance,
             slippage=slippage,
+            contract=None,
         )
         self.contract = self.acc.w3.eth.contract(
-            address=config.BASESWAP.CONTRACT,
+            address=eth_utils.address.to_checksum_address(config.BASESWAP.CONTRACT),
             abi=config.BASESWAP.ABI,
         )
