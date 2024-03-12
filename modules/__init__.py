@@ -36,6 +36,7 @@ from .swaps.arb_swap import ArbSwap
 from .swaps.xy_finance_swap import XY_finance_swap
 from .swaps.rango import RangoSwap
 from .swaps.skydrome_swap import Skydrome
+from .swaps.spacefi import SpaceFi
 from .lendings.eralend import Eralend
 from .lendings.layerbank import Layerbank
 from .lendings.aave import Aave
