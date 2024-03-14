@@ -18,6 +18,7 @@ class DEX:
     XY_FINANCE_SWAP = XY_finance_swap
     RANGO_SWAP = RangoSwap
     SKYDROME = Skydrome
+    MUTE = Mute
     SPACEFI = SpaceFi
     ACROSS = Across
     STARGATE = Stargate
