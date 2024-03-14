@@ -39,6 +39,7 @@ class LENDINGS:
 
 
 class NFTS:
+    FREE_NFT = Free_NFT
     L2PASS = L2pass_NFT
 
 
