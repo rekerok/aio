@@ -95,6 +95,18 @@ class IzumiSwap(Web3Swapper):
             except Exception as error:
                 logger.error(error)
                 return None
+        elif "USDC" in [from_token.symbol, to_token.symbol] and "USDC" in [
+            from_token.symbol,
+            to_token.symbol,
+        ]:
+            from_token_bytes = HexBytes(from_token.address).rjust(20, b"\0")
+            fee = await self._get_pool_fee(from_token=from_token, to_token=to_token)
+            if fee is None:
+                return None
+            from_token_bytes = HexBytes(from_token.address).rjust(20, b"\0")
+            to_token_bytes = HexBytes(to_token.address).rjust(20, b"\0")
+            fee_bytes = fee.to_bytes(3, "big")
+            return from_token_bytes + fee_bytes + to_token_bytes
         else:
             try:
                 from_token_bytes = HexBytes(from_token.address).rjust(20, b"\0")
