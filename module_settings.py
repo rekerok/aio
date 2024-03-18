@@ -20,6 +20,7 @@ class DEX:
     SKYDROME = Skydrome
     MUTE = Mute
     SPACEFI = SpaceFi
+    ZEBRA = Zebra
     ACROSS = Across
     STARGATE = Stargate
     ORBITER = Orbiter
