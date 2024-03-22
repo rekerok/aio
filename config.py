@@ -612,7 +612,12 @@ class ZEROLEND:
 
 class RUBYSCORE:
     ABI = '[{"stateMutability":"payable","type":"fallback"},{"inputs":[],"name":"vote","outputs":[],"stateMutability":"payable","type":"function"}]'
-    CONTRACT = "0xe10Add2ad591A7AC3CA46788a06290De017b9fB4"
+    CONTRACTS = {
+        Network.SCROLL: "0xe10Add2ad591A7AC3CA46788a06290De017b9fB4",
+        Network.ZKSYNC: "0xcb84d512f0c9943d3bc6b4be8801ac8aa6621a54",
+        Network.BASE: "0xe10add2ad591a7ac3ca46788a06290de017b9fb4",
+        Network.ZKSYNC: "0xcb84d512f0c9943d3bc6b4be8801ac8aa6621a54",
+    }
 
 
 class TOKEN:

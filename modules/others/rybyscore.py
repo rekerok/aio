@@ -1,3 +1,4 @@
+import pprint
 import random
 import eth_utils
 
@@ -7,38 +8,49 @@ from modules.web3Client import Web3Client
 from settings import Client_Networks
 import utils
 import config
-from utils.enums import RESULT_TRANSACTION
+from utils.enums import NETWORK_FIELDS, PARAMETR, RESULT_TRANSACTION
 
 
-async def rubyscore(settings):
-    wallets = await utils.files.read_file_lines(
-        path=(
-            "files/wallets.txt"
-            if settings.WALLETS_FILE == ""
-            else settings.WALLETS_FILE
+async def rubyscore(settings, wallets: list[str] = None):
+    if wallets is None:
+        wallets = await utils.files.read_file_lines(
+            path="files/wallets.txt",
         )
-    )
+    db = list()
 
-    wallets = [item for item in wallets for _ in range(random.randint(*settings.COUNT))]
-
-    # print(wallets)
-    random.shuffle(wallets)
+    for param in settings.PARAMS:
+        db.extend(
+            [
+                {"wallet": wallet, "network": param.get(PARAMETR.NETWORK)}
+                for wallet in wallets
+                for _ in range(random.randint(*param.get(PARAMETR.COUNT_TRANSACTION)))
+            ]
+        )
+    # pprint.pprint(db)
+    random.shuffle(db)
     counter = 1
-    for wallet in wallets:
-        logger.warning(f"OPERATION {counter}/{len(wallets)}")
+    for data in db:
+        logger.warning(f"OPERATION {counter}/{len(db)}")
 
         try:
-            acc = Account(private_key=wallet, network=Client_Networks.scroll)
+            acc = Account(private_key=data["wallet"], network=data["network"])
+            logger.info("RUBYSCORE")
+            logger.info(f"WALLET {acc.address}")
+            logger.info(f"NETWORK {acc.network.get(NETWORK_FIELDS.NAME)}")
             contract = acc.w3.eth.contract(
                 address=eth_utils.address.to_checksum_address(
-                    config.RUBYSCORE.CONTRACT
+                    config.RUBYSCORE.CONTRACTS.get(
+                        data["network"].get(NETWORK_FIELDS.NAME)
+                    )
                 ),
                 abi=config.RUBYSCORE.ABI,
             )
-            data = await Web3Client.get_data(
+            data_transaction = await Web3Client.get_data(
                 contract=contract, function_of_contract="vote"
             )
-            result = await acc.send_transaction(to_address=contract.address, data=data)
+            result = await acc.send_transaction(
+                to_address=contract.address, data=data_transaction
+            )
         except Exception as error:
             logger.error(error)
             result = RESULT_TRANSACTION.FAIL

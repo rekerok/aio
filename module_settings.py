@@ -397,9 +397,13 @@ class DEPLOY_SETTINGS:
 
 
 class RYBYSCORE_VOTE_SETTINGS:
-    SLEEP = (60 * 10, 60 * 20)
-    COUNT = (1, 2)
+    SLEEP = (60 * 1, 60 * 3)
     WALLETS_FILE: str = ""
+    PARAMS = [
+        {PARAMETR.NETWORK: Client_Networks.scroll, PARAMETR.COUNT_TRANSACTION: (1, 1)},
+        {PARAMETR.NETWORK: Client_Networks.zksync, PARAMETR.COUNT_TRANSACTION: (1, 3)},
+        {PARAMETR.NETWORK: Client_Networks.base, PARAMETR.COUNT_TRANSACTION: (1, 3)},
+    ]
 
     ######### NOT CHANGE #########
     def __init__(
