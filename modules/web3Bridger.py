@@ -213,10 +213,11 @@ class Web3Bridger(Web3Client):
         return database
 
     @staticmethod
-    async def swap_use_database(settings):
-        wallets = await utils.files.read_file_lines(
-            path="files/wallets.txt",
-        )
+    async def swap_use_database(settings, wallets: list[str] = None):
+        if wallets is None:
+            wallets = await utils.files.read_file_lines(
+                path="files/wallets.txt",
+            )
         database = await Web3Bridger._create_database(
             wallets=wallets, params=settings.PARAMS
         )

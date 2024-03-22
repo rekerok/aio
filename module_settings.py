@@ -50,7 +50,7 @@ class REFUEL_APP:
 
 
 class MODULES:
-    OKX_WITHDRAW = OKX.withdraw_use_database
+    # OKX_WITHDRAW = OKX.withdraw_use_database
     TRANSFER = Transfers.transfer_use_database
     SWAPS = Web3Swapper.swap_use_database
     BRIDGES = Web3Bridger.swap_use_database
@@ -522,114 +522,144 @@ class CREATE_WALLETS_SETTIGS:
 
 
 class MULTITASKS_SETTINGS:
-    SLEEP_BETWEEN_MODULES = (60 * 1, 60 * 2)
+    SLEEP_BETWEEN_MODULES = (60 * 15, 60 * 25)
 
     TASKS = [
-        # {
-        #     PARAMETR.MODULE: MODULES.SWAPS,
-        #     PARAMETR.SETTINGS: SWAP_SETTINGS(
-        #         SLEEP=(60 * 1, 60 * 2),
-        #         PARAMS=[
-        #             {
-        #                 PARAMETR.NETWORK: Client_Networks.scroll,
-        #                 PARAMETR.TYPE_TRANSACTION: TYPES_OF_TRANSACTION.PERCENT,
-        #                 PARAMETR.VALUE: (1, 3),
-        #                 PARAMETR.FROM_TOKEN: TOKENS.SCROLL.ETH,
-        #                 PARAMETR.MIN_BALANCE: 0,
-        #                 PARAMETR.MAX_BALANCE: 1000,
-        #                 PARAMETR.TO_TOKENS: [
-        #                     {
-        #                         PARAMETR.TO_TOKEN: TOKENS.SCROLL.USDC,
-        #                         PARAMETR.DEXS: [DEX.SPACEFI],
-        #                     },
-        #                     {
-        #                         PARAMETR.TO_TOKEN: TOKENS.SCROLL.USDT,
-        #                         PARAMETR.DEXS: [DEX.IZUMI],
-        #                     },
-        #                 ],
-        #                 PARAMETR.WALLETS_FILE: "",
-        #             },
-        #         ],
-        #     ),
-        # },
         {
             PARAMETR.MODULE: MODULES.SWAPS,
             PARAMETR.SETTINGS: SWAP_SETTINGS(
-                SLEEP=(60 * 1, 60 * 2),
+                SLEEP=(60 * 5, 60 * 10),
                 PARAMS=[
                     {
-                        PARAMETR.NETWORK: Client_Networks.scroll,
+                        PARAMETR.NETWORK: Client_Networks.zksync,
                         PARAMETR.TYPE_TRANSACTION: TYPES_OF_TRANSACTION.PERCENT,
-                        PARAMETR.VALUE: (100, 100),
-                        PARAMETR.FROM_TOKEN: TOKENS.SCROLL.USDC,
-                        PARAMETR.MIN_BALANCE: 2,
+                        PARAMETR.VALUE: (90, 95),
+                        PARAMETR.FROM_TOKEN: TOKENS.ZKSYNC.ETH,
+                        PARAMETR.MIN_BALANCE: 0,
                         PARAMETR.MAX_BALANCE: 1000,
                         PARAMETR.TO_TOKENS: [
                             {
-                                PARAMETR.TO_TOKEN: TOKENS.SCROLL.USDT,
-                                PARAMETR.DEXS: [DEX.IZUMI],
+                                PARAMETR.TO_TOKEN: TOKENS.ZKSYNC.USDC,
+                                PARAMETR.DEXS: [
+                                    DEX.ODOS,
+                                    DEX.IZUMI,
+                                    DEX.SPACEFI,
+                                    DEX.MUTE,
+                                    DEX.XY_FINANCE_SWAP,
+                                ],
+                            },
+                            {
+                                PARAMETR.TO_TOKEN: TOKENS.ZKSYNC.USDT,
+                                PARAMETR.DEXS: [
+                                    DEX.ODOS,
+                                    DEX.IZUMI,
+                                    DEX.SPACEFI,
+                                    DEX.MUTE,
+                                    DEX.XY_FINANCE_SWAP,
+                                    DEX.SYNCSWAP,
+                                ],
                             },
                         ],
                         PARAMETR.WALLETS_FILE: "",
                     },
-                    # {
-                    #     PARAMETR.NETWORK: Client_Networks.scroll,
-                    #     PARAMETR.TYPE_TRANSACTION: TYPES_OF_TRANSACTION.PERCENT,
-                    #     PARAMETR.VALUE: (100, 100),
-                    #     PARAMETR.FROM_TOKEN: TOKENS.SCROLL.USDT,
-                    #     PARAMETR.MIN_BALANCE: 2,
-                    #     PARAMETR.MAX_BALANCE: 1000,
-                    #     PARAMETR.TO_TOKENS: [
-                    #         {
-                    #             PARAMETR.TO_TOKEN: TOKENS.SCROLL.USDC,
-                    #             PARAMETR.DEXS: [DEX.SKYDROME],
-                    #         },
-                    #     ],
-                    #     PARAMETR.WALLETS_FILE: "",
-                    # },
                 ],
             ),
         },
         {
             PARAMETR.MODULE: MODULES.SWAPS,
             PARAMETR.SETTINGS: SWAP_SETTINGS(
-                SLEEP=(60 * 1, 60 * 2),
+                SLEEP=(60 * 5, 60 * 10),
                 PARAMS=[
                     {
-                        PARAMETR.NETWORK: Client_Networks.scroll,
+                        PARAMETR.NETWORK: Client_Networks.zksync,
                         PARAMETR.TYPE_TRANSACTION: TYPES_OF_TRANSACTION.PERCENT,
                         PARAMETR.VALUE: (100, 100),
-                        PARAMETR.FROM_TOKEN: TOKENS.SCROLL.USDC,
-                        PARAMETR.MIN_BALANCE: 2,
+                        PARAMETR.FROM_TOKEN: TOKENS.ZKSYNC.USDC,
+                        PARAMETR.MIN_BALANCE: 100,
                         PARAMETR.MAX_BALANCE: 1000,
                         PARAMETR.TO_TOKENS: [
                             {
-                                PARAMETR.TO_TOKEN: TOKENS.SCROLL.ETH,
+                                PARAMETR.TO_TOKEN: TOKENS.ZKSYNC.USDT,
                                 PARAMETR.DEXS: [
-                                    DEX.SPACEFI,
-                                    DEX.SKYDROME,
-                                    DEX.SYNCSWAP,
+                                    DEX.ODOS,
                                     DEX.IZUMI,
+                                    DEX.SPACEFI,
+                                    DEX.MUTE,
+                                    DEX.XY_FINANCE_SWAP,
+                                    DEX.SYNCSWAP,
                                 ],
                             },
                         ],
                         PARAMETR.WALLETS_FILE: "",
                     },
                     {
-                        PARAMETR.NETWORK: Client_Networks.scroll,
+                        PARAMETR.NETWORK: Client_Networks.zksync,
                         PARAMETR.TYPE_TRANSACTION: TYPES_OF_TRANSACTION.PERCENT,
                         PARAMETR.VALUE: (100, 100),
-                        PARAMETR.FROM_TOKEN: TOKENS.SCROLL.USDT,
-                        PARAMETR.MIN_BALANCE: 2,
+                        PARAMETR.FROM_TOKEN: TOKENS.ZKSYNC.USDT,
+                        PARAMETR.MIN_BALANCE: 100,
                         PARAMETR.MAX_BALANCE: 1000,
                         PARAMETR.TO_TOKENS: [
                             {
-                                PARAMETR.TO_TOKEN: TOKENS.SCROLL.ETH,
+                                PARAMETR.TO_TOKEN: TOKENS.ZKSYNC.USDC,
                                 PARAMETR.DEXS: [
-                                    DEX.SPACEFI,
-                                    DEX.SKYDROME,
-                                    DEX.SYNCSWAP,
+                                    DEX.ODOS,
                                     DEX.IZUMI,
+                                    DEX.SPACEFI,
+                                    DEX.MUTE,
+                                    DEX.XY_FINANCE_SWAP,
+                                ],
+                            },
+                        ],
+                        PARAMETR.WALLETS_FILE: "",
+                    },
+                ],
+            ),
+        },
+        {
+            PARAMETR.MODULE: MODULES.SWAPS,
+            PARAMETR.SETTINGS: SWAP_SETTINGS(
+                SLEEP=(60 * 5, 60 * 10),
+                PARAMS=[
+                    {
+                        PARAMETR.NETWORK: Client_Networks.zksync,
+                        PARAMETR.TYPE_TRANSACTION: TYPES_OF_TRANSACTION.PERCENT,
+                        PARAMETR.VALUE: (100, 100),
+                        PARAMETR.FROM_TOKEN: TOKENS.ZKSYNC.USDC,
+                        PARAMETR.MIN_BALANCE: 100,
+                        PARAMETR.MAX_BALANCE: 1000,
+                        PARAMETR.TO_TOKENS: [
+                            {
+                                PARAMETR.TO_TOKEN: TOKENS.ZKSYNC.ETH,
+                                PARAMETR.DEXS: [
+                                    DEX.ODOS,
+                                    DEX.IZUMI,
+                                    DEX.SPACEFI,
+                                    DEX.MUTE,
+                                    DEX.XY_FINANCE_SWAP,
+                                    DEX.SYNCSWAP,
+                                ],
+                            },
+                        ],
+                        PARAMETR.WALLETS_FILE: "",
+                    },
+                    {
+                        PARAMETR.NETWORK: Client_Networks.zksync,
+                        PARAMETR.TYPE_TRANSACTION: TYPES_OF_TRANSACTION.PERCENT,
+                        PARAMETR.VALUE: (100, 100),
+                        PARAMETR.FROM_TOKEN: TOKENS.ZKSYNC.USDT,
+                        PARAMETR.MIN_BALANCE: 100,
+                        PARAMETR.MAX_BALANCE: 1000,
+                        PARAMETR.TO_TOKENS: [
+                            {
+                                PARAMETR.TO_TOKEN: TOKENS.ZKSYNC.ETH,
+                                PARAMETR.DEXS: [
+                                    DEX.ODOS,
+                                    DEX.IZUMI,
+                                    DEX.SPACEFI,
+                                    DEX.MUTE,
+                                    DEX.XY_FINANCE_SWAP,
+                                    DEX.SYNCSWAP,
                                 ],
                             },
                         ],
