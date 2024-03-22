@@ -11,7 +11,7 @@ class DEX:
     OPENOCEAN = OpenoceanSwap
     SUSHI = SushiSwap
     SYNCSWAP = SyncSwap
-    WOOFI = WoofiSwap
+    # WOOFI = WoofiSwap
     ZKSWAP = ZkSwap
     BASESWAP = BaseSwap
     ZEROX = Zerox
@@ -69,9 +69,9 @@ class OKX_settings:
     PROXY: str = ""  # "http://user:pass@ip:port"
 
     KEYS: dict = {
-        PARAMETR.OKX_API_KEY: "78c95265-a13a-4de6-88d3-47fab33d83b5",
-        PARAMETR.OKX_API_SECRET: "F91A0B0A13499D068EEEBEF4FCDB7D7B",
-        PARAMETR.OKX_PASSWORD: "!NUXY$HN0bd09MXJe@YJ",
+        PARAMETR.OKX_API_KEY: "",
+        PARAMETR.OKX_API_SECRET: "",
+        PARAMETR.OKX_PASSWORD: "",
     }
 
     PARAMS: list[dict] = [
@@ -273,31 +273,61 @@ class MINT_NFT_SETTINGS:
 
 
 class WARMUPSWAPS_SETTINGS:
-    SLEEP = (20, 30)
-    SLIPPAGE = 3
-    USE_MAX_BALANCE = False
+    SLEEP = (60 * 2, 60 * 3)
+    SLIPPAGE = 1
+    USE_MAX_BALANCE = True
     WALLETS_FILE = ""  # DEFAULT files/wallets.txt
-    PARAMS = {
-        DEX.ODOS: [
-            {
-                PARAMETR.NETWORK: Client_Networks.polygon,
-                PARAMETR.TOKENS: [
-                    {
-                        PARAMETR.TOKEN: TOKENS.POLYGON.USDT,
-                        PARAMETR.MIN_BALANCE: 1,
-                        PARAMETR.MAX_BALANCE: 1000,
-                    },
-                    {
-                        PARAMETR.TOKEN: TOKENS.POLYGON.USDC_BRIDGED,
-                        PARAMETR.MIN_BALANCE: 1,
-                        PARAMETR.MAX_BALANCE: 1000,
-                    },
-                ],
-                PARAMETR.COUNT_TRANSACTION: (2, 3),
-                PARAMETR.VALUE: (20, 30),
-            },
-        ],
-    }
+    PARAMS = [
+        {
+            PARAMETR.NETWORK: Client_Networks.zksync,
+            PARAMETR.COUNT_TRANSACTION: (2, 4),
+            PARAMETR.DEXS: [DEX.XY_FINANCE_SWAP, DEX.ODOS, DEX.ZKSWAP],
+            PARAMETR.TOKENS: [
+                {
+                    PARAMETR.TOKEN: TOKENS.ZKSYNC.USDT,
+                    PARAMETR.VALUE: (50, 60),
+                    PARAMETR.MIN_BALANCE: 1,
+                    PARAMETR.MAX_BALANCE: 100,
+                },
+                {
+                    PARAMETR.TOKEN: TOKENS.ZKSYNC.USDC,
+                    PARAMETR.VALUE: (50, 60),
+                    PARAMETR.MIN_BALANCE: 1,
+                    PARAMETR.MAX_BALANCE: 100,
+                },
+                {
+                    PARAMETR.TOKEN: TOKENS.ZKSYNC.ETH,
+                    PARAMETR.VALUE: (50, 60),
+                    PARAMETR.MIN_BALANCE: 0,
+                    PARAMETR.MAX_BALANCE: 100,
+                },
+            ],
+        },
+        {
+            PARAMETR.NETWORK: Client_Networks.base,
+            PARAMETR.DEXS: [
+                DEX.ODOS,
+                # DEX.XY_FINANCE_SWAP,
+                DEX.ZEROX,
+                # DEX.SUSHI,
+            ],
+            PARAMETR.COUNT_TRANSACTION: (10, 20),
+            PARAMETR.TOKENS: [
+                {
+                    PARAMETR.TOKEN: TOKENS.BASE.USDbC,
+                    PARAMETR.VALUE: (100, 100),
+                    PARAMETR.MIN_BALANCE: 1,
+                    PARAMETR.MAX_BALANCE: 100,
+                },
+                {
+                    PARAMETR.TOKEN: TOKENS.BASE.ETH,
+                    PARAMETR.VALUE: (50, 70),
+                    PARAMETR.MIN_BALANCE: 0,
+                    PARAMETR.MAX_BALANCE: 100,
+                },
+            ],
+        },
+    ]
 
     ######### NOT CHANGE #########
     def __init__(

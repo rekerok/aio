@@ -1,3 +1,4 @@
+import pprint
 import utils
 import random
 from loguru import logger
@@ -10,25 +11,6 @@ from utils.enums import NETWORK_FIELDS, PARAMETR, RESULT_TRANSACTION
 
 
 class WarmUPSwaps:
-    @staticmethod
-    async def _create_database(wallets, params):
-        database = list()
-        for wallet in wallets:
-            for dex, networks in params.items():
-                for network in networks:
-                    for i in range(
-                        random.randint(*network.get(PARAMETR.COUNT_TRANSACTION))
-                    ):
-                        database.append(
-                            {
-                                "private_key": wallet,
-                                "network": network.get(PARAMETR.NETWORK),
-                                "dex": dex,
-                                "tokens": network.get(PARAMETR.TOKENS),
-                                "value": network.get(PARAMETR.VALUE),
-                            }
-                        )
-        return database
 
     @staticmethod
     async def _get_random_pair_for_swap(tokens: list, acc: Account):
@@ -63,14 +45,16 @@ class WarmUPSwaps:
             return (None, None)
         logger.info(acc.network.get(NETWORK_FIELDS.NAME))
         for token in tokens:
-            token_info: Token_Info = await Token_Info.get_info_token(
-                acc=acc, token_address=token.get(PARAMETR.TOKEN).ADDRESS
-            )
-            balance: Token_Amount = await acc.get_balance(
-                token_address=token_info.addressœ
-            )
-
             try:
+                token_info: Token_Info = await Token_Info.get_info_token(
+                    acc=acc, token_address=token.get(PARAMETR.TOKEN).ADDRESS
+                )
+                balance: Token_Amount = await acc.get_balance(
+                    token_address=token_info.address
+                )
+                if token_info.symbol == "USDBC":
+                    token_info.symbol = "USDC"
+
                 # logger.info(f"{token_info.symbol} - {token_info.address}")
                 price_token = await utils.prices.get_price_token(
                     token_name=token_info.symbol
@@ -101,17 +85,31 @@ class WarmUPSwaps:
         return (sorted_data[0], random.choice(sorted_data[1:]))
 
     @staticmethod
-    async def warmup(settings):
-        wallets = await utils.files.read_file_lines(
-            path=(
-                "files/wallets.txt"
-                if settings.WALLETS_FILE == ""
-                else settings.WALLETS_FILE
-            ),
-        )
+    async def _create_database(wallets, params):
+        database = list()
+        for wallet in wallets:
+            for param in params:
+                for i in range(random.randint(*param.get(PARAMETR.COUNT_TRANSACTION))):
+                    database.append(
+                        {
+                            "private_key": wallet,
+                            "network": param.get(PARAMETR.NETWORK),
+                            "dexs": param.get(PARAMETR.DEXS),
+                            "tokens": param.get(PARAMETR.TOKENS),
+                        }
+                    )
+        return database
+
+    @staticmethod
+    async def warmup(settings, wallets: list[str] = None):
+        if wallets is None:
+            wallets = await utils.files.read_file_lines(
+                path="files/wallets.txt",
+            )
         database = await WarmUPSwaps._create_database(
             wallets=wallets, params=settings.PARAMS
         )
+        # pprint.pprint(database)
         random.shuffle(database)
         random.shuffle(database)
         random.shuffle(database)
@@ -143,15 +141,16 @@ class WarmUPSwaps:
                 )
                 counter += 1
                 continue
-            dex: Web3Swapper = data["dex"](
+            dex: Web3Swapper = random.choice(data["dexs"])(
                 private_key=data.get("private_key"),
                 network=data.get("network"),
                 type_transfer=TYPES_OF_TRANSACTION.PERCENT,
-                value=data.get("value"),
+                value=pair_tokens[0].get(PARAMETR.VALUE),
                 min_balance=pair_tokens[0].get(PARAMETR.MIN_BALANCE),
                 max_balance=pair_tokens[0].get(PARAMETR.MAX_BALANCE),
                 slippage=settings.SLIPPAGE,
             )
+            # result = RESULT_TRANSACTION.FAIL
             result = await dex.swap(
                 from_token=pair_tokens[0].get(PARAMETR.TOKEN),
                 to_token=pair_tokens[1].get(PARAMETR.TOKEN),
