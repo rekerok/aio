@@ -52,64 +52,75 @@ class Transfers:
     async def _make_tranfer_all_amount(
         self, balance: Token_Amount, token_info: Token_Info
     ) -> None:
-        kepp_amount = random.uniform(*self.value)
+        kepp_amount = Token_Amount(
+            amount=random.uniform(*self.value), decimals=token_info.decimals
+        )
         amount_to_send = Token_Amount(
-            amount=balance.ETHER - kepp_amount, decimals=token_info.decimals
+            amount=balance.ETHER - kepp_amount.ETHER, decimals=token_info.decimals
         )
         logger.info(f"BALANCE: {balance.ETHER} {token_info.symbol}")
-        if kepp_amount > balance.ETHER:
-            logger.info(f"Keep amount {kepp_amount} > {balance.ETHER}")
+        logger.info(f"SEND: {balance.ETHER-kepp_amount.ETHER} {token_info.symbol}")
+        if kepp_amount.ETHER > balance.ETHER:
+            logger.info(f"Keep amount {kepp_amount.ETHER} > {balance.ETHER}")
             return RESULT_TRANSACTION.FAIL
 
         return await self.acc.transfer(
             to_address=self.to_address,
             amount=amount_to_send,
-            token_address=self.token_adress,
+            token_address=token_info.address,
         )
 
     async def _transfer_amount(
         self, balance: Token_Amount, token_info: Token_Info
     ) -> None:
         amount_to_send = random.uniform(self.value[0], self.value[1])
-        logger.info(f"BALANCE: {balance.ETHER} {token_info.symbol}")
-        if amount_to_send > balance.ETHER:
-            logger.error(f"BALANCE: {balance.ETHER} < {amount_to_send}")
-            return RESULT_TRANSACTION.FAIL
         amount_to_send = Token_Amount(
             amount=amount_to_send, decimals=token_info.decimals
         )
+        logger.info(f"BALANCE: {balance.ETHER} {token_info.symbol}")
+        logger.info(f"SEND: {amount_to_send.ETHER} {token_info.symbol}")
+
+        if amount_to_send.WEI > balance.WEI:
+            logger.error(f"BALANCE: {balance.ETHER} < {amount_to_send}")
+            return RESULT_TRANSACTION.FAIL
         return await self.acc.transfer(
             to_address=self.to_address,
             amount=amount_to_send,
-            token_address=self.token_adress,
+            token_address=token_info.address,
         )
 
     async def make_transfer(
         self,
     ):
-        token_info: Token_Info = await Token_Info.get_info_token(
-            acc=self.acc, token_address=self.token.ADDRESS
-        )
-        balance: Token_Amount = await self.acc.get_balance(token_info.address)
-        logger.info(f"FROM: {self.acc.address}")
-        logger.info(f"TO: {self.to_address}")
-        logger.info(f"NETWORK: {self.acc.network.get(NETWORK_FIELDS.NAME)}")
-        logger.info(f"TOKEN: {token_info.symbol}")
+        try:
+            token_info: Token_Info = await Token_Info.get_info_token(
+                acc=self.acc, token_address=self.token.ADDRESS
+            )
+            balance: Token_Amount = await self.acc.get_balance(token_info.address)
+            logger.info(f"FROM: {self.acc.address}")
+            logger.info(f"TO: {self.to_address}")
+            logger.info(f"NETWORK: {self.acc.network.get(NETWORK_FIELDS.NAME)}")
+            logger.info(f"TOKEN: {token_info.symbol}")
 
-        if balance.ETHER < self.min_balance:
-            logger.error(f"BALANCE: {balance.ETHER} < {self.min_balance}")
+            if balance.ETHER < self.min_balance:
+                logger.error(f"BALANCE: {balance.ETHER} < {self.min_balance}")
+                return RESULT_TRANSACTION.FAIL
+
+            if self.type_transfer == TYPES_OF_TRANSACTION.PERCENT:
+                return await self._make_tranfer_percent(
+                    balance=balance, token_info=token_info
+                )
+            elif self.type_transfer == TYPES_OF_TRANSACTION.ALL_BALANCE:
+                return await self._make_tranfer_all_amount(
+                    balance=balance, token_info=token_info
+                )
+            else:
+                return await self._transfer_amount(
+                    balance=balance, token_info=token_info
+                )
+        except Exception as error:
+            logger.error(error)
             return RESULT_TRANSACTION.FAIL
-
-        if self.type_transfer == TYPES_OF_TRANSACTION.PERCENT:
-            return await self._make_tranfer_percent(
-                balance=balance, token_info=token_info
-            )
-        elif self.type_transfer == TYPES_OF_TRANSACTION.ALL_BALANCE:
-            return await self._make_tranfer_all_amount(
-                balance=balance, token_info=token_info
-            )
-        else:
-            return await self._transfer_amount(balance=balance, token_info=token_info)
 
     @staticmethod
     async def create_database(wallets: list[tuple], settings):
