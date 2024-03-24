@@ -34,7 +34,7 @@ class Basilisk(Web3Lending):
         )
         self.contract = self.acc.w3.eth.contract(
             eth_utils.address.to_checksum_address(
-                config.BASILISK.LANDINGS.get(""),
+                config.BASILISK.CONTRACT,
             ),
             abi=config.BASILISK.ABI,
         )

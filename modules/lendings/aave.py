@@ -5,7 +5,12 @@ from loguru import logger
 import config
 import eth_utils
 from modules import Web3Lending
-from utils.enums import RESULT_TRANSACTION, TYPES_OF_TRANSACTION
+from utils.enums import (
+    NETWORK_FIELDS,
+    PARAMETR,
+    RESULT_TRANSACTION,
+    TYPES_OF_TRANSACTION,
+)
 from utils.token_amount import Token_Amount
 from utils.token_info import Token_Info
 
@@ -31,11 +36,23 @@ class Aave(Web3Lending):
             type_lending=type_lending,
         )
         self.contract = self.acc.w3.eth.contract(
-            address=eth_utils.address.to_checksum_address(config.AAVE.CONTRACT),
+            address=eth_utils.address.to_checksum_address(
+                config.AAVE.CONTRACTS.get(network.get(NETWORK_FIELDS.NAME)).get(
+                    PARAMETR.CONTRACT
+                )
+            ),
             abi=config.AAVE.ABI,
         )
-        self.weth_token = eth_utils.address.to_checksum_address(config.AAVE.WETH)
-        self.pool = eth_utils.address.to_checksum_address(config.AAVE.POOL)
+        self.weth_token = eth_utils.address.to_checksum_address(
+            config.AAVE.CONTRACTS.get(network.get(NETWORK_FIELDS.NAME)).get(
+                PARAMETR.TOKEN_ADDRESS
+            )
+        )
+        self.pool = eth_utils.address.to_checksum_address(
+            config.AAVE.CONTRACTS.get(network.get(NETWORK_FIELDS.NAME)).get(
+                PARAMETR.POOL_ADDRESS
+            )
+        )
 
     async def _perform_deposit(
         self, amount_to_deposit: Token_Amount, token_to_deposit: Token_Info

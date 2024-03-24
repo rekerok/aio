@@ -31,12 +31,13 @@ class DEX:
 
 
 class LENDINGS:
-    ERALEND = Eralend
-    LAYERBANK = Layerbank
     AAVE = Aave
     BASILISK = Basilisk
-    ZEROLEND = ZeroLend
+    ERALEND = Eralend
+    LAYERBANK = Layerbank
+    MOONWELL = Moonwell
     REACTOR_FUSION = Reactor_Fusion
+    ZEROLEND = ZeroLend
 
 
 class NFTS:

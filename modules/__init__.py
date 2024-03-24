@@ -39,11 +39,12 @@ from .swaps.xy_finance_swap import XY_finance_swap
 from .swaps.rango import RangoSwap
 from .swaps.skydrome_swap import Skydrome
 from .swaps.spacefi import SpaceFi
-from .lendings.eralend import Eralend
-from .lendings.layerbank import Layerbank
 from .lendings.aave import Aave
 from .lendings.basilisk import Basilisk
-from .lendings.zeroland import ZeroLend
+from .lendings.eralend import Eralend
+from .lendings.layerbank import Layerbank
+from .lendings.moonwell import Moonwell
 from .lendings.reactor_fusion import Reactor_Fusion
+from .lendings.zeroland import ZeroLend
 from .nft.l2pass import L2pass_NFT
 from .nft.free_nft import Free_NFT

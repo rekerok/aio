@@ -34,7 +34,7 @@ class Reactor_Fusion(Basilisk):
         )
         self.contract = self.acc.w3.eth.contract(
             eth_utils.address.to_checksum_address(
-                config.REACTORFUSION.LANDINGS.get(""),
+                config.REACTORFUSION.CONTRACT,
             ),
             abi=config.REACTORFUSION.ABI,
         )

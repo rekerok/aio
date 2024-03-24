@@ -34,7 +34,7 @@ class Eralend(Basilisk):
         )
         self.contract = self.acc.w3.eth.contract(
             eth_utils.address.to_checksum_address(
-                config.ERALEND.LANDINGS.get(""),
+                config.ERALEND.CONTRACT,
             ),
             abi=config.ERALEND.ABI,
         )
@@ -42,4 +42,4 @@ class Eralend(Basilisk):
             address=self.contract.address, abi=config.ERALEND.ABI
         )
 
-        self.withdraw_fuctions = ["redeemUnderlying"]
+        self.withdraw_fuctions = ["redeemUnderlying", "redeem"]

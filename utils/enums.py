@@ -36,6 +36,7 @@ class PARAMETR(Enum):
     MODULE = auto()
     NETWORK = auto()
     NETWORKS = auto()
+    CONTRACT = auto()
     TO_TOKEN = auto()
     NAME_NFT = auto()
     LENDINGS = auto()
