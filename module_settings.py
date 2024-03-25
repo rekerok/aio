@@ -212,7 +212,7 @@ class BRIDGE_SETTINGS:
             self.PARAMS = PARAMS
 
 
-class LANDINGS_SETTINGS:
+class LENDINGS_SETTINGS:
     SLEEP = (100, 100)
 
     PARAMS = [

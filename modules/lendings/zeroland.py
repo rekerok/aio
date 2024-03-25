@@ -30,10 +30,11 @@ class ZeroLend(Aave):
             min_balance=min_balance,
             max_balance=max_balance,
             type_lending=type_lending,
+            contract=False,
         )
         self.contract = self.acc.w3.eth.contract(
             address=eth_utils.address.to_checksum_address(config.ZEROLEND.CONTRACT),
-            abi=config.AAVE.ABI,
+            abi=config.ZEROLEND.ABI,
         )
         self.weth_token = eth_utils.address.to_checksum_address(config.ZEROLEND.WETH)
         self.pool = eth_utils.address.to_checksum_address(config.ZEROLEND.POOL)

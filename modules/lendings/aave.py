@@ -26,6 +26,7 @@ class Aave(Web3Lending):
         type_lending: TYPES_OF_TRANSACTION = None,
         min_balance: float = 0,
         max_balance: float = 100,
+        contract: bool = True,
     ) -> None:
         super().__init__(
             private_key=private_key,
@@ -35,24 +36,25 @@ class Aave(Web3Lending):
             max_balance=max_balance,
             type_lending=type_lending,
         )
-        self.contract = self.acc.w3.eth.contract(
-            address=eth_utils.address.to_checksum_address(
+        if contract:
+            self.contract = self.acc.w3.eth.contract(
+                address=eth_utils.address.to_checksum_address(
+                    config.AAVE.CONTRACTS.get(network.get(NETWORK_FIELDS.NAME)).get(
+                        PARAMETR.CONTRACT
+                    )
+                ),
+                abi=config.AAVE.ABI,
+            )
+            self.weth_token = eth_utils.address.to_checksum_address(
                 config.AAVE.CONTRACTS.get(network.get(NETWORK_FIELDS.NAME)).get(
-                    PARAMETR.CONTRACT
+                    PARAMETR.TOKEN_ADDRESS
                 )
-            ),
-            abi=config.AAVE.ABI,
-        )
-        self.weth_token = eth_utils.address.to_checksum_address(
-            config.AAVE.CONTRACTS.get(network.get(NETWORK_FIELDS.NAME)).get(
-                PARAMETR.TOKEN_ADDRESS
             )
-        )
-        self.pool = eth_utils.address.to_checksum_address(
-            config.AAVE.CONTRACTS.get(network.get(NETWORK_FIELDS.NAME)).get(
-                PARAMETR.POOL_ADDRESS
+            self.pool = eth_utils.address.to_checksum_address(
+                config.AAVE.CONTRACTS.get(network.get(NETWORK_FIELDS.NAME)).get(
+                    PARAMETR.POOL_ADDRESS
+                )
             )
-        )
 
     async def _perform_deposit(
         self, amount_to_deposit: Token_Amount, token_to_deposit: Token_Info
