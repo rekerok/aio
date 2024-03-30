@@ -724,7 +724,7 @@ async def bridges():
 
 
 async def landings():
-    await Web3Lending.landing_use_database(settings=LANDINGS_SETTINGS)
+    await Web3Lending.landing_use_database(settings=LENDINGS_SETTINGS)
 
 
 async def mint_nfts():

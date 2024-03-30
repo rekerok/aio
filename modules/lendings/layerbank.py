@@ -78,7 +78,7 @@ class Layerbank(Web3Lending):
         )
         data = await self.get_data(
             contract=self.contract,
-            function_of_contract=random.choice["redeemUnderlying", "redeemToken"],
+            function_of_contract=random.choice(["redeemUnderlying", "redeemToken"]),
             args=(
                 eth_utils.address.to_checksum_address(config.LAYERBANK.WETH),
                 amount_to_deposited.WEI,
