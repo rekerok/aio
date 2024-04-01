@@ -212,6 +212,46 @@ class BRIDGE_SETTINGS:
             self.PARAMS = PARAMS
 
 
+class DEP_TO_NETWORK_SETTINGS:
+    SLEEPS = {
+        PARAMETR.AFTER_WITHDRAW: (60 * 4, 60 * 10),
+        PARAMETR.BETWEEN_WALLETS: (60 * 10, 60 * 20),
+    }
+    OKX = {
+        PARAMETR.OKX_API_KEY: "",
+        PARAMETR.OKX_API_SECRET: "",
+        PARAMETR.OKX_PASSWORD: "",
+        PARAMETR.ATTEMPT: 15,
+    }
+
+    PARAMS = {
+        PARAMETR.VALUE: (0.00028182 * 21, 0.00028182 * 25),
+        PARAMETR.TOKENS: [
+            {
+                PARAMETR.TOKEN: TOKENS.BASE.ETH,
+                PARAMETR.NETWORK: Client_Networks.base,
+            },
+            {
+                PARAMETR.TOKEN: TOKENS.OPTIMISM.ETH,
+                PARAMETR.NETWORK: Client_Networks.optimism,
+            },
+            {
+                PARAMETR.TOKEN: TOKENS.ARBITRUM.ETH,
+                PARAMETR.NETWORK: Client_Networks.arbitrum,
+            },
+            {
+                PARAMETR.TOKEN: TOKENS.ZKSYNC.ETH,
+                PARAMETR.NETWORK: Client_Networks.zksync,
+            },
+        ],
+        PARAMETR.TO_TOKEN: {
+            PARAMETR.NETWORK: Network.BASE,
+            PARAMETR.TOKEN: TOKENS.BASE.ETH,
+        },
+        PARAMETR.DEXS: [DEX.ACROSS, DEX.NITRO, DEX.XY_FINANCE_BRIDGE],
+    }
+
+
 class LENDINGS_SETTINGS:
     SLEEP = (100, 100)
 
@@ -725,6 +765,10 @@ async def bridges():
 
 async def landings():
     await Web3Lending.landing_use_database(settings=LENDINGS_SETTINGS)
+
+
+async def dep_to_networks():
+    await dep_to_network(settings=DEP_TO_NETWORK_SETTINGS)
 
 
 async def mint_nfts():

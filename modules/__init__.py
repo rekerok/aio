@@ -21,6 +21,7 @@ from .others.rybyscore import rubyscore
 from .others.okx import OKX
 from .others.deployer import Deployer
 from .others.create_wallets import Create_Wallets
+from .others.dep_networks import dep_to_network
 from .swaps.inch_swap import InchSwap
 from .swaps.izumi_swap import IzumiSwap
 from .swaps.odos_swap import OdosSwap
