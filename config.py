@@ -646,18 +646,18 @@ class TOKENS:
     class OPTIMISM:
         ETH = TOKEN(
             address="",
-            network="Optimism",
+            network="OPTIMISM",
             exchange_name="ETH",
         )
         WETH = TOKEN(address="0x4200000000000000000000000000000000000006")
         USDT = TOKEN(
             address="0x94b008aA00579c1307B0EF2c499aD98a8ce58e58",
-            network="Optimism",
+            network="OPTIMISM",
             exchange_name="USDT",
         )
         USDC = TOKEN(
             address="0x0b2C639c533813f4Aa9D7837CAf62653d097Ff85",
-            network="Optimism",
+            network="OPTIMISM",
             exchange_name="USDC",
         )
         USDC_BRIDGED = TOKEN(
@@ -669,23 +669,23 @@ class TOKENS:
         WBTC = TOKEN(address="0x68f180fcCe6836688e9084f035309E29Bf0A2095")
         OP = TOKEN(
             address="0x4200000000000000000000000000000000000042",
-            network="Optimism",
+            network="OPTIMISM",
             exchange_name="USDC",
         )
 
     class ARBITRUM:
-        ETH = TOKEN(address="", network="Arbitrum One", exchange_name="ETH")
+        ETH = TOKEN(address="", network="ARBONE", exchange_name="ETH")
         WETH = TOKEN(
             address="0x82aF49447D8a07e3bd95BD0d56f35241523fBab1",
         )
         USDT = TOKEN(
             address="0xFd086bC7CD5C481DCC9C85ebE478A1C0b69FCbb9",
-            network="Arbitrum One",
+            network="ARBONE",
             exchange_name="USDT",
         )
         USDC = TOKEN(
             address="0xaf88d065e77c8cC2239327C5EDb3A432268e5831",
-            network="Arbitrum One",
+            network="ARBONE",
             exchange_name="USDC",
         )
         USDC_BRIDGED = TOKEN(
@@ -696,7 +696,7 @@ class TOKENS:
         )
         ARB = TOKEN(
             address="0x912CE59144191C1204E64559FE8253a0e49E6548",
-            network="Arbitrum One",
+            network="ARBONE",
             exchange_name="ARB",
         )
 
@@ -749,7 +749,7 @@ class TOKENS:
         ARB = TOKEN(address="0xf823C3cD3CeBE0a1fA952ba88Dc9EEf8e0Bf46AD")
 
     class BASE:
-        ETH = TOKEN(address="", exchange_name="ETH")
+        ETH = TOKEN(address="", network="Base",exchange_name="ETH")
         WETH = TOKEN(address="0x4200000000000000000000000000000000000006")
         USDC = TOKEN(address="0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913")
         USDbC = TOKEN(address="0xd9aaec86b65d86f6a7b5b1b0c42ffa531710b6ca")
@@ -769,19 +769,19 @@ class TOKENS:
     class POLYGON:
         MATIC = TOKEN(
             address="",
-            network="Polygon",
+            network="MATIC",
             exchange_name="MATIC",
         )
         WMATIC = TOKEN(address="0x0d500B1d8E8eF31E21C99d1Db9A6444d3ADf1270")
         WETH = TOKEN(address="0x7ceB23fD6bC0adD59E62ac25578270cFf1b9f619")
         USDT = TOKEN(
             address="0xc2132D05D31c914a87C6611C10748AEb04B58e8F",
-            network="Polygon",
+            network="MATIC",
             exchange_name="USDT",
         )
         USDC = TOKEN(
             address="0x3c499c542cEF5E3811e1192ce70d8cC03d5c3359",
-            network="Polygon",
+            network="MATIC",
             exchange_name="USDC",
         )
         USDC_BRIDGED = TOKEN(

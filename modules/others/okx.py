@@ -28,13 +28,14 @@ class OKX:
         self.count_attempt = attempt
         self.check_send = check_send
 
-    async def _get_fee(self, currency: str = None, chain: str = None):
+    async def _get_data(self, currency: str = None, chain: str = None):
         try:
             if chain == "Avalanche C-Chain":
                 chain = "Avalanche C"
             if chain == "Avalanche X-Chain":
                 chain = "Avalanche X"
-            return self.okx.fetch_currencies()[currency]["networks"][chain]["fee"]
+            # pprint.pprint(self.okx.fetch_currencies()[currency]["networks"][chain])
+            return self.okx.fetch_currencies()[currency]["networks"][chain]
         except:
             logger.error("don't get fee")
             return None
@@ -73,7 +74,8 @@ class OKX:
     async def withdraw(self, address: str, currency: str, chain: str, amount: float):
         try:
             await self.withdraw_from_subaccs()
-            logger.info(f"start withdraw {amount} {currency}-{chain} to {address}")
+            data_chains = await self._get_data(currency=currency, chain=chain)
+            logger.info(f"start withdraw {amount} {data_chains['id']} to {address}")
             id = self.okx.withdraw(
                 currency,
                 amount,
@@ -83,8 +85,8 @@ class OKX:
                     "amt": f"{amount}",
                     "dest": 4,
                     "toAddr": address,
-                    "fee": await self._get_fee(currency=currency, chain=chain),
-                    "chain": f"{currency}-{chain}",
+                    "fee": data_chains["fee"],
+                    "chain": data_chains["id"],
                     "pwd": "-",
                 },
             )["info"]["wdId"]
