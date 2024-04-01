@@ -230,25 +230,43 @@ class DEP_TO_NETWORK_SETTINGS:
             {
                 PARAMETR.TOKEN: TOKENS.BASE.ETH,
                 PARAMETR.NETWORK: Client_Networks.base,
+                PARAMETR.DEXS: [
+                    DEX.ACROSS,
+                    DEX.NITRO,
+                    DEX.XY_FINANCE_BRIDGE,
+                    DEX.STARGATE,
+                ],
             },
             {
                 PARAMETR.TOKEN: TOKENS.OPTIMISM.ETH,
                 PARAMETR.NETWORK: Client_Networks.optimism,
+                PARAMETR.DEXS: [
+                    DEX.ACROSS,
+                    DEX.NITRO,
+                    DEX.XY_FINANCE_BRIDGE,
+                    DEX.STARGATE,
+                ],
             },
             {
                 PARAMETR.TOKEN: TOKENS.ARBITRUM.ETH,
                 PARAMETR.NETWORK: Client_Networks.arbitrum,
+                PARAMETR.DEXS: [
+                    DEX.ACROSS,
+                    DEX.NITRO,
+                    DEX.XY_FINANCE_BRIDGE,
+                    DEX.STARGATE,
+                ],
             },
             {
                 PARAMETR.TOKEN: TOKENS.ZKSYNC.ETH,
                 PARAMETR.NETWORK: Client_Networks.zksync,
+                PARAMETR.DEXS: [DEX.ACROSS, DEX.NITRO, DEX.XY_FINANCE_BRIDGE],
             },
         ],
         PARAMETR.TO_TOKEN: {
             PARAMETR.NETWORK: Network.BASE,
             PARAMETR.TOKEN: TOKENS.BASE.ETH,
         },
-        PARAMETR.DEXS: [DEX.ACROSS, DEX.NITRO, DEX.XY_FINANCE_BRIDGE],
     }
 
 
