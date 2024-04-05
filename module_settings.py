@@ -223,50 +223,48 @@ class DEP_TO_NETWORK_SETTINGS:
         PARAMETR.OKX_PASSWORD: "",
         PARAMETR.ATTEMPT: 15,
     }
-
+    CHANGE_NETWORK = (
+        True  # Если сеть в которую депаешь совпадет с той в которую будет деп
+    )
     PARAMS = {
-        PARAMETR.VALUE: (0.00028182 * 21, 0.00028182 * 25),
+        PARAMETR.VALUE: (0.002, 0.004),
         PARAMETR.TOKENS: [
             {
                 PARAMETR.TOKEN: TOKENS.BASE.ETH,
                 PARAMETR.NETWORK: Client_Networks.base,
                 PARAMETR.DEXS: [
-                    DEX.ACROSS,
-                    DEX.NITRO,
-                    DEX.XY_FINANCE_BRIDGE,
                     DEX.STARGATE,
                 ],
             },
+            # {
+            #     PARAMETR.TOKEN: TOKENS.OPTIMISM.ETH,
+            #     PARAMETR.NETWORK: Client_Networks.optimism,
+            #     PARAMETR.DEXS: [
+            #         DEX.STARGATE,
+            #     ],
+            # },
+            # {
+            #     PARAMETR.TOKEN: TOKENS.ARBITRUM.ETH,
+            #     PARAMETR.NETWORK: Client_Networks.arbitrum,
+            #     PARAMETR.DEXS: [
+            #         DEX.STARGATE,
+            #     ],
+            # },
+        ],
+        PARAMETR.TO_TOKEN: [
             {
+                PARAMETR.NETWORK: Network.BASE,
+                PARAMETR.TOKEN: TOKENS.BASE.ETH,
+            },
+            # {
+            #     PARAMETR.NETWORK: Network.ARBITRUM,
+            #     PARAMETR.TOKEN: TOKENS.ARBITRUM.ETH,
+            # },
+            {
+                PARAMETR.NETWORK: Network.OPTIMISM,
                 PARAMETR.TOKEN: TOKENS.OPTIMISM.ETH,
-                PARAMETR.NETWORK: Client_Networks.optimism,
-                PARAMETR.DEXS: [
-                    DEX.ACROSS,
-                    DEX.NITRO,
-                    DEX.XY_FINANCE_BRIDGE,
-                    DEX.STARGATE,
-                ],
-            },
-            {
-                PARAMETR.TOKEN: TOKENS.ARBITRUM.ETH,
-                PARAMETR.NETWORK: Client_Networks.arbitrum,
-                PARAMETR.DEXS: [
-                    DEX.ACROSS,
-                    DEX.NITRO,
-                    DEX.XY_FINANCE_BRIDGE,
-                    DEX.STARGATE,
-                ],
-            },
-            {
-                PARAMETR.TOKEN: TOKENS.ZKSYNC.ETH,
-                PARAMETR.NETWORK: Client_Networks.zksync,
-                PARAMETR.DEXS: [DEX.ACROSS, DEX.NITRO, DEX.XY_FINANCE_BRIDGE],
             },
         ],
-        PARAMETR.TO_TOKEN: {
-            PARAMETR.NETWORK: Network.BASE,
-            PARAMETR.TOKEN: TOKENS.BASE.ETH,
-        },
     }
 
 

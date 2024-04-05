@@ -38,31 +38,40 @@ async def dep_to_network(settings):
         )
         logger.debug("SLEEP AFTER WITHDRAW")
         await utils.time.sleep_view(settings.SLEEPS[PARAMETR.AFTER_WITHDRAW])
-        if (
-            to_withdraw[PARAMETR.NETWORK][NETWORK_FIELDS.NAME]
-            != settings.PARAMS[PARAMETR.TO_TOKEN][PARAMETR.NETWORK]
-        ):
-            dex_class = random.choice(to_withdraw[PARAMETR.DEXS])
-            dex = dex_class(
-                private_key=wallet[0],
-                network=to_withdraw[PARAMETR.NETWORK],
-                type_transfer=TYPES_OF_TRANSACTION.AMOUNT,
-                value=(value * 0.85, value * 0.95),
-                min_balance=0,
-            )
-
-            result = await dex.bridge(
-                from_token=to_withdraw[PARAMETR.TOKEN],
-                to_token=settings.PARAMS[PARAMETR.TO_TOKEN][PARAMETR.TOKEN],
-                to_network=settings.PARAMS[PARAMETR.TO_TOKEN][PARAMETR.NETWORK],
-            )
-            if result == RESULT_TRANSACTION.SUCCESS:
-                logger.debug("SLEEP BETWEEN_WALLETS")
+        if not settings.CHANGE_NETWORK:
+            dep_to = random.choice(settings.PARAMS[PARAMETR.TO_TOKEN])
+            if (
+                to_withdraw[PARAMETR.NETWORK][NETWORK_FIELDS.NAME]
+                == dep_to[PARAMETR.NETWORK]
+            ):
+                logger.debug("SLEEP BETWEEN WALLETS")
                 await utils.time.sleep_view(settings.SLEEPS[PARAMETR.BETWEEN_WALLETS])
-            else:
-                await utils.time.sleep_view((10, 15))
-
+                continue
         else:
-            logger.debug("SLEEP BETWEEN WALLETS")
+            remaining_elements = [
+                element
+                for element in settings.PARAMS[PARAMETR.TO_TOKEN]
+                if element[PARAMETR.NETWORK]
+                != to_withdraw[PARAMETR.NETWORK][NETWORK_FIELDS.NAME]
+            ]
+            dep_to = random.choice(remaining_elements)
+        dex_class = random.choice(to_withdraw[PARAMETR.DEXS])
+        dex = dex_class(
+            private_key=wallet[0],
+            network=to_withdraw[PARAMETR.NETWORK],
+            type_transfer=TYPES_OF_TRANSACTION.AMOUNT,
+            value=(value * 0.85, value * 0.95),
+            min_balance=0,
+        )
+
+        result = await dex.bridge(
+            from_token=to_withdraw[PARAMETR.TOKEN],
+            to_token=dep_to[PARAMETR.TOKEN],
+            to_network=dep_to[PARAMETR.NETWORK],
+        )
+        if result == RESULT_TRANSACTION.SUCCESS:
+            logger.debug("SLEEP BETWEEN_WALLETS")
             await utils.time.sleep_view(settings.SLEEPS[PARAMETR.BETWEEN_WALLETS])
+        else:
+            await utils.time.sleep_view((10, 15))
         counter += 1
