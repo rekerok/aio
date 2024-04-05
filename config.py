@@ -221,17 +221,17 @@ class IZUMI:
         Network.ZKSYNC: {
             "quoter": "0x30C089574551516e5F1169C32C6D429C92bf3CD7",
             "router": "0x943ac2310D9BC703d6AB5e5e76876e212100f894",
-            "pairs": {"USDC/ETH": 2000, "USDC/USDT": 400},
+            "pairs": {"USDC.E/ETH": 2000, "USDC.E/USDT": 400},
         },
         Network.LINEA: {
             "quoter": "0xe6805638db944eA605e774e72c6F0D15Fb6a1347",
             "router": "0x032b241De86a8660f1Ae0691a4760B426EA246d7",
-            "pairs": {"USDC/ETH": 3000, "USDC/USDT": 500},
+            "pairs": {"USDC.E/ETH": 3000, "USDC.E/USDT": 500},
         },
         Network.SCROLL: {
             "quoter": "0x3EF68D3f7664b2805D4E88381b64868a56f88bC4",
             "router": "0x2db0AFD0045F3518c77eC6591a542e326Befd3D7",
-            "pairs": {"USDC/ETH": 3000, "USDC/USDT": 500},
+            "pairs": {"USDC.E/ETH": 3000, "USDC.E/USDT": 500},
         },
     }
 
