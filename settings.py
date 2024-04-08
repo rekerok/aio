@@ -68,7 +68,8 @@ class Client_Networks:
         NETWORK_FIELDS.EXPLORER: "https://basescan.org/",
         NETWORK_FIELDS.EIP1559: True,
         NETWORK_FIELDS.NATIVE_TOKEN: "ETH",
-        NETWORK_FIELDS.CHECK_GAS: False,
+        NETWORK_FIELDS.CHECK_GAS: True,
+        NETWORK_FIELDS.LIMIT_GAS: 1,
     }
 
     zksync = {
@@ -93,6 +94,7 @@ class Client_Networks:
         NETWORK_FIELDS.EIP1559: False,
         NETWORK_FIELDS.NATIVE_TOKEN: "ETH",
         NETWORK_FIELDS.CHECK_GAS: True,
+        NETWORK_FIELDS.LIMIT_GAS: 0.5,
     }
 
     nova = {

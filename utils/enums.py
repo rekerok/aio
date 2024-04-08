@@ -18,6 +18,7 @@ class NETWORK_FIELDS(Enum):
     RPCS = auto()
     EIP1559 = auto()
     EXPLORER = auto()
+    LIMIT_GAS = auto()
     CHECK_GAS = auto()
     NATIVE_TOKEN = auto()
 

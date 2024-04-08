@@ -2,7 +2,7 @@ from tqdm import trange
 import time
 import random
 import asyncio
-from settings import *
+from settings import COUNT_CHECK_GAS
 from loguru import logger
 from web3 import AsyncHTTPProvider, AsyncWeb3
 from web3.middleware import async_geth_poa_middleware
@@ -27,7 +27,7 @@ async def get_gas(network: dict) -> int:
         return None
 
 
-async def wait_gas(w3):
+async def wait_gas(w3, LIMIT_GWEI=None):
     for i in range(COUNT_CHECK_GAS):
         try:
             gas_now = w3.from_wei(await w3.eth.gas_price, "gwei")

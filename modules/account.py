@@ -1,4 +1,3 @@
-import asyncio
 import utils
 import config
 import random
@@ -82,24 +81,30 @@ class Account:
         )
         self.w3.middleware_onion.inject(async_geth_poa_middleware, layer=0)
 
-    async def _get_eip1559_tx(self, tx_params: dict, increase_gas: float = 1.0):
-        last_block = await self.w3.eth.get_block("latest")
-        base_fee = int(last_block["baseFeePerGas"] * increase_gas)
-        max_priority_fee_per_gas = await self.w3.eth.max_priority_fee
-        tx_params["maxFeePerGas"] = int(base_fee + max_priority_fee_per_gas)
-        tx_params["maxPriorityFeePerGas"] = max_priority_fee_per_gas
-        return tx_params
+    async def transfer(
+        self, to_address: str, amount: Token_Amount, token_address: str = None
+    ):
+        logger.info("START TRANSFER MODULE")
+        # logger.info(f"WILL SEND {amount.ETHER} to {to_address}")
+        if token_address is None or token_address == "":
+            return await self.send_transaction(to_address=to_address, value=amount)
+        else:
+            contract = self.w3.eth.contract(
+                address=self.w3.to_checksum_address(token_address),
+                abi=config.GENERAL.ERC20_ABI,
+            )
+            await self.approve(
+                token_address=token_address, spender=to_address, amount=amount
+            )
+            data = contract.encodeABI(
+                "transfer", args=(self.w3.to_checksum_address(to_address), amount.WEI)
+            )
+            return await self.send_transaction(
+                data=data, to_address=token_address, value=0
+            )
 
-    async def _verifi_tx(self, tx_hash):
-        try:
-            data = await self.w3.eth.wait_for_transaction_receipt(tx_hash, timeout=400)
-            if "status" in data and data["status"] == 1:
-                return True
-            else:
-                return False
-        except Exception as error:
-            logger.error(error)
-            return False
+    async def deploy_contract(self, bytecode: str):
+        return await self.send_transaction(data=bytecode)
 
     async def _get_allowance(
         self, token_address: str, owner: str, spender: str
@@ -155,30 +160,30 @@ class Account:
             )
             await utils.time.sleep_view(settings.SLEEP_AFTER_APPROOVE)
 
-    async def transfer(
-        self, to_address: str, amount: Token_Amount, token_address: str = None
-    ):
-        logger.info("START TRANSFER MODULE")
-        # logger.info(f"WILL SEND {amount.ETHER} to {to_address}")
-        if token_address is None or token_address == "":
-            return await self.send_transaction(to_address=to_address, value=amount)
-        else:
-            contract = self.w3.eth.contract(
-                address=self.w3.to_checksum_address(token_address),
-                abi=config.GENERAL.ERC20_ABI,
-            )
-            await self.approve(
-                token_address=token_address, spender=to_address, amount=amount
-            )
-            data = contract.encodeABI(
-                "transfer", args=(self.w3.to_checksum_address(to_address), amount.WEI)
-            )
-            return await self.send_transaction(
-                data=data, to_address=token_address, value=0
-            )
+    async def _sign_transaction(self, tx: dict):
+        signed_tx = self.w3.eth.account.sign_transaction(tx, self.private_key)
+        raw_tx_hash = await self.w3.eth.send_raw_transaction(signed_tx.rawTransaction)
+        tx_hash = self.w3.to_hex(raw_tx_hash)
+        return tx_hash
 
-    async def deploy_contract(self, bytecode: str):
-        return await self.send_transaction(data=bytecode)
+    async def _get_eip1559_tx(self, tx_params: dict, increase_gas: float = 1.0):
+        last_block = await self.w3.eth.get_block("latest")
+        base_fee = int(last_block["baseFeePerGas"] * increase_gas)
+        max_priority_fee_per_gas = await self.w3.eth.max_priority_fee
+        tx_params["maxFeePerGas"] = int(base_fee + max_priority_fee_per_gas)
+        tx_params["maxPriorityFeePerGas"] = max_priority_fee_per_gas
+        return tx_params
+
+    async def _verifi_tx(self, tx_hash):
+        try:
+            data = await self.w3.eth.wait_for_transaction_receipt(tx_hash, timeout=400)
+            if "status" in data and data["status"] == 1:
+                return True
+            else:
+                return False
+        except Exception as error:
+            logger.error(error)
+            return False
 
     async def send_transaction(
         self,
@@ -188,8 +193,29 @@ class Account:
     ):
         allow_transaction = True
         if self.network.get(NETWORK_FIELDS.CHECK_GAS):
-            allow_transaction = await utils.time.wait_gas(
-                AsyncWeb3(
+            if self.network.get(NETWORK_FIELDS.NAME) == config.Network.SCROLL:
+                w3 = AsyncWeb3(
+                    AsyncHTTPProvider(
+                        endpoint_uri=random.choice(
+                            self.network.get(NETWORK_FIELDS.RPCS)
+                        ),
+                        request_kwargs=self.request_kwargs,
+                    )
+                )
+                limit = self.network.get(NETWORK_FIELDS.LIMIT_GAS)
+            elif self.network.get(NETWORK_FIELDS.NAME) == config.Network.BASE:
+                w3 = AsyncWeb3(
+                    AsyncHTTPProvider(
+                        endpoint_uri=random.choice(
+                            self.network.get(NETWORK_FIELDS.RPCS)
+                        ),
+                        request_kwargs=self.request_kwargs,
+                    )
+                )
+                limit = self.network.get(NETWORK_FIELDS.LIMIT_GAS)
+            else:
+                limit = settings.LIMIT_GWEI
+                w3 = AsyncWeb3(
                     AsyncHTTPProvider(
                         endpoint_uri=random.choice(
                             Client_Networks.ethereum.get(NETWORK_FIELDS.RPCS)
@@ -197,7 +223,7 @@ class Account:
                         request_kwargs=self.request_kwargs,
                     )
                 )
-            )
+            allow_transaction = await utils.time.wait_gas(w3=w3,LIMIT_GWEI=limit)
 
         if allow_transaction:
             try:
@@ -244,9 +270,3 @@ class Account:
                 return RESULT_TRANSACTION.FAIL
         else:
             return RESULT_TRANSACTION.FAIL
-
-    async def _sign_transaction(self, tx: dict):
-        signed_tx = self.w3.eth.account.sign_transaction(tx, self.private_key)
-        raw_tx_hash = await self.w3.eth.send_raw_transaction(signed_tx.rawTransaction)
-        tx_hash = self.w3.to_hex(raw_tx_hash)
-        return tx_hash
