@@ -83,6 +83,11 @@ class IzumiSwap(Web3Swapper):
             )
 
     async def _get_path(self, from_token: Token_Info, to_token: Token_Info):
+        usdc = (
+            "USDC"
+            if self.acc.network.get(NETWORK_FIELDS.NAME) != config.Network.ZKSYNC
+            else "USDC.E"
+        )
         if not (from_token.symbol == "USDT" or to_token.symbol == "USDT"):
             try:
                 fee = await self._get_pool_fee(from_token=from_token, to_token=to_token)
@@ -95,7 +100,7 @@ class IzumiSwap(Web3Swapper):
             except Exception as error:
                 logger.error(error)
                 return None
-        elif "USDC" in [from_token.symbol, to_token.symbol] and "USDC" in [
+        elif usdc in [from_token.symbol, to_token.symbol] and usdc in [
             from_token.symbol,
             to_token.symbol,
         ]:
@@ -112,14 +117,14 @@ class IzumiSwap(Web3Swapper):
                 from_token_bytes = HexBytes(from_token.address).rjust(20, b"\0")
                 fee1 = await self._get_pool_fee(
                     from_token=from_token,
-                    to_token=Token_Info(address="", symbol="USDC", decimals=6),
+                    to_token=Token_Info(address="", symbol=usdc, decimals=6),
                 )
                 fee_bytes_1 = fee1.to_bytes(3, "big")
                 middle_token_bytes = HexBytes(await self._get_usdc_address()).rjust(
                     20, b"\0"
                 )
                 fee2 = await self._get_pool_fee(
-                    from_token=Token_Info(address="", symbol="USDC", decimals=6),
+                    from_token=Token_Info(address="", symbol=usdc, decimals=6),
                     to_token=to_token,
                 )
                 fee_bytes_2 = fee2.to_bytes(3, "big")

@@ -16,7 +16,7 @@ class DEX:
     BASESWAP = BaseSwap
     ZEROX = Zerox
     XY_FINANCE_SWAP = XY_finance_swap
-    RANGO_SWAP = RangoSwap
+    # RANGO_SWAP = RangoSwap
     SKYDROME = Skydrome
     MUTE = Mute
     SPACEFI = SpaceFi
@@ -26,7 +26,7 @@ class DEX:
     ORBITER = Orbiter
     NITRO = Nitro
     XY_FINANCE_BRIDGE = XY_finance_bridge
-    RANGO_BRIDGE = Rango_Bridge
+    # RANGO_BRIDGE = Rango_Bridge
     RUBYSCORE_VOTE = rubyscore
 
 

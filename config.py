@@ -226,12 +226,12 @@ class IZUMI:
         Network.LINEA: {
             "quoter": "0xe6805638db944eA605e774e72c6F0D15Fb6a1347",
             "router": "0x032b241De86a8660f1Ae0691a4760B426EA246d7",
-            "pairs": {"USDC.E/ETH": 3000, "USDC.E/USDT": 500},
+            "pairs": {"USDC/ETH": 3000, "USDC/USDT": 500},
         },
         Network.SCROLL: {
             "quoter": "0x3EF68D3f7664b2805D4E88381b64868a56f88bC4",
             "router": "0x2db0AFD0045F3518c77eC6591a542e326Befd3D7",
-            "pairs": {"USDC.E/ETH": 3000, "USDC.E/USDT": 500},
+            "pairs": {"USDC/ETH": 3000, "USDC/USDT": 500},
         },
     }
 
@@ -749,7 +749,7 @@ class TOKENS:
         ARB = TOKEN(address="0xf823C3cD3CeBE0a1fA952ba88Dc9EEf8e0Bf46AD")
 
     class BASE:
-        ETH = TOKEN(address="", network="Base",exchange_name="ETH")
+        ETH = TOKEN(address="", network="Base", exchange_name="ETH")
         WETH = TOKEN(address="0x4200000000000000000000000000000000000006")
         USDC = TOKEN(address="0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913")
         USDbC = TOKEN(address="0xd9aaec86b65d86f6a7b5b1b0c42ffa531710b6ca")
@@ -794,18 +794,18 @@ class TOKENS:
     class AVALANCHE:
         AVAX = TOKEN(
             address="",
-            network="Avalanche C-Chain",
+            network="AVAXC",
             exchange_name="AVAX",
         )
         WAVAX = TOKEN(address="0xb31f66aa3c1e785363f0875a1b74e27b85fd66c7")
         USDT = TOKEN(
             address="0x9702230A8Ea53601f5cD2dc00fDBc13d4dF4A8c7",
-            network="Avalanche C-Chain",
+            network="AVAXC",
             exchange_name="USDT",
         )
         USDC = TOKEN(
             address="0xB97EF9Ef8734C71904D8002F8b6Bc66Dd9c48a6E",
-            network="Avalanche C-Chain",
+            network="AVAXC",
             exchange_name="USDC",
         )
         BTC_B = TOKEN(address="0x152b9d0FdC40C096757F570A51E494bd4b943E50")
