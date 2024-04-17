@@ -54,7 +54,8 @@ class WarmUPSwaps:
                 )
                 if token_info.symbol == "USDBC":
                     token_info.symbol = "USDC"
-
+                if token_info.symbol == "USDC.E":
+                    token_info.symbol = "USDC"
                 # logger.info(f"{token_info.symbol} - {token_info.address}")
                 price_token = await utils.prices.get_price_token(
                     token_name=token_info.symbol

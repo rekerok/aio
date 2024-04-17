@@ -61,7 +61,7 @@ class Transfers:
         logger.info(f"BALANCE: {balance.ETHER} {token_info.symbol}")
         logger.info(f"SEND: {balance.ETHER-kepp_amount.ETHER} {token_info.symbol}")
         if kepp_amount.ETHER > balance.ETHER:
-            logger.info(f"Keep amount {kepp_amount.ETHER} > {balance.ETHER}")
+            logger.error(f"Keep amount {kepp_amount.ETHER} > {balance.ETHER}")
             return RESULT_TRANSACTION.FAIL
 
         return await self.acc.transfer(

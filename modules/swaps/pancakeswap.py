@@ -148,7 +148,7 @@ class PancakeSwap(Web3Swapper):
                     path, amount_to_send.WEI
                 ).call()
             )
-            return int(min_amount_out - (min_amount_out / 100 * self.slippage))
+            return int(min_amount_out - (min_amount_out * 0.1))
         except Exception as error:
             logger.error(error)
             return None

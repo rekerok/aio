@@ -197,19 +197,39 @@ class Web3Bridger(Web3Client):
                 else await utils.files.read_file_lines(param.get(PARAMETR.WALLETS_FILE))
             ):
                 to_token = random.choice(param.get(PARAMETR.TO_TOKENS))
-                database.append(
-                    {
-                        "private_key": wallet,
-                        "network": param.get(PARAMETR.NETWORK),
-                        "dex": random.choice(to_token.get(PARAMETR.DEXS)),
-                        "type_swap": param.get(PARAMETR.TYPE_TRANSACTION),
-                        "value": param.get(PARAMETR.VALUE),
-                        "from_token": param.get(PARAMETR.FROM_TOKEN),
-                        "min_balance": param.get(PARAMETR.MIN_BALANCE),
-                        "to_network": to_token.get(PARAMETR.NETWORK),
-                        "to_token": to_token.get(PARAMETR.TO_TOKEN),
-                    }
-                )
+                while True:
+                    acc = Account(
+                        private_key=wallet, network=param.get(PARAMETR.NETWORK)
+                    )
+                    balance = await acc.get_balance(
+                        token_address=param.get(PARAMETR.FROM_TOKEN).ADDRESS
+                    )
+                    token_info = await Token_Info.get_info_token(
+                        acc=acc, token_address=param.get(PARAMETR.FROM_TOKEN).ADDRESS
+                    )
+                    if balance is not None and token_info is not None:
+                        break
+                if balance.ETHER > param.get(PARAMETR.MIN_BALANCE):
+                    database.append(
+                        {
+                            "private_key": wallet,
+                            "network": param.get(PARAMETR.NETWORK),
+                            "dex": random.choice(to_token.get(PARAMETR.DEXS)),
+                            "type_swap": param.get(PARAMETR.TYPE_TRANSACTION),
+                            "value": param.get(PARAMETR.VALUE),
+                            "from_token": param.get(PARAMETR.FROM_TOKEN),
+                            "min_balance": param.get(PARAMETR.MIN_BALANCE),
+                            "to_network": to_token.get(PARAMETR.NETWORK),
+                            "to_token": to_token.get(PARAMETR.TO_TOKEN),
+                        }
+                    )
+                    logger.success(
+                        f"{acc.address} ({round(balance.ETHER,3)} {token_info.symbol}) ({param.get(PARAMETR.NETWORK)[NETWORK_FIELDS.NAME]}) add to DB"
+                    )
+                else:
+                    logger.error(
+                        f"{acc.address} ({round(balance.ETHER,3)} {token_info.symbol}) ({param.get(PARAMETR.NETWORK)[NETWORK_FIELDS.NAME]}) don't add to DB"
+                    )
         return database
 
     @staticmethod

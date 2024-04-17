@@ -82,7 +82,7 @@ class Client_Networks:
         NETWORK_FIELDS.EXPLORER: "https://explorer.zksync.io/",
         NETWORK_FIELDS.EIP1559: False,
         NETWORK_FIELDS.NATIVE_TOKEN: "ETH",
-        NETWORK_FIELDS.CHECK_GAS: True,
+        NETWORK_FIELDS.CHECK_GAS: False,
     }
 
     scroll = {
@@ -120,7 +120,7 @@ class Client_Networks:
         NETWORK_FIELDS.EXPLORER: "https://lineascan.build/",
         NETWORK_FIELDS.EIP1559: False,
         NETWORK_FIELDS.NATIVE_TOKEN: "ETH",
-        NETWORK_FIELDS.CHECK_GAS: True,
+        NETWORK_FIELDS.CHECK_GAS: False,
     }
 
     avalanche = {
