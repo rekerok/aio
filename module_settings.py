@@ -7,6 +7,7 @@ from utils import TYPES_OF_TRANSACTION, PARAMETR
 class DEX:
     ONE_INCH = InchSwap
     IZUMI = IzumiSwap
+    PANCAKESWAP = PancakeSwap
     ODOS = OdosSwap
     OPENOCEAN = OpenoceanSwap
     SUSHI = SushiSwap

@@ -26,6 +26,7 @@ from .swaps.inch_swap import InchSwap
 from .swaps.izumi_swap import IzumiSwap
 from .swaps.odos_swap import OdosSwap
 from .swaps.openocean_swap import OpenoceanSwap
+from .swaps.pancakeswap import PancakeSwap
 from .swaps.sushi_swap import SushiSwap
 from .swaps.sync_swap import SyncSwap
 from .swaps.warmup_swaps import WarmUPSwaps
