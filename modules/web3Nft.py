@@ -33,15 +33,16 @@ class Web3Nft(Web3Client):
                 if param.get(PARAMETR.WALLETS_FILE) == ""
                 else await utils.files.read_file_lines(param.get(PARAMETR.WALLETS_FILE))
             ):
-                tmp = random.choice(param.get(PARAMETR.NFTS))
-                database.append(
-                    {
-                        "private_key": wallet,
-                        "network": param.get(PARAMETR.NETWORK),
-                        "dex": tmp.get(PARAMETR.DEX),
-                        "contract": random.choice(tmp.get(PARAMETR.CONTRACTS)),
-                    }
-                )
+                for i in range(random.randint(param.get(PARAMETR.COUNT_TRANSACTION))):
+                    tmp = random.choice(param.get(PARAMETR.NFTS))
+                    database.append(
+                        {
+                            "private_key": wallet,
+                            "network": param.get(PARAMETR.NETWORK),
+                            "dex": tmp.get(PARAMETR.DEX),
+                            "contract": random.choice(tmp.get(PARAMETR.CONTRACTS)),
+                        }
+                    )
         return database
 
     @staticmethod

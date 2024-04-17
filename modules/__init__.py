@@ -49,3 +49,4 @@ from .lendings.reactor_fusion import Reactor_Fusion
 from .lendings.zeroland import ZeroLend
 from .nft.l2pass import L2pass_NFT
 from .nft.free_nft import Free_NFT
+from .nft.nft2me import NFT2ME
