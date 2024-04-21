@@ -61,8 +61,6 @@ class Web3Bridger(Web3Client):
     async def _make_bridge_percent(
         self,
         from_token: Token_Info,
-        to_token: str,
-        to_network: config.Network,
         balance: Token_Amount,
     ):
         percent = random.uniform(self.value[0], self.value[1])
@@ -73,18 +71,11 @@ class Web3Bridger(Web3Client):
         logger.info(f"PERCENT: {percent} %")
         logger.info(f"SEND: {amount_to_send.ETHER} {from_token.symbol}")
 
-        return await self._perform_bridge(
-            amount_to_send=amount_to_send,
-            from_token=from_token,
-            to_chain=to_network,
-            to_token_address=to_token,
-        )
+        return amount_to_send
 
     async def _make_bridge_all_balance(
         self,
         from_token: Token_Info,
-        to_token: str,
-        to_network: config.Network,
         balance: Token_Amount,
     ):
         keep_amount = Token_Amount(
@@ -97,23 +88,16 @@ class Web3Bridger(Web3Client):
 
         if keep_amount.ETHER > balance.ETHER:
             logger.error(f"KEEP AMOUNT:  {keep_amount.ETHER} > {balance.ETHER} BALANCE")
-            return RESULT_TRANSACTION.FAIL
+            return None
 
         logger.info(f"BALANCE: {balance.ETHER} {from_token.symbol}")
         logger.info(f"SEND: {amount_to_send.ETHER} {from_token.symbol}")
 
-        return await self._perform_bridge(
-            amount_to_send=amount_to_send,
-            from_token=from_token,
-            to_chain=to_network,
-            to_token_address=to_token,
-        )
+        return amount_to_send
 
     async def _make_bridge_amount(
         self,
         from_token: Token_Info,
-        to_token: str,
-        to_network: config.Network,
         balance: Token_Amount,
     ):
         amount_to_send = Token_Amount(
@@ -123,16 +107,11 @@ class Web3Bridger(Web3Client):
 
         if amount_to_send.ETHER > balance.ETHER:
             logger.error(f"BALANCE: {balance.ETHER} < {amount_to_send.ETHER} SEND")
-            return RESULT_TRANSACTION.FAIL
+            return None
 
         logger.info(f"SEND: {amount_to_send.ETHER} {from_token.symbol}")
 
-        return await self._perform_bridge(
-            amount_to_send=amount_to_send,
-            from_token=from_token,
-            to_chain=to_network,
-            to_token_address=to_token,
-        )
+        return amount_to_send
 
     @abstractmethod
     async def _perform_bridge(
@@ -140,7 +119,7 @@ class Web3Bridger(Web3Client):
         amount_to_send: Token_Amount,
         from_token: Token_Info,
         to_chain: config.Network,
-        to_token: config.TOKEN = None,
+        to_token_address: config.TOKEN = None,
     ):
         pass
 
@@ -178,13 +157,22 @@ class Web3Bridger(Web3Client):
         if balance.ETHER < self.min_balance:
             logger.error(f"Balance {balance.ETHER} < {self.min_balance}")
             return RESULT_TRANSACTION.FAIL
+
         func_bridge = await self._choice_type_transaction()
 
-        return await func_bridge(
+        amount_to_send = await func_bridge(
             from_token=from_token,
-            to_token=to_token.ADDRESS,
-            to_network=to_network,
             balance=balance,
+        )
+
+        if amount_to_send is None or not await Web3Client.wait_gas(acc=self.acc):
+            return RESULT_TRANSACTION.FAIL
+
+        return await self._perform_bridge(
+            amount_to_send=amount_to_send,
+            from_token=from_token,
+            to_chain=to_network,
+            to_token_address=to_token.ADDRESS,
         )
 
     @staticmethod
@@ -197,19 +185,15 @@ class Web3Bridger(Web3Client):
                 else await utils.files.read_file_lines(param.get(PARAMETR.WALLETS_FILE))
             ):
                 to_token = random.choice(param.get(PARAMETR.TO_TOKENS))
-                while True:
-                    acc = Account(
-                        private_key=wallet, network=param.get(PARAMETR.NETWORK)
+                acc = Account(private_key=wallet, network=param.get(PARAMETR.NETWORK))
+                allow_transaction, balance, token_info = (
+                    await Web3Client.check_min_balance(
+                        acc=acc,
+                        token=param.get(PARAMETR.FROM_TOKEN),
+                        min_balance=param.get(PARAMETR.MIN_BALANCE),
                     )
-                    balance = await acc.get_balance(
-                        token_address=param.get(PARAMETR.FROM_TOKEN).ADDRESS
-                    )
-                    token_info = await Token_Info.get_info_token(
-                        acc=acc, token_address=param.get(PARAMETR.FROM_TOKEN).ADDRESS
-                    )
-                    if balance is not None and token_info is not None:
-                        break
-                if balance.ETHER > param.get(PARAMETR.MIN_BALANCE):
+                )
+                if allow_transaction:
                     database.append(
                         {
                             "private_key": wallet,

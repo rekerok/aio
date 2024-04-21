@@ -32,9 +32,7 @@ class Web3Swapper(Web3Client):
         self.max_balance = max_balance
         self.slippage = slippage
 
-    async def _make_swap_percent(
-        self, from_token: Token_Info, to_token: Token_Info, balance: Token_Amount
-    ):
+    async def _make_swap_percent(self, from_token: Token_Info, balance: Token_Amount):
         percent = random.uniform(self.value[0], self.value[1])
         amount_to_send = Token_Amount(
             balance.ETHER * percent / 100, decimals=from_token.decimals
@@ -43,12 +41,10 @@ class Web3Swapper(Web3Client):
         logger.info(f"PERCENT: {percent} %")
         logger.info(f"SEND: {amount_to_send.ETHER} {from_token.symbol}")
 
-        return await self._perform_swap(
-            amount_to_send=amount_to_send, from_token=from_token, to_token=to_token
-        )
+        return amount_to_send
 
     async def _make_swap_all_balance(
-        self, from_token: Token_Info, to_token: Token_Info, balance: Token_Amount
+        self, from_token: Token_Info, balance: Token_Amount
     ):
         keep_amount = Token_Amount(
             amount=random.uniform(self.value[0], self.value[1]),
@@ -60,16 +56,14 @@ class Web3Swapper(Web3Client):
 
         if keep_amount.ETHER > balance.ETHER:
             logger.error(f"KEEP AMOUNT:  {keep_amount.ETHER} > {balance.ETHER} BALANCE")
-            return RESULT_TRANSACTION.FAIL
+            return None
 
         logger.info(f"BALANCE: {balance.ETHER} {from_token.symbol}")
         logger.info(f"SEND: {amount_to_send.ETHER} {from_token.symbol}")
 
-        return await self._perform_swap(amount_to_send, from_token, to_token)
+        return amount_to_send
 
-    async def _make_swap_amount(
-        self, from_token: Token_Info, to_token: Token_Info, balance: Token_Amount
-    ):
+    async def _make_swap_amount(self, from_token: Token_Info, balance: Token_Amount):
         amount_to_send = Token_Amount(
             amount=random.uniform(self.value[0], self.value[1]),
             decimals=from_token.decimals,
@@ -77,11 +71,11 @@ class Web3Swapper(Web3Client):
 
         if amount_to_send.ETHER > balance.ETHER:
             logger.info(f"BALANCE: {balance.ETHER} < {amount_to_send.ETHER} SEND")
-            return RESULT_TRANSACTION.FAIL
+            return None
 
         logger.info(f"SEND: {amount_to_send.ETHER} {from_token.symbol}")
 
-        return await self._perform_swap(amount_to_send, from_token, to_token)
+        return await amount_to_send
 
     async def _choice_type_transaction(
         self,
@@ -92,15 +86,6 @@ class Web3Swapper(Web3Client):
             return self._make_swap_all_balance
         else:
             return self._make_swap_amount
-
-    @abstractmethod
-    async def _perform_swap(
-        self,
-        amount_to_send: Token_Amount,
-        from_token: Token_Info,
-        to_token: Token_Info,
-    ):
-        pass
 
     async def swap(
         self, from_token: config.TOKEN = None, to_token: config.TOKEN = None
@@ -128,11 +113,26 @@ class Web3Swapper(Web3Client):
 
         func_swap = await self._choice_type_transaction()
 
-        return await func_swap(
+        amount_to_send = await func_swap(
             from_token=from_token,
-            to_token=to_token,
             balance=balance,
         )
+
+        if amount_to_send is None or not await Web3Client.wait_gas(acc=self.acc):
+            return RESULT_TRANSACTION.FAIL
+
+        return await self._perform_swap(
+            amount_to_send=amount_to_send, from_token=from_token, to_token=to_token
+        )
+
+    @abstractmethod
+    async def _perform_swap(
+        self,
+        amount_to_send: Token_Amount,
+        from_token: Token_Info,
+        to_token: Token_Info,
+    ):
+        pass
 
     @staticmethod
     async def _create_database(wallets: list[str], params):
@@ -144,19 +144,33 @@ class Web3Swapper(Web3Client):
                 else await utils.files.read_file_lines(param.get(PARAMETR.WALLETS_FILE))
             ):
                 to_token = random.choice(param.get(PARAMETR.TO_TOKENS))
-                database.append(
-                    {
-                        "private_key": wallet,
-                        "network": param.get(PARAMETR.NETWORK),
-                        "dex": random.choice(to_token.get(PARAMETR.DEXS)),
-                        "type_swap": param.get(PARAMETR.TYPE_TRANSACTION),
-                        "value": param.get(PARAMETR.VALUE),
-                        "from_token": param.get(PARAMETR.FROM_TOKEN),
-                        "min_balance": param.get(PARAMETR.MIN_BALANCE),
-                        "max_balance": param.get(PARAMETR.MAX_BALANCE),
-                        "to_token": to_token.get(PARAMETR.TO_TOKEN),
-                    }
+                acc = Account(private_key=wallet, network=param.get(PARAMETR.NETWORK))
+                allow_transaction, balance, token_info = Web3Client.check_min_balance(
+                    acc=acc,
+                    token=param.get(PARAMETR.FROM_TOKEN),
+                    min_balance=param.get(PARAMETR.MIN_BALANCE),
                 )
+                if allow_transaction:
+                    database.append(
+                        {
+                            "private_key": wallet,
+                            "network": param.get(PARAMETR.NETWORK),
+                            "dex": random.choice(to_token.get(PARAMETR.DEXS)),
+                            "type_swap": param.get(PARAMETR.TYPE_TRANSACTION),
+                            "value": param.get(PARAMETR.VALUE),
+                            "from_token": param.get(PARAMETR.FROM_TOKEN),
+                            "min_balance": param.get(PARAMETR.MIN_BALANCE),
+                            "max_balance": param.get(PARAMETR.MAX_BALANCE),
+                            "to_token": to_token.get(PARAMETR.TO_TOKEN),
+                        }
+                    )
+                    logger.success(
+                        f"{acc.address} ({round(balance.ETHER,3)} {token_info.symbol}) ({param.get(PARAMETR.NETWORK)[NETWORK_FIELDS.NAME]}) add to DB"
+                    )
+                else:
+                    logger.error(
+                        f"{acc.address} ({round(balance.ETHER,3)} {token_info.symbol}) ({param.get(PARAMETR.NETWORK)[NETWORK_FIELDS.NAME]}) don't add to DB"
+                    )
         return database
 
     @staticmethod

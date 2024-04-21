@@ -24,7 +24,6 @@ class Account:
         self.request_kwargs = {
             "timeout": timeout,
         }
-
         self.request_kwargs["proxy"] = (
             utils.files.get_random_proxy() if settings.USE_PROXY else None
         )
@@ -80,6 +79,7 @@ class Account:
             )
         )
         self.w3.middleware_onion.inject(async_geth_poa_middleware, layer=0)
+        logger.warning("CHANGE_RPC")
 
     async def transfer(
         self, to_address: str, amount: Token_Amount, token_address: str = None
@@ -191,82 +191,45 @@ class Account:
         data: str = None,
         value: Token_Amount = None,
     ):
-        allow_transaction = True
-        if self.network.get(NETWORK_FIELDS.CHECK_GAS):
-            if self.network.get(NETWORK_FIELDS.NAME) == config.Network.SCROLL:
-                w3 = AsyncWeb3(
-                    AsyncHTTPProvider(
-                        endpoint_uri=random.choice(
-                            self.network.get(NETWORK_FIELDS.RPCS)
-                        ),
-                        request_kwargs=self.request_kwargs,
-                    )
-                )
-                limit = self.network.get(NETWORK_FIELDS.LIMIT_GAS)
-            elif self.network.get(NETWORK_FIELDS.NAME) == config.Network.BASE:
-                w3 = AsyncWeb3(
-                    AsyncHTTPProvider(
-                        endpoint_uri=random.choice(
-                            self.network.get(NETWORK_FIELDS.RPCS)
-                        ),
-                        request_kwargs=self.request_kwargs,
-                    )
-                )
-                limit = self.network.get(NETWORK_FIELDS.LIMIT_GAS)
+        try:
+            logger.info("Begin transactction")
+            tx_params = {
+                "from": self.address,
+                "chainId": await self.w3.eth.chain_id,
+                "nonce": await self.w3.eth.get_transaction_count(self.address),
+            }
+
+            if to_address:
+                tx_params["to"] = self.w3.to_checksum_address(to_address)
+            if data:
+                tx_params["data"] = data
+
+            if value is None or value == 0:
+                tx_params["value"] = 0
             else:
-                limit = settings.LIMIT_GWEI
-                w3 = AsyncWeb3(
-                    AsyncHTTPProvider(
-                        endpoint_uri=random.choice(
-                            Client_Networks.ethereum.get(NETWORK_FIELDS.RPCS)
-                        ),
-                        request_kwargs=self.request_kwargs,
-                    )
+                tx_params["value"] = value.WEI
+
+            if self.network[NETWORK_FIELDS.EIP1559]:
+                tx_params = await self._get_eip1559_tx(tx_params=tx_params)
+            else:
+                tx_params["gasPrice"] = await self.w3.eth.gas_price
+
+            tx_params["gas"] = int(
+                await self.w3.eth.estimate_gas(tx_params) * GAS_MULTIPLAY
+            )
+
+            tx_hash = await self._sign_transaction(tx=tx_params)
+            verify = await self._verifi_tx(tx_hash=tx_hash)
+            if verify:
+                logger.success(
+                    f"LINK {self.network[NETWORK_FIELDS.EXPLORER]}tx/{tx_hash}"
                 )
-            allow_transaction = await utils.time.wait_gas(w3=w3,LIMIT_GWEI=limit)
-
-        if allow_transaction:
-            try:
-                logger.info("Begin transactction")
-                tx_params = {
-                    "from": self.address,
-                    "chainId": await self.w3.eth.chain_id,
-                    "nonce": await self.w3.eth.get_transaction_count(self.address),
-                }
-
-                if to_address:
-                    tx_params["to"] = self.w3.to_checksum_address(to_address)
-                if data:
-                    tx_params["data"] = data
-
-                if value is None or value == 0:
-                    tx_params["value"] = 0
-                else:
-                    tx_params["value"] = value.WEI
-
-                if self.network[NETWORK_FIELDS.EIP1559]:
-                    tx_params = await self._get_eip1559_tx(tx_params=tx_params)
-                else:
-                    tx_params["gasPrice"] = await self.w3.eth.gas_price
-
-                tx_params["gas"] = int(
-                    await self.w3.eth.estimate_gas(tx_params) * GAS_MULTIPLAY
+                return RESULT_TRANSACTION.SUCCESS
+            else:
+                logger.error(
+                    f"LINK {self.network[NETWORK_FIELDS.EXPLORER]}tx/{tx_hash}"
                 )
-
-                tx_hash = await self._sign_transaction(tx=tx_params)
-                verify = await self._verifi_tx(tx_hash=tx_hash)
-                if verify:
-                    logger.success(
-                        f"LINK {self.network[NETWORK_FIELDS.EXPLORER]}tx/{tx_hash}"
-                    )
-                    return RESULT_TRANSACTION.SUCCESS
-                else:
-                    logger.error(
-                        f"LINK {self.network[NETWORK_FIELDS.EXPLORER]}tx/{tx_hash}"
-                    )
-                    return RESULT_TRANSACTION.FAIL
-            except Exception as error:
-                logger.error(error)
                 return RESULT_TRANSACTION.FAIL
-        else:
+        except Exception as error:
+            logger.error(error)
             return RESULT_TRANSACTION.FAIL

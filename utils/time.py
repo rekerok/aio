@@ -28,6 +28,7 @@ async def get_gas(network: dict) -> int:
 
 
 async def wait_gas(w3, LIMIT_GWEI=None):
+
     for i in range(COUNT_CHECK_GAS):
         try:
             gas_now = w3.from_wei(await w3.eth.gas_price, "gwei")

@@ -1,3 +1,4 @@
+from modules.web3Client import Web3Client
 import utils
 import random
 import config
@@ -127,17 +128,33 @@ class Transfers:
         database: list[dict] = list()
         for param in settings.PARAMS:
             for wallet in wallets:
-                database.append(
-                    {
-                        "private_key": wallet[0],
-                        "recipient": wallet[1],
-                        "network": param.get(PARAMETR.NETWORK),
-                        "token": param.get(PARAMETR.TOKEN),
-                        "min_balance": param.get(PARAMETR.MIN_BALANCE),
-                        "type_transfer": param.get(PARAMETR.TYPE_TRANSACTION),
-                        "value": param.get(PARAMETR.VALUE),
-                    }
+                acc = Account(private_key=wallet[0], network=param.get(PARAMETR.NETWORK))
+                allow_transaction, balance, token_info = (
+                    await Web3Client.check_min_balance(
+                        acc=acc,
+                        token=param.get(PARAMETR.TOKEN),
+                        min_balance=param.get(PARAMETR.MIN_BALANCE),
+                    )
                 )
+                if allow_transaction:
+                    database.append(
+                        {
+                            "private_key": wallet[0],
+                            "recipient": wallet[1],
+                            "network": param.get(PARAMETR.NETWORK),
+                            "token": param.get(PARAMETR.TOKEN),
+                            "min_balance": param.get(PARAMETR.MIN_BALANCE),
+                            "type_transfer": param.get(PARAMETR.TYPE_TRANSACTION),
+                            "value": param.get(PARAMETR.VALUE),
+                        }
+                    )
+                    logger.success(
+                        f"{acc.address} ({round(balance.ETHER,3)} {token_info.symbol}) ({param.get(PARAMETR.NETWORK)[NETWORK_FIELDS.NAME]}) add to DB"
+                    )
+                else:
+                    logger.error(
+                        f"{acc.address} ({round(balance.ETHER,3)} {token_info.symbol}) ({param.get(PARAMETR.NETWORK)[NETWORK_FIELDS.NAME]}) don't add to DB"
+                    )
         return database
 
     @staticmethod

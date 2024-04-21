@@ -125,6 +125,7 @@ class GENERAL:
         Network.SCROLL: 534352,
         Network.LINEA: 59144,
         Network.POLYGON: 137,
+        Network.AVALANCHE: 43114,
     }
 
     NATIVE_TOKEN = "0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE"

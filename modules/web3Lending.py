@@ -3,6 +3,7 @@ import random
 from typing import Union
 
 from loguru import logger
+from modules.account import Account
 from modules.web3Client import Web3Client
 import utils
 import config
@@ -164,19 +165,33 @@ class Web3Lending(Web3Client):
                 else await utils.files.read_file_lines(param.get(PARAMETR.WALLETS_FILE))
             ):
                 token = random.choice(param.get(PARAMETR.TOKENS))
-                database.append(
-                    {
-                        "private_key": wallet,
-                        "network": param.get(PARAMETR.NETWORK),
-                        "value": param.get(PARAMETR.VALUE),
-                        "token": token.get(PARAMETR.TOKEN),
-                        "app": random.choice(token.get(PARAMETR.LENDINGS)),
-                        "type_lending": param.get(PARAMETR.TYPE_TRANSACTION),
-                        "min_balance": param.get(PARAMETR.MIN_BALANCE),
-                        "deposit": param.get(PARAMETR.LENDING_DEPOSIT),
-                        # "max_balance": param.get(PARAMETR.MAX_BALANCE),
-                    }
+                acc = Account(private_key=wallet, network=param.get(PARAMETR.NETWORK))
+                allow_transaction, balance, token_info = await Web3Client.check_min_balance(
+                    acc=acc,
+                    token=param.get(PARAMETR.FROM_TOKEN),
+                    min_balance=param.get(PARAMETR.MIN_BALANCE),
                 )
+                if allow_transaction:
+                    database.append(
+                        {
+                            "private_key": wallet,
+                            "network": param.get(PARAMETR.NETWORK),
+                            "value": param.get(PARAMETR.VALUE),
+                            "token": token.get(PARAMETR.TOKEN),
+                            "app": random.choice(token.get(PARAMETR.LENDINGS)),
+                            "type_lending": param.get(PARAMETR.TYPE_TRANSACTION),
+                            "min_balance": param.get(PARAMETR.MIN_BALANCE),
+                            "deposit": param.get(PARAMETR.LENDING_DEPOSIT),
+                            # "max_balance": param.get(PARAMETR.MAX_BALANCE),
+                        }
+                    )
+                    logger.success(
+                        f"{acc.address} ({round(balance.ETHER,3)} {token_info.symbol}) ({param.get(PARAMETR.NETWORK)[NETWORK_FIELDS.NAME]}) add to DB"
+                    )
+                else:
+                    logger.error(
+                        f"{acc.address} ({round(balance.ETHER,3)} {token_info.symbol}) ({param.get(PARAMETR.NETWORK)[NETWORK_FIELDS.NAME]}) don't add to DB"
+                    )
         return database
 
     @staticmethod
