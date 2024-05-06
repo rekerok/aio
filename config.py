@@ -48,6 +48,8 @@ class Network(Enum):
     XPLA = auto()
     MANTA = auto()
     SHIMMEREVM = auto()
+    HOLESKY = auto()
+    SEPOLINA = auto()
 
 
 class GENERAL:
@@ -126,6 +128,8 @@ class GENERAL:
         Network.LINEA: 59144,
         Network.POLYGON: 137,
         Network.AVALANCHE: 43114,
+        Network.HOLESKY: 17000,
+        Network.SEPOLINA: 11155111,
     }
 
     NATIVE_TOKEN = "0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE"
@@ -639,6 +643,28 @@ class TOKEN:
 
 
 class TOKENS:
+
+    class HOLESKY:
+        ETH = TOKEN(
+            address="",
+            network="",
+            exchange_name="",
+        )
+
+    class SEPOLINA:
+        ETH = TOKEN(
+            address="",
+            network="",
+            exchange_name="",
+        )
+
+    class ETHEREUM:
+        ETH = TOKEN(
+            address="",
+            network="ETH",
+            exchange_name="ETH",
+        )
+
     class OPTIMISM:
         ETH = TOKEN(
             address="",

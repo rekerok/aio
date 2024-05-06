@@ -1,4 +1,5 @@
 import csv
+import pprint
 import ccxt
 import utils
 import random
@@ -34,7 +35,7 @@ class OKX:
                 chain = "Avalanche C"
             if chain == "Avalanche X-Chain":
                 chain = "Avalanche X"
-            # pprint.pprint(self.okx.fetch_currencies()[currency]["networks"][chain])
+            # pprint.pprint(self.okx.fetch_currencies()[currency]["networks"])
             return self.okx.fetch_currencies()[currency]["networks"][chain]
         except:
             logger.error("don't get fee")
@@ -76,6 +77,7 @@ class OKX:
             await self.withdraw_from_subaccs()
             data_chains = await self._get_data(currency=currency, chain=chain)
             logger.info(f"start withdraw {amount} {data_chains['id']} to {address}")
+            # 0.0006
             id = self.okx.withdraw(
                 currency,
                 amount,
@@ -85,7 +87,7 @@ class OKX:
                     "amt": f"{amount}",
                     "dest": 4,
                     "toAddr": address,
-                    "fee": data_chains["fee"],
+                    "fee": fee,
                     "chain": data_chains["id"],
                     "pwd": "-",
                 },

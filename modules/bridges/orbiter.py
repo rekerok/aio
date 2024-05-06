@@ -12,6 +12,9 @@ from utils.enums import NETWORK_FIELDS, RESULT_TRANSACTION, TYPES_OF_TRANSACTION
 from utils.token_amount import Token_Amount
 from utils.token_info import Token_Info
 
+api_url_main = "https://api.orbiter.finance/sdk/"
+api_url_test = "https://openapi2.orbiter.finance/sdk/"
+
 
 class Orbiter(Web3Bridger):
     NAME = "ORBITER"
@@ -34,8 +37,6 @@ class Orbiter(Web3Bridger):
             slippage=slippage,
         )
 
-    
-
     async def _get_router(
         self,
         from_chain_id: int,
@@ -43,12 +44,14 @@ class Orbiter(Web3Bridger):
         from_token: Token_Info,
         to_token: Token_Info,
     ):
-        url = "https://api.orbiter.finance/sdk/routers/"
+        url = api_url_main + "routers/"
         response = await utils.aiohttp.get_json_aiohttp(url=url)
         if not response or response["status"] == "error":
             return None
         try:
             allow_router = []
+            with open("response.txt", "w") as file:
+                file.write(str(response))
             for router in response["result"]:
                 if (
                     router["srcChain"] == str(from_chain_id)
@@ -59,10 +62,11 @@ class Orbiter(Web3Bridger):
                     allow_router.append(router)
             return random.choice(allow_router)
         except Exception as error:
+            logger.error(error)
             return None
 
     async def _get_chainId_orbiter(self, to_chain_id: int | str):
-        url = "https://api.orbiter.finance/sdk/chains/"
+        url = api_url_main + "chains/"
         response = await utils.aiohttp.get_json_aiohttp(url=url)
         if not response or response["status"] == "error":
             return None
