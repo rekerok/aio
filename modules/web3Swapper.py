@@ -145,7 +145,7 @@ class Web3Swapper(Web3Client):
             ):
                 to_token = random.choice(param.get(PARAMETR.TO_TOKENS))
                 acc = Account(private_key=wallet, network=param.get(PARAMETR.NETWORK))
-                allow_transaction, balance, token_info = Web3Client.check_min_balance(
+                allow_transaction, balance, token_info = await Web3Client.check_min_balance(
                     acc=acc,
                     token=param.get(PARAMETR.FROM_TOKEN),
                     min_balance=param.get(PARAMETR.MIN_BALANCE),
