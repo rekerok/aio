@@ -126,6 +126,10 @@ class Web3Lending(Web3Client):
                 f"NOT {self.min_balance} < {balance.ETHER} < {self.max_balance}"
             )
             return RESULT_TRANSACTION.FAIL
+
+        if not await Web3Client.wait_gas(acc=self.acc):
+            return RESULT_TRANSACTION.FAIL
+
         func_lending = await self._choice_type_transaction()
         return await func_lending(
             token_to_deposit=token_to_deposit,

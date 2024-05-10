@@ -22,6 +22,9 @@ class Web3Nft(Web3Client):
         logger.info(f"WALLET: {self.acc.address}")
         logger.info(f"NETWORK: {self.acc.network.get(NETWORK_FIELDS.NAME)}")
         logger.info(f"DEX: {self.NAME} ")
+        if not await Web3Client.wait_gas(acc=self.acc):
+            return RESULT_TRANSACTION.FAIL
+
         return await self._perform_mint(nft_contract_address=nft_contract_address)
 
     @staticmethod
