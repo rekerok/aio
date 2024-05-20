@@ -1,4 +1,3 @@
-import pprint
 import random
 import eth_account
 import eth_keys
@@ -22,7 +21,6 @@ async def create_database(wallets, tasks):
                     "settings": task.get(PARAMETR.SETTINGS),
                 }
             )
-    # pprint.pprint(db)
     return db
 
 

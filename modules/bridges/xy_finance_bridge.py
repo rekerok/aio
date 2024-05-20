@@ -1,4 +1,3 @@
-import pprint
 import random
 import config
 import utils
@@ -60,7 +59,6 @@ class XY_finance_bridge(Web3Bridger):
         if response is None or not response["isSuccess"]:
             logger.error(response["msg"])
             return None
-        # pprint.pprint(response)
         return response
 
     async def _build_tx(
@@ -129,7 +127,6 @@ class XY_finance_bridge(Web3Bridger):
         if tx is None:
             logger.error("FAIL BUILD TRANSACTION")
             return RESULT_TRANSACTION.FAIL
-        # pprint.pprint(tx)
         return await self._send_transaction(
             from_token=from_token,
             to_address=tx["tx"]["to"],

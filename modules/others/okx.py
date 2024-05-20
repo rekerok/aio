@@ -1,5 +1,4 @@
 import csv
-import pprint
 import ccxt
 import utils
 import random
@@ -35,7 +34,6 @@ class OKX:
                 chain = "Avalanche C"
             if chain == "Avalanche X-Chain":
                 chain = "Avalanche X"
-            # pprint.pprint(self.okx.fetch_currencies()[currency]["networks"])
             return self.okx.fetch_currencies()[currency]["networks"][chain]
         except:
             logger.error("don't get fee")
@@ -171,7 +169,6 @@ class OKX:
         counter = 1
         for wallet in database:
             logger.info(f"OPERATION {counter}/{len(database)}")
-            print(wallet["token"].NETWORK)
             await okx.withdraw(
                 address=wallet["address"],
                 amount=wallet["amount"],

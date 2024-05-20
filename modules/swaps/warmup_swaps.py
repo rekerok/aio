@@ -1,4 +1,3 @@
-import pprint
 import utils
 import random
 from loguru import logger
@@ -110,7 +109,6 @@ class WarmUPSwaps:
         database = await WarmUPSwaps._create_database(
             wallets=wallets, params=settings.PARAMS
         )
-        # pprint.pprint(database)
         random.shuffle(database)
         random.shuffle(database)
         random.shuffle(database)

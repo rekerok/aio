@@ -67,7 +67,6 @@ class XY_finance_swap(Web3Swapper):
             url=url,
             params=params,
         )
-        print(response)
         if not response:
             return None
         return response
@@ -104,7 +103,6 @@ class XY_finance_swap(Web3Swapper):
             url=url,
             params=params,
         )
-        # print(response)
         if response is None or not response["success"]:
             logger.error(response["errorMsg"])
             return None
@@ -128,7 +126,6 @@ class XY_finance_swap(Web3Swapper):
         )
         if quote is None:
             return RESULT_TRANSACTION.FAIL
-        # pprint.pprint(quote)
         tx = await self._build_tx(
             chain_id=chain_id,
             from_token=from_token,

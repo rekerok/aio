@@ -1,6 +1,5 @@
 import utils
 import config
-import pprint
 import settings
 import eth_utils
 from typing import Union

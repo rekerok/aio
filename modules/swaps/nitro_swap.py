@@ -1,4 +1,3 @@
-import pprint
 from loguru import logger
 import config
 from typing import Union
@@ -96,7 +95,6 @@ class NitroSwap(Web3Swapper):
             {"senderAddress": self.acc.address, "receiverAddress": self.acc.address}
         )
         transaction = await self._build_transaction(quote=quote)
-        # pprint.pprint(transaction)
         if transaction is None:
             logger.error("FAIL BUILD TRANSACTION")
             return RESULT_TRANSACTION.FAIL

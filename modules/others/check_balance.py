@@ -1,6 +1,5 @@
 import asyncio
 import csv
-import pprint
 from modules.account import Account
 import utils
 from loguru import logger
@@ -20,7 +19,7 @@ async def collect_balance(wallet, params):
                     acc=acc, token_address=token.ADDRESS
                 )
                 if token_info is None:
-                    logger.warning("CHANGE RPC")
+                    logger.error(f"NOT TOKEN INFO {token.ADDRESS}")
                     await acc.change_connection()
                     continue
                 balance_of_wallet = await acc.get_balance(
@@ -38,7 +37,7 @@ async def collect_balance(wallet, params):
                         }
                     )
                     break
-                logger.warning("CHANGE RPC")
+                logger.error(f"NOT BALANCE INFO {acc.address}")
                 await acc.change_connection()
         balance.append({param.get(PARAMETR.NETWORK).get(NETWORK_FIELDS.NAME): balances})
     return {wallet: balance}

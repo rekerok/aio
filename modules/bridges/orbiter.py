@@ -1,4 +1,3 @@
-import pprint
 import random
 
 from loguru import logger
@@ -102,7 +101,6 @@ class Orbiter(Web3Bridger):
         if router is None:
             logger.error("DON'T GET ROUTER")
             return RESULT_TRANSACTION.FAIL
-        # print(router)
         commission = Token_Amount(
             amount=float(router["withholdingFee"]), decimals=from_token.decimals
         )

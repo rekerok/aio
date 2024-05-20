@@ -1,4 +1,3 @@
-import pprint
 import random
 import config
 import utils
@@ -160,13 +159,11 @@ class Rango_Bridge(Web3Bridger):
         )
         if not response:
             return None
-        # pprint.pprint(response)
         return response
 
     async def _build_tx(self, quote: dict):
         headers = {"apiKey": Rango_Bridge.API_KEY}
         url = config.RANGO.BUILD_TX
-        # pprint.pprint(quote)
         params = {
             "requestId": quote["requestId"],
             "step": len(quote["result"]["swaps"]),
@@ -215,11 +212,9 @@ class Rango_Bridge(Web3Bridger):
         if quote is None:
             logger.error("FAIL GET QUOTE")
             return RESULT_TRANSACTION.FAIL
-        # pprint.pprint(quote)
         transation_data = await self._build_tx(quote=quote)
         if transation_data is None:
             return RESULT_TRANSACTION.FAIL
-        # pprint.pprint(transation_data)
         return await self._send_transaction(
             from_token=from_token,
             to_address=transation_data["transaction"]["to"],

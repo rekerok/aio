@@ -10,14 +10,15 @@ class DEX:
     PANCAKESWAP = PancakeSwap
     ODOS = OdosSwap
     OPENOCEAN = OpenoceanSwap
-    SUSHI = SushiSwap
+    # ARBSAWP = ArbSwap
+    # SUSHI = SushiSwap
     SYNCSWAP = SyncSwap
     # WOOFI = WoofiSwap
     ZKSWAP = ZkSwap
     BASESWAP = BaseSwap
     ZEROX = Zerox
     XY_FINANCE_SWAP = XY_finance_swap
-    # RANGO_SWAP = RangoSwap
+    RANGO_SWAP = RangoSwap
     SKYDROME = Skydrome
     MUTE = Mute
     SPACEFI = SpaceFi
@@ -143,7 +144,7 @@ class TRANSFERS_SETTINGS:
 
 class SWAP_SETTINGS:
     SLEEP = (50, 50)
-    SLIPPAGE = 1
+    SLIPPAGE = 5
 
     PARAMS = [
         {
@@ -156,7 +157,7 @@ class SWAP_SETTINGS:
             PARAMETR.TO_TOKENS: [
                 {
                     PARAMETR.TO_TOKEN: TOKENS.ZKSYNC.USDC,
-                    PARAMETR.DEXS: [DEX.MUTE],
+                    PARAMETR.DEXS: [DEX.RANGO_SWAP],
                 },
             ],
             PARAMETR.WALLETS_FILE: "",
@@ -542,7 +543,7 @@ class CHECK_BALANCES_SETTINGS:
         {
             PARAMETR.NETWORK: Client_Networks.arbitrum,
             PARAMETR.TOKENS: [
-                # TOKENS.ARBITRUM.ETH,
+                TOKENS.ARBITRUM.ETH,
                 TOKENS.ARBITRUM.USDC,
                 TOKENS.ARBITRUM.USDC_BRIDGED,
                 TOKENS.ARBITRUM.USDT,
@@ -551,41 +552,41 @@ class CHECK_BALANCES_SETTINGS:
         {
             PARAMETR.NETWORK: Client_Networks.optimism,
             PARAMETR.TOKENS: [
-                # TOKENS.OPTIMISM.ETH,
+                TOKENS.OPTIMISM.ETH,
                 TOKENS.OPTIMISM.USDC,
                 TOKENS.OPTIMISM.USDC_BRIDGED,
-                # TOKENS.OPTIMISM.USDT,
+                TOKENS.OPTIMISM.USDT,
             ],
         },
         {
             PARAMETR.NETWORK: Client_Networks.zksync,
             PARAMETR.TOKENS: [
-                # TOKENS.ZKSYNC.ETH,
+                TOKENS.ZKSYNC.ETH,
                 TOKENS.ZKSYNC.USDC,
                 TOKENS.ZKSYNC.USDT,
-                # TOKENS.ZKSYNC.DAI,
+                TOKENS.ZKSYNC.DAI,
             ],
         },
-        # {
-        #     PARAMETR.NETWORK: Client_Networks.base,
-        #     PARAMETR.TOKENS: [TOKENS.BASE.ETH, TOKENS.BASE.USDbC],
-        # },
-        # {
-        #     PARAMETR.NETWORK: Client_Networks.nova,
-        #     PARAMETR.TOKENS: [TOKENS.NOVA.ETH],
-        # },
-        # {
-        #     PARAMETR.NETWORK: Client_Networks.scroll,
-        #     PARAMETR.TOKENS: [
-        #         TOKENS.SCROLL.ETH,
-        #         TOKENS.SCROLL.USDC,
-        #         TOKENS.SCROLL.USDT,
-        #     ],
-        # },
+        {
+            PARAMETR.NETWORK: Client_Networks.base,
+            PARAMETR.TOKENS: [TOKENS.BASE.ETH, TOKENS.BASE.USDbC],
+        },
+        {
+            PARAMETR.NETWORK: Client_Networks.nova,
+            PARAMETR.TOKENS: [TOKENS.NOVA.ETH],
+        },
+        {
+            PARAMETR.NETWORK: Client_Networks.scroll,
+            PARAMETR.TOKENS: [
+                TOKENS.SCROLL.ETH,
+                TOKENS.SCROLL.USDC,
+                TOKENS.SCROLL.USDT,
+            ],
+        },
         {
             PARAMETR.NETWORK: Client_Networks.avalanche,
             PARAMETR.TOKENS: [
-                # TOKENS.AVALANCHE.AVAX,
+                TOKENS.AVALANCHE.AVAX,
                 TOKENS.AVALANCHE.USDC,
                 TOKENS.AVALANCHE.USDT,
             ],
@@ -593,16 +594,16 @@ class CHECK_BALANCES_SETTINGS:
         {
             PARAMETR.NETWORK: Client_Networks.polygon,
             PARAMETR.TOKENS: [
-                # TOKENS.POLYGON.MATIC,
+                TOKENS.POLYGON.MATIC,
                 TOKENS.POLYGON.USDC_BRIDGED,
                 TOKENS.POLYGON.USDC,
                 TOKENS.POLYGON.USDT,
             ],
         },
-        # {
-        #     PARAMETR.NETWORK: Client_Networks.bsc,
-        #     PARAMETR.TOKENS: [TOKENS.BSC.BNB, TOKENS.BSC.USDT],
-        # },
+        {
+            PARAMETR.NETWORK: Client_Networks.bsc,
+            PARAMETR.TOKENS: [TOKENS.BSC.BNB, TOKENS.BSC.USDT],
+        },
     ]
 
 

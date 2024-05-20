@@ -1,4 +1,3 @@
-import pprint
 import random
 import eth_utils
 
@@ -26,7 +25,6 @@ async def rubyscore(settings, wallets: list[str] = None):
                 for _ in range(random.randint(*param.get(PARAMETR.COUNT_TRANSACTION)))
             ]
         )
-    # pprint.pprint(db)
     random.shuffle(db)
     counter = 1
     for data in db:

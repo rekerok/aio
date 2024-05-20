@@ -1,4 +1,3 @@
-import pprint
 import utils
 import config
 import settings
@@ -35,8 +34,8 @@ class RangoSwap(Web3Swapper):
         )
 
     async def _get_info(self):
-        headers = {"apiKey": RangoSwap.API_KEY}
         url = config.RANGO.META
+        headers = {"apiKey": RangoSwap.API_KEY}
         response = await utils.aiohttp.get_json_aiohttp(url=url, headers=headers)
         if not response:
             return None
@@ -46,6 +45,7 @@ class RangoSwap(Web3Swapper):
         for chain in info["blockchains"]:
             if chain["chainId"] == str(chain_id):
                 return chain
+        return None
 
     async def _prepare_token(self, token: Token_Info, info: dict, blockchain: str):
         if await Token_Info.is_native_token(self.acc.network, token=token):
@@ -75,14 +75,15 @@ class RangoSwap(Web3Swapper):
         from_token_info = await self._prepare_token(
             token=from_token, info=info, blockchain=blockchain_info["name"]
         )
+        
         to_token_info = await self._prepare_token(
             token=to_token, info=info, blockchain=blockchain_info["name"]
         )
         if from_token_info is None or to_token_info is None:
             return None
 
-        headers = {"apiKey": RangoSwap.API_KEY}
         url = config.RANGO.ROUTING
+        headers = {"apiKey": RangoSwap.API_KEY}
         params = {
             "from": {
                 "blockchain": blockchain_info["name"],
@@ -95,7 +96,7 @@ class RangoSwap(Web3Swapper):
                 "address": to_token_info["address"],
             },
             "amount": amount_to_send.ETHER,
-            "slippage": self.slippage,
+            "slippage": 5,
             "checkPrerequisites": True,
             "selectedWallets": {blockchain_info["name"]: self.acc.address},
             "connectedWallets": [
@@ -129,7 +130,6 @@ class RangoSwap(Web3Swapper):
     async def _build_tx(self, quote: dict):
         headers = {"apiKey": RangoSwap.API_KEY}
         url = config.RANGO.BUILD_TX
-        # pprint.pprint(quote)
         params = {
             "requestId": quote["requestId"],
             "step": len(quote["result"]["swaps"]),
