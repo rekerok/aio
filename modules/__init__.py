@@ -13,6 +13,7 @@ from .bridges.stargate import Stargate
 from .bridges.orbiter import Orbiter
 from .bridges.nitro import Nitro
 from .bridges.xy_finance_bridge import XY_finance_bridge
+from .bridges.hyperlane_merkly import Hyperlane
 from .bridges.rango_bridge import Rango_Bridge
 from .others.check_nft import Check_NFT
 from .others.transfers import Transfers

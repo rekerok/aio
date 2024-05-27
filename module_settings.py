@@ -29,6 +29,7 @@ class DEX:
     ORBITER = Orbiter
     NITRO = Nitro
     XY_FINANCE_BRIDGE = XY_finance_bridge
+    HYPERLANE_ETH = Hyperlane
     # RANGO_BRIDGE = Rango_Bridge
     RUBYSCORE_VOTE = rubyscore
 
@@ -411,7 +412,7 @@ class WARMUPSWAPS_SETTINGS:
             self.PARAMS = PARAMS
 
 
-class REFUEL_SETTINGS:
+class MERKLY_REFUEL_SETTINGS:
     SLEEP = (150, 200)
     CHECK_COMISSION_NETWORKS = {
         REFUEL_APP.MERKLY: [
@@ -804,7 +805,11 @@ async def warm_up_refuel():
 
 
 async def get_fees_refuel():
-    await WarmUpRefuel.get_fees(apps=REFUEL_SETTINGS.CHECK_COMISSION_NETWORKS)
+    await WarmUpRefuel.get_fees(apps=MERKLY_REFUEL_SETTINGS.CHECK_COMISSION_NETWORKS)
+
+
+async def get_hyperlane_eth_fee():
+    await Hyperlane.check_fees()
 
 
 async def multitasks():

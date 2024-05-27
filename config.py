@@ -386,6 +386,18 @@ class MERKLY:
     }
 
 
+class HYPERLANE:
+    ABI_TOKEN_BRIDGE = '[{"type":"function","name":"quoteBridge","constant":true,"stateMutability":"view","payable":false,"inputs":[{"type":"uint32","name":"_destination"},{"type":"uint256","name":"amount"}],"outputs":[{"type":"uint256","name":"fee"}]},{"type":"function","name":"bridgeETH","constant":false,"stateMutability":"payable","payable":true,"inputs":[{"type":"uint32","name":"_destination"},{"type":"uint256","name":"amount"}],"outputs":[{"type":"bytes32","name":"messageId"}]},{"type":"function","name":"bridgeWETH","constant":false,"stateMutability":"payable","payable":true,"inputs":[{"type":"uint32","name":"_destination"},{"type":"uint256","name":"amount"}],"outputs":[{"type":"bytes32","name":"messageId"}]}]'
+    CONTRACTS_BRIDGE_ETH = {
+        Network.ARBITRUM: "0x233888F5Dc1d3C0360b559aBc029675290DAFa70",
+        Network.OPTIMISM: "0xC110E7FAA95680c79937CCACa3d1caB7902bE25e",
+        Network.BASE: "0x0cb0354E9C51960a7875724343dfC37B93d32609",
+        Network.SCROLL: "0xc0faBF14f8ad908b2dCE4C8aA2e7c1a6bD069957",
+        Network.BSC: "0xae4789D7C596fdED0e135Bca007152c87a0756f5",
+        Network.POLYGON: "0x0cb0354E9C51960a7875724343dfC37B93d32609",
+    }
+
+
 class L2PASS:
     ABI = '[{"inputs":[{"internalType":"address","name":"lzEndpoint_","type":"address"},{"internalType":"uint256","name":"gasRefuelPrice_","type":"uint256"}],"stateMutability":"nonpayable","type":"constructor"},{"anonymous":false,"inputs":[{"indexed":true,"internalType":"address","name":"previousOwner","type":"address"},{"indexed":true,"internalType":"address","name":"newOwner","type":"address"}],"name":"OwnershipTransferred","type":"event"},{"inputs":[{"internalType":"uint16","name":"dstChainId","type":"uint16"},{"internalType":"uint256","name":"nativeForDst","type":"uint256"},{"internalType":"address","name":"addressOnDst","type":"address"},{"internalType":"bool","name":"useZro","type":"bool"}],"name":"estimateGasRefuelFee","outputs":[{"internalType":"uint256","name":"nativeFee","type":"uint256"},{"internalType":"uint256","name":"zroFee","type":"uint256"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"uint16","name":"dstChainId","type":"uint16"},{"internalType":"address","name":"zroPaymentAddress","type":"address"},{"internalType":"uint256","name":"nativeForDst","type":"uint256"},{"internalType":"address","name":"addressOnDst","type":"address"}],"name":"gasRefuel","outputs":[],"stateMutability":"payable","type":"function"},{"inputs":[],"name":"gasRefuelPrice","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"uint16","name":"","type":"uint16"},{"internalType":"bytes","name":"","type":"bytes"},{"internalType":"uint64","name":"","type":"uint64"},{"internalType":"bytes","name":"","type":"bytes"}],"name":"lzReceive","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[],"name":"owner","outputs":[{"internalType":"address","name":"","type":"address"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"renounceOwnership","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"uint256","name":"gasRefuelPrice_","type":"uint256"}],"name":"setGasRefuelPrice","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"address","name":"newOwner","type":"address"}],"name":"transferOwnership","outputs":[],"stateMutability":"nonpayable","type":"function"}]'
     CONTRACT = {
@@ -502,7 +514,7 @@ class STARGATE:
             },
         },
         Network.OPTIMISM: {
-            "ETH": {
+            "": {
                 PARAMETR.TOKEN_ADDRESS: "0xd22363e3762cA7339569F3d33EADe20127D5F98C",
                 PARAMETR.ID: 13,
             },
