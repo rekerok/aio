@@ -66,13 +66,11 @@ class Nitro(Web3Bridger):
         amount_to_send: Token_Amount,
         from_token: Token_Info,
         to_chain: config.Network,
-        to_token_address: str = "",
+        to_token: Token_Info = None,
     ):
         from_chain_id: int = int(await self.acc.w3.eth.chain_id)
         to_chain_id: int = int(config.GENERAL.CHAIN_IDS.get(to_chain))
-        to_token: Token_Info = await self._get_to_token(
-            to_chain=to_chain, to_token_address=to_token_address
-        )
+
         from_token, to_token = await Token_Info.to_native_token(
             from_token=from_token, to_token=to_token
         )

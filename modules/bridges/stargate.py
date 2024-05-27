@@ -83,11 +83,8 @@ class Stargate(Web3Bridger):
         amount_to_send: Token_Amount,
         from_token: Token_Info,
         to_chain: config.Network,
-        to_token_address: str = "",
+        to_token: Token_Info = None,
     ):
-        to_token = await self._get_to_token(
-            to_chain=to_chain, to_token_address=to_token_address
-        )
         from_pool_id = await self._get_pool_id(chain=self.acc.network, token=from_token)
         to_pool_id = await self._get_pool_id(chain=to_chain, token=to_token)
         if any(v is None for v in (to_token, from_pool_id, to_pool_id)):

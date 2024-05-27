@@ -91,7 +91,7 @@ class Across(Web3Bridger):
         amount_to_send: Token_Amount,
         from_token: Token_Info,
         to_chain: config.Network,
-        to_token_address: str = "",
+        to_token: Token_Info = None,
     ):
         from_chain_id = await self.acc.w3.eth.chain_id
         to_chain_id: int = config.GENERAL.CHAIN_IDS.get(to_chain)
@@ -101,19 +101,6 @@ class Across(Web3Bridger):
                 network=self.acc.network, from_token=from_token
             )
         )[0]
-
-        if to_token_address == "":
-            to_token: Token_Info = Token_Info(
-                address=config.GENERAL.WETH.get(to_chain),
-                symbol="WETH",
-                decimals=18,
-            )
-        else:
-            to_token: Token_Info = Token_Info(
-                address=to_token_address,
-                symbol=from_token.symbol,
-                decimals=from_token.decimals,
-            )
 
         info = await self._get_info(
             from_token=from_token,

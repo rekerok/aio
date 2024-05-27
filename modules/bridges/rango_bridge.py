@@ -185,13 +185,10 @@ class Rango_Bridge(Web3Bridger):
         amount_to_send: Token_Amount,
         from_token: Token_Info,
         to_chain: config.Network,
-        to_token_address: str = "",
+        to_token: Token_Info = None,
     ):
         from_chain_id = await self.acc.w3.eth.chain_id
         to_chain_id = int(config.GENERAL.CHAIN_IDS.get(to_chain))
-        to_token = await self._get_to_token(
-            to_chain=to_chain, to_token_address=to_token_address
-        )
         to_network = await self._get_to_network(to_chain=to_chain)
         info = await self._get_info()
         if info is None:

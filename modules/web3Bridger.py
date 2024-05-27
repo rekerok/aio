@@ -119,7 +119,7 @@ class Web3Bridger(Web3Client):
         amount_to_send: Token_Amount,
         from_token: Token_Info,
         to_chain: config.Network,
-        to_token_address: config.TOKEN = None,
+        to_token: Token_Info = None,
     ):
         pass
 
@@ -143,7 +143,11 @@ class Web3Bridger(Web3Client):
             acc=self.acc, token_address=from_token.ADDRESS
         )
 
-        if not from_token:
+        to_token: Token_Info = await self._get_to_token(
+            to_chain=to_network, to_token_address=to_token.ADDRESS
+        )
+
+        if not from_token or not to_token:
             return RESULT_TRANSACTION.FAIL
         balance: Token_Amount = await self.acc.get_balance(from_token.address)
         if balance is None:
@@ -151,7 +155,7 @@ class Web3Bridger(Web3Client):
             return RESULT_TRANSACTION.FAIL
         logger.info(f"WALLET: {self.acc.address}")
         logger.info(
-            f"{self.acc.network.get(NETWORK_FIELDS.NAME)} ({from_token.symbol}) -> {to_network}"
+            f"{self.acc.network.get(NETWORK_FIELDS.NAME)} ({from_token.symbol}) -> {to_network} ({to_token.symbol})"
         )
         logger.info(f"DEX: {self.NAME} ")
         if balance.ETHER < self.min_balance:
@@ -172,7 +176,7 @@ class Web3Bridger(Web3Client):
             amount_to_send=amount_to_send,
             from_token=from_token,
             to_chain=to_network,
-            to_token_address=to_token.ADDRESS,
+            to_token=to_token,
         )
 
     @staticmethod

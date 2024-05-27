@@ -81,13 +81,10 @@ class Orbiter(Web3Bridger):
         amount_to_send: Token_Amount,
         from_token: Token_Info,
         to_chain: config.Network,
-        to_token_address: str = "",
+        to_token: Token_Info = None,
     ):
         from_chain_id: int = int(await self.acc.w3.eth.chain_id)
         to_chain_id: int = int(config.GENERAL.CHAIN_IDS.get(to_chain))
-        to_token: Token_Info = await self._get_to_token(
-            to_chain=to_chain, to_token_address=to_token_address
-        )
         if from_token.symbol == "ETH":
             from_token.address = config.GENERAL.ZERO_ADDRESS
         if to_token.symbol == "ETH":
