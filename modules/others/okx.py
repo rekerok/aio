@@ -85,7 +85,7 @@ class OKX:
                     "amt": f"{amount}",
                     "dest": 4,
                     "toAddr": address,
-                    "fee": fee,
+                    "fee": data_chains["fee"],
                     "chain": data_chains["id"],
                     "pwd": "-",
                 },
