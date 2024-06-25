@@ -29,6 +29,7 @@ class DEX:
     ORBITER = Orbiter
     NITRO = Nitro
     XY_FINANCE_BRIDGE = XY_finance_bridge
+    RELAY = Relay
     HYPERLANE_ETH = Hyperlane
     # RANGO_BRIDGE = Rango_Bridge
     RUBYSCORE_VOTE = rubyscore
@@ -186,16 +187,16 @@ class BRIDGE_SETTINGS:
 
     PARAMS = [
         {
-            PARAMETR.NETWORK: Client_Networks.avalanche,
-            PARAMETR.TYPE_TRANSACTION: TYPES_OF_TRANSACTION.AMOUNT,
-            PARAMETR.VALUE: (1.5, 1.5),
-            PARAMETR.FROM_TOKEN: TOKENS.AVALANCHE.USDC,
+            PARAMETR.NETWORK: Client_Networks.scroll,
+            PARAMETR.TYPE_TRANSACTION: TYPES_OF_TRANSACTION.PERCENT,
+            PARAMETR.VALUE: (20, 20),
+            PARAMETR.FROM_TOKEN: TOKENS.SCROLL.ETH,
             PARAMETR.MIN_BALANCE: 0,
             PARAMETR.TO_TOKENS: [
                 {
-                    PARAMETR.NETWORK: Network.ZKSYNC,
-                    PARAMETR.TO_TOKEN: TOKENS.ZKSYNC.USDC,
-                    PARAMETR.DEXS: [DEX.NITRO],
+                    PARAMETR.NETWORK: Network.BASE,
+                    PARAMETR.TO_TOKEN: TOKENS.BASE.ETH,
+                    PARAMETR.DEXS: [DEX.RELAY],
                 },
             ],
             PARAMETR.WALLETS_FILE: "",
@@ -800,8 +801,8 @@ async def warm_up_swaps():
     await WarmUPSwaps.warmup(settings=WARMUPSWAPS_SETTINGS)
 
 
-async def warm_up_refuel():
-    await WarmUpRefuel.warm_up_refuel(settings=REFUEL_SETTINGS)
+# async def warm_up_refuel():
+#     await WarmUpRefuel.warm_up_refuel(settings=REFUEL_SETTINGS)
 
 
 async def get_fees_refuel():
