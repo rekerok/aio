@@ -45,18 +45,14 @@ async def collect_balance(wallet, params):
 
 async def check_balances(settings):
     wallets = await utils.files.read_file_lines("files/addresses.txt")
-    results = []
     tasks = []
     counter = 1
     for wallet in wallets:
         logger.debug(f"OPERATION {counter}/{len(wallets)}")
-        # results.append(await collect_balance(wallet=wallet, params=settings.params))
-        tasks.append(
-            asyncio.create_task(collect_balance(wallet=wallet, params=settings.params))
-        )
+        tasks.append(collect_balance(wallet=wallet, params=settings.params))
         counter += 1
-    results, pending = await asyncio.wait(tasks)
-    results = [i.result() for i in results]
+    results = await asyncio.gather(*tasks)
+
     with open("files/balances.csv", "w") as file:
         writer = csv.writer(file)
         header = ["№", "WALLET"]
@@ -68,7 +64,6 @@ async def check_balances(settings):
                             header.append(f"{network.name}-{coin}")
         writer.writerow(header)
         count = 1
-        lines = []
         for i in results:
             line = [count, list(i.keys())[0]]
             for wallet, balances in i.items():
