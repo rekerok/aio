@@ -20,7 +20,7 @@ def get_module():
             Choice("8) Mint NFT", mint_nfts),
             Choice("9) Rubyscore vote", rubyscore_vote),
             Choice("10) WarmUP swaps", warm_up_swaps),
-            Choice("11) WarmUP refuel", warm_up_refuel),
+            # Choice("11) WarmUP refuel", warm_up_refuel),
             Choice("12) Multi Tasks", multitasks),
             Choice("13) Get refuel fees", get_fees_refuel),
             Choice("14) Get hyperlane eth fees", get_hyperlane_eth_fee),

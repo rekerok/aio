@@ -33,9 +33,7 @@ class Client_Networks:
         NETWORK_FIELDS.NAME: Network.ARBITRUM,
         NETWORK_FIELDS.RPCS: [
             "https://rpc.ankr.com/arbitrum",
-            "https://arbitrum.llamarpc.com",
-            "wss://arbitrum-one.publicnode.com",
-            "https://arbitrum-one.public.blastapi.io",
+
         ],
         NETWORK_FIELDS.EXPLORER: "https://arbiscan.io/",
         NETWORK_FIELDS.EIP1559: True,
@@ -47,9 +45,7 @@ class Client_Networks:
         NETWORK_FIELDS.NAME: Network.OPTIMISM,
         NETWORK_FIELDS.RPCS: [
             "https://rpc.ankr.com/optimism",
-            "wss://optimism.publicnode.com",
-            "https://rpc.optimism.gateway.fm",
-            "https://optimism.blockpi.network/v1/rpc/public",
+
         ],
         NETWORK_FIELDS.EXPLORER: "https://optimistic.etherscan.io/",
         NETWORK_FIELDS.EIP1559: True,
@@ -61,9 +57,6 @@ class Client_Networks:
         NETWORK_FIELDS.NAME: Network.BASE,
         NETWORK_FIELDS.RPCS: [
             "https://rpc.ankr.com/base",
-            "https://base.llamarpc.com",
-            "https://mainnet.base.org",
-            "https://base.gateway.tenderly.co",
         ],
         NETWORK_FIELDS.EXPLORER: "https://basescan.org/",
         NETWORK_FIELDS.EIP1559: True,
@@ -76,8 +69,6 @@ class Client_Networks:
         NETWORK_FIELDS.NAME: Network.ZKSYNC,
         NETWORK_FIELDS.RPCS: [
             "https://rpc.ankr.com/zksync_era",
-            "https://mainnet.era.zksync.io",
-            "https://1rpc.io/zksync2-era",
         ],
         NETWORK_FIELDS.EXPLORER: "https://explorer.zksync.io/",
         NETWORK_FIELDS.EIP1559: False,
@@ -101,9 +92,7 @@ class Client_Networks:
         NETWORK_FIELDS.NAME: Network.NOVA,
         NETWORK_FIELDS.RPCS: [
             "https://rpc.ankr.com/arbitrumnova",
-            "https://arbitrum-nova.public.blastapi.io",
-            "https://arbitrum-nova.publicnode.com",
-            "https://arbitrum-nova.blockpi.network/v1/rpc/public",
+
         ],
         NETWORK_FIELDS.EXPLORER: "https://nova.arbiscan.io/",
         NETWORK_FIELDS.EIP1559: True,
@@ -127,9 +116,7 @@ class Client_Networks:
         NETWORK_FIELDS.NAME: Network.AVALANCHE,
         NETWORK_FIELDS.RPCS: [
             "https://rpc.ankr.com/avalanche",
-            "https://ava-mainnet.public.blastapi.io/ext/bc/C/rpc",
-            "https://avalanche.blockpi.network/v1/rpc/public",
-            "https://1rpc.io/avax/c",
+
         ],
         NETWORK_FIELDS.EXPLORER: "https://snowtrace.io/",
         NETWORK_FIELDS.EIP1559: True,
@@ -141,9 +128,7 @@ class Client_Networks:
         NETWORK_FIELDS.NAME: Network.POLYGON,
         NETWORK_FIELDS.RPCS: [
             "https://rpc.ankr.com/polygon",
-            "wss://polygon.gateway.tenderly.co",
-            "wss://polygon-bor.publicnode.com",
-            "https://polygon-bor.publicnode.com",
+
         ],
         NETWORK_FIELDS.EXPLORER: "https://polygonscan.com/",
         NETWORK_FIELDS.EIP1559: True,
@@ -166,8 +151,7 @@ class Client_Networks:
         NETWORK_FIELDS.NAME: Network.BSC,
         NETWORK_FIELDS.RPCS: [
             "https://rpc.ankr.com/bsc/",
-            "wss://bsc.publicnode.com",
-            "https://bsc-dataseed.bnbchain.org",
+
         ],
         NETWORK_FIELDS.EXPLORER: "https://bscscan.com/",
         NETWORK_FIELDS.EIP1559: True,
