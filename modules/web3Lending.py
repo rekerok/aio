@@ -110,7 +110,7 @@ class Web3Lending(Web3Client):
     async def deposit(self, token_to_deposit: config.TOKEN):
         logger.info("DEPOSIT")
         token_to_deposit: Token_Info = await Token_Info.get_info_token(
-            acc=self.acc, token_address=token_to_deposit.ADDRESS
+            acc=self.acc, token_address=token_to_deposit.address
         )
         if token_to_deposit is None:
             return RESULT_TRANSACTION.FAIL
@@ -141,7 +141,7 @@ class Web3Lending(Web3Client):
         logger.info(f"DEX: {self.NAME} ")
 
         token_to_withdraw: Token_Info = await Token_Info.get_info_token(
-            acc=self.acc, token_address=token_to_withdraw.ADDRESS
+            acc=self.acc, token_address=token_to_withdraw.address
         )
         if token_to_withdraw is None:
             return RESULT_TRANSACTION.FAIL

@@ -91,10 +91,10 @@ class Web3Swapper(Web3Client):
         self, from_token: config.TOKEN = None, to_token: config.TOKEN = None
     ):
         from_token: Token_Info = await Token_Info.get_info_token(
-            acc=self.acc, token_address=from_token.ADDRESS
+            acc=self.acc, token_address=from_token.address
         )
         to_token: Token_Info = await Token_Info.get_info_token(
-            acc=self.acc, token_address=to_token.ADDRESS
+            acc=self.acc, token_address=to_token.address
         )
         if not from_token or not to_token:
             return RESULT_TRANSACTION.FAIL

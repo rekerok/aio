@@ -54,9 +54,9 @@ class Web3Client:
         token: config.TOKEN = config.TOKEN(address=""),
     ):
         while True:
-            balance = await acc.get_balance(token_address=token.ADDRESS)
+            balance = await acc.get_balance(token_address=token.address)
             token_info = await Token_Info.get_info_token(
-                acc=acc, token_address=token.ADDRESS
+                acc=acc, token_address=token.address
             )
             if balance is not None and token_info is not None:
                 break

@@ -140,11 +140,11 @@ class Web3Bridger(Web3Client):
         to_network: config.Network,
     ):
         from_token: Token_Info = await Token_Info.get_info_token(
-            acc=self.acc, token_address=from_token.ADDRESS
+            acc=self.acc, token_address=from_token.address
         )
 
         to_token: Token_Info = await self._get_to_token(
-            to_chain=to_network, to_token_address=to_token.ADDRESS
+            to_chain=to_network, to_token_address=to_token.address
         )
 
         if not from_token or not to_token:

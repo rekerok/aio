@@ -95,7 +95,7 @@ class Transfers:
     ):
         try:
             token_info: Token_Info = await Token_Info.get_info_token(
-                acc=self.acc, token_address=self.token.ADDRESS
+                acc=self.acc, token_address=self.token.address
             )
             balance: Token_Amount = await self.acc.get_balance(token_info.address)
             logger.info(f"FROM: {self.acc.address}")

@@ -653,12 +653,12 @@ class TOKEN:
     def __init__(
         self, address: str, network: str = None, exchange_name: str | None = None
     ):
-        self.ADDRESS = address
-        self.NETWORK = network
-        self.EXCHANGE_NAME = exchange_name
+        self.address = address
+        self.network = network
+        self.exchange_name = exchange_name
 
     def __str__(self) -> str:
-        return self.ADDRESS
+        return self.address
 
 
 class TOKENS:
