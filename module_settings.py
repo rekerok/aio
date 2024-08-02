@@ -413,6 +413,35 @@ class WARMUPSWAPS_SETTINGS:
             self.PARAMS = PARAMS
 
 
+class WARMUP_APPROVER_MODE_SETTINGS:
+    SLEEP = (60 * 2, 60 * 3)
+    PARAMS = [
+        {
+            PARAMETR.NETWORK: Client_Networks.zksync,
+            PARAMETR.COUNT_TRANSACTION: (5, 10),
+            PARAMETR.CONTRACTS: [
+                "0xbE7D1FD1f6748bbDefC4fbaCafBb11C6Fc506d1d",
+                "0x5673B6e6e51dE3479B8deB22dF46B12308db5E1e",
+                "0x5673B6e6e51dE3479B8deB22dF46B12308db5E1e",
+            ],
+            PARAMETR.TOKENS: [
+                {
+                    PARAMETR.TOKEN: TOKENS.ZKSYNC.USDT,
+                    PARAMETR.VALUE: (10, 30),
+                },
+                {
+                    PARAMETR.TOKEN: TOKENS.ZKSYNC.USDC,
+                    PARAMETR.VALUE: (10, 30),
+                },
+                {
+                    PARAMETR.TOKEN: TOKENS.ZKSYNC.DAI,
+                    PARAMETR.VALUE: (10, 30),
+                },
+            ],
+        },
+    ]
+
+
 class MERKLY_REFUEL_SETTINGS:
     SLEEP = (150, 200)
     CHECK_COMISSION_NETWORKS = {
@@ -803,6 +832,10 @@ async def warm_up_swaps():
 
 # async def warm_up_refuel():
 #     await WarmUpRefuel.warm_up_refuel(settings=REFUEL_SETTINGS)
+
+
+async def approve_warmup():
+    await warmup_approver_mode(settings=WARMUP_APPROVER_MODE_SETTINGS)
 
 
 async def get_fees_refuel():

@@ -127,38 +127,56 @@ class Account:
             logger.error(f"{error}")
             return Token_Amount(amount=0)
 
-    async def approve(self, token_address: str, spender: str, amount: Token_Amount):
-        logger.info(f"Check approve")
-        allowanced: Token_Amount = await self._get_allowance(
-            token_address=token_address, owner=self.address, spender=spender
+    async def approve(
+        self,
+        token_address: str,
+        spender: str,
+        amount: Token_Amount,
+        check_approve: bool = True,
+    ):
+        contract = self.w3.eth.contract(
+            address=self.w3.to_checksum_address(token_address),
+            abi=config.GENERAL.ERC20_ABI,
         )
+        if check_approve:
+            logger.info(f"Check approve")
+            allowanced: Token_Amount = await self._get_allowance(
+                token_address=token_address, owner=self.address, spender=spender
+            )
 
-        if allowanced.ETHER > amount.ETHER:
-            logger.info(f"Approve not need")
-            return
+            if allowanced.ETHER > amount.ETHER:
+                logger.info(f"Approve not need")
+                return
+            else:
+                logger.info(f"Apptove need")
+
+                value_approove = Token_Amount(
+                    amount=amount.WEI + amount.WEI * random.uniform(0.01, 0.05),
+                    decimals=amount.DECIMAL,
+                    wei=True,
+                )
+                logger.info(f"Make approve for {value_approove.ETHER}")
+                return await self.send_transaction(
+                    to_address=token_address,
+                    data=contract.encodeABI(
+                        "approve",
+                        args=(
+                            self.w3.to_checksum_address(spender),
+                            int(value_approove.WEI),
+                        ),
+                    ),
+                )
         else:
-            logger.info(f"Apptove need")
-            contract = self.w3.eth.contract(
-                address=self.w3.to_checksum_address(token_address),
-                abi=config.GENERAL.ERC20_ABI,
-            )
-            value_approove = Token_Amount(
-                amount=amount.WEI + amount.WEI * random.uniform(0.01, 0.05),
-                decimals=amount.DECIMAL,
-                wei=True,
-            )
-            logger.info(f"Make approve for {value_approove.ETHER}")
-            await self.send_transaction(
+            return await self.send_transaction(
                 to_address=token_address,
                 data=contract.encodeABI(
                     "approve",
                     args=(
                         self.w3.to_checksum_address(spender),
-                        int(value_approove.WEI),
+                        int(amount.WEI),
                     ),
                 ),
             )
-            await utils.time.sleep_view(settings.SLEEP_AFTER_APPROOVE)
 
     async def _sign_transaction(self, tx: dict):
         signed_tx = self.w3.eth.account.sign_transaction(tx, self.private_key)
