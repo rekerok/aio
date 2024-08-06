@@ -84,7 +84,6 @@ class Account:
     async def transfer(
         self, to_address: str, amount: Token_Amount, token_address: str = None
     ):
-        logger.info("START TRANSFER MODULE")
         # logger.info(f"WILL SEND {amount.ETHER} to {to_address}")
         if token_address is None or token_address == "":
             return await self.send_transaction(to_address=to_address, value=amount)
@@ -228,13 +227,11 @@ class Account:
                 tx_params["value"] = value.WEI
 
             if self.network[NETWORK_FIELDS.EIP1559]:
-                tx_params = await self._get_eip1559_tx(tx_params=tx_params)
+                tx_params = await self._get_eip1559_tx(tx_params=tx_params,increase_gas= GAS_MULTIPLAY)
             else:
-                tx_params["gasPrice"] = await self.w3.eth.gas_price
+                tx_params["gasPrice"] = int(await self.w3.eth.gas_price * GAS_MULTIPLAY)
 
-            tx_params["gas"] = int(
-                await self.w3.eth.estimate_gas(tx_params) * GAS_MULTIPLAY
-            )
+            tx_params["gas"] = int(await self.w3.eth.estimate_gas(tx_params))
 
             tx_hash = await self._sign_transaction(tx=tx_params)
             verify = await self._verifi_tx(tx_hash=tx_hash)

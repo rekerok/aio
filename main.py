@@ -27,7 +27,7 @@ def get_module():
             Choice("15) Get hyperlane eth fees", get_hyperlane_eth_fee),
             Choice("16) Deploy contracts", deploy_contracts),
             Choice("17) Create wallets", create_wallets),
-            Choice("18) esxai reedemption", esxai_reedemption),
+            # Choice("18) esxai reedemption", esxai_reedemption),
             Choice("19) Check balances", check_balance),
         ],
         qmark="⚙️ ",
@@ -37,6 +37,7 @@ def get_module():
 
 
 async def main(module=None):
+    logger.debug("STARTTTTTTTTT")
     await module()
     logger.debug("FINISHHHHHHHH")
 
