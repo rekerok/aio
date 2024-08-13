@@ -16,10 +16,10 @@ async def collect_balance(wallet, params):
         for token in param.get(PARAMETR.TOKENS):
             while True:
                 token_info = await Token_Info.get_info_token(
-                    acc=acc, token_address=token.ADDRESS
+                    acc=acc, token_address=token.address
                 )
                 if token_info is None:
-                    logger.error(f"NOT TOKEN INFO {token.ADDRESS}")
+                    logger.error(f"NOT TOKEN INFO {token.address}")
                     await acc.change_connection()
                     continue
                 balance_of_wallet = await acc.get_balance(
