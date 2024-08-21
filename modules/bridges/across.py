@@ -98,7 +98,7 @@ class Across(Web3Bridger):
 
         from_token = (
             await Token_Info.to_wrapped_token(
-                network=self.acc.network, from_token=from_token
+                network=self.acc.network, from_token=from_token, to_token=to_token
             )
         )[0]
 
@@ -123,18 +123,18 @@ class Across(Web3Bridger):
             logger.error("FAIL LIMITS")
             return RESULT_TRANSACTION.FAIL
 
-        if (
-            await self._check_route(
-                from_chain_id=await self.acc.w3.eth.chain_id,
-                to_chain_id=to_chain_id,
-                from_token=from_token,
-                to_token=to_token,
-            )
-            is None
-            or []
-        ):
-            logger.error("INVALID DATA")
-            return RESULT_TRANSACTION.FAIL
+        # if (
+        #     await self._check_route(
+        #         from_chain_id=await self.acc.w3.eth.chain_id,
+        #         to_chain_id=to_chain_id,
+        #         from_token=from_token,
+        #         to_token=to_token,
+        #     )
+        #     is None
+        #     or []
+        # ):
+        #     logger.error("INVALID DATA")
+        #     return RESULT_TRANSACTION.FAIL
 
         args = [
             self.acc.address,

@@ -138,17 +138,15 @@ class Web3Swapper(Web3Client):
     async def _create_database(wallets: list[str], params):
         database = list()
         for param in params:
-            for wallet in (
-                wallets
-                if param.get(PARAMETR.WALLETS_FILE) == ""
-                else await utils.files.read_file_lines(param.get(PARAMETR.WALLETS_FILE))
-            ):
+            for wallet in wallets:
                 to_token = random.choice(param.get(PARAMETR.TO_TOKENS))
                 acc = Account(private_key=wallet, network=param.get(PARAMETR.NETWORK))
-                allow_transaction, balance, token_info = await Web3Client.check_min_balance(
-                    acc=acc,
-                    token=param.get(PARAMETR.FROM_TOKEN),
-                    min_balance=param.get(PARAMETR.MIN_BALANCE),
+                allow_transaction, balance, token_info = (
+                    await Web3Client.check_min_balance(
+                        acc=acc,
+                        token=param.get(PARAMETR.FROM_TOKEN),
+                        min_balance=param.get(PARAMETR.MIN_BALANCE),
+                    )
                 )
                 if allow_transaction:
                     database.append(
@@ -175,10 +173,9 @@ class Web3Swapper(Web3Client):
 
     @staticmethod
     async def swap_use_database(settings, wallets: list[str] = None):
-        if wallets is None:
-            wallets = await utils.files.read_file_lines(
-                path="files/wallets.txt",
-            )
+        wallets = await utils.files.read_file_lines(
+            path="files/wallets.txt",
+        )
         database = await Web3Swapper._create_database(
             wallets=wallets, params=settings.PARAMS
         )
