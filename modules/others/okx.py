@@ -172,8 +172,8 @@ class OKX:
             await okx.withdraw(
                 address=wallet["address"],
                 amount=wallet["amount"],
-                chain=wallet["token"].NETWORK,
-                currency=wallet["token"].EXCHANGE_NAME,
+                chain=wallet["token"].network,
+                currency=wallet["token"].exchange_name,
             )
             await utils.time.sleep_view(settings.SLEEP)
             logger.info("------------------------------------")

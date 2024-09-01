@@ -32,8 +32,8 @@ async def dep_to_network(settings):
         value = random.uniform(*settings.PARAMS.get(PARAMETR.VALUE))
         await okx.withdraw(
             wallet[1],
-            currency=to_withdraw.get(PARAMETR.TOKEN).EXCHANGE_NAME,
-            chain=to_withdraw.get(PARAMETR.TOKEN).NETWORK,
+            currency=to_withdraw.get(PARAMETR.TOKEN).exchange_name,
+            chain=to_withdraw.get(PARAMETR.TOKEN).network,
             amount=value,
         )
         logger.debug("SLEEP AFTER WITHDRAW")

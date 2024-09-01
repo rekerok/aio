@@ -44,7 +44,7 @@ class Deployer:
     async def deploy_with_database(settings=None):
         wallets = await utils.files.read_file_lines("files/wallets.txt")
         database = await Deployer.create_database(
-            wallets=wallets, params=settings.params
+            wallets=wallets, params=settings.PARAMS
         )
         random.shuffle(database)
         counter = 1

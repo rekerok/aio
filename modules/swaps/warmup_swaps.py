@@ -22,7 +22,7 @@ class WarmUPSwaps:
         from_token = None
         for token in tokens:
             balance = await acc.get_balance(
-                token_address=token.get(PARAMETR.TOKEN).ADDRESS
+                token_address=token.get(PARAMETR.TOKEN).address
             )
             if balance.ETHER > token.get(PARAMETR.MIN_BALANCE):
                 from_token = token
@@ -46,7 +46,7 @@ class WarmUPSwaps:
         for token in tokens:
             try:
                 token_info: Token_Info = await Token_Info.get_info_token(
-                    acc=acc, token_address=token.get(PARAMETR.TOKEN).ADDRESS
+                    acc=acc, token_address=token.get(PARAMETR.TOKEN).address
                 )
                 balance: Token_Amount = await acc.get_balance(
                     token_address=token_info.address
