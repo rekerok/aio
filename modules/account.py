@@ -9,6 +9,7 @@ from settings import GAS_MULTIPLAY
 from settings import Client_Networks
 from web3 import AsyncWeb3, AsyncHTTPProvider
 from web3.middleware import async_geth_poa_middleware
+from utils.annotations import retry_async
 from utils.enums import NETWORK_FIELDS, RESULT_TRANSACTION
 
 
@@ -202,6 +203,7 @@ class Account:
             logger.error(error)
             return False
 
+    @retry_async(attempts=3)
     async def send_transaction(
         self,
         to_address: str = None,
@@ -225,11 +227,15 @@ class Account:
                 tx_params["value"] = 0
             else:
                 tx_params["value"] = value.WEI
-
+            increase_gas = random.uniform(GAS_MULTIPLAY[0], GAS_MULTIPLAY[1])
+            logger.info(f"GAS MULTIPLAY IS {increase_gas}")
             if self.network[NETWORK_FIELDS.EIP1559]:
-                tx_params = await self._get_eip1559_tx(tx_params=tx_params,increase_gas= GAS_MULTIPLAY)
+                tx_params = await self._get_eip1559_tx(
+                    tx_params=tx_params, increase_gas=increase_gas
+                )
+
             else:
-                tx_params["gasPrice"] = int(await self.w3.eth.gas_price * GAS_MULTIPLAY)
+                tx_params["gasPrice"] = int(await self.w3.eth.gas_price * increase_gas)
 
             tx_params["gas"] = int(await self.w3.eth.estimate_gas(tx_params))
 
