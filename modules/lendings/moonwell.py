@@ -1,3 +1,4 @@
+import random
 from typing import Union
 
 from loguru import logger
@@ -59,37 +60,45 @@ class Moonwell(Web3Lending):
         )
 
     async def _perform_withdraw(self, token_to_withdraw: Token_Info):
-        contract = self.acc.w3.eth.contract(
-            eth_utils.address.to_checksum_address(
-                config.MOONWELL.WETH_TOKEN,
-            ),
-            abi=config.MOONWELL.ABI_WITHDRAW,
-        )
         try:
-            amount_to_deposited = await self.acc.get_balance(
-                token_address=config.MOONWELL.WETH_TOKEN
+            withdraw_contract = self.acc.w3.eth.contract(
+                eth_utils.address.to_checksum_address(
+                    config.MOONWELL.WETH_TOKEN,
+                ),
+                abi=config.MOONWELL.ABI_WITHDRAW,
             )
-            if amount_to_deposited.ETHER < self.min_balance:
-                logger.error(f"DEPOSIT < {self.min_balance}")
+            deposit_token: Token_Info = await Token_Info.get_info_token(
+                acc=self.acc, token_address=config.MOONWELL.WETH_TOKEN
+            )
+            balance = await self.acc.get_balance(deposit_token.address)
+            logger.info(f"DEPOSITED {balance.ETHER} {deposit_token.symbol}")
+            withdraw_percent = random.uniform(self.value[0], self.value[1])
+            logger.info(f"WITHDRAW PERCENT {withdraw_percent}")
+            amount_to_withdraw = Token_Amount(
+                amount=balance.ETHER * withdraw_percent / 100
+            )
+            logger.info(
+                f"AMOUNT WITHDRAW {amount_to_withdraw.ETHER} {deposit_token.symbol}"
+            )
+
+            await self.acc.approve(
+                token_address=withdraw_contract.address,
+                spender=withdraw_contract.address,
+                amount=amount_to_withdraw,
+            )
+            data = await self.get_data(
+                contract=withdraw_contract,
+                function_of_contract="redeem",
+                args=(amount_to_withdraw.WEI,),
+            )
+            if data is None:
+                logger.error("FAIL GET DATA")
                 return RESULT_TRANSACTION.FAIL
+            return await self._send_transaction(
+                from_token=token_to_withdraw,
+                to_address=withdraw_contract.address,
+                data=data,
+            )
         except Exception as error:
             logger.error(error)
             return RESULT_TRANSACTION.FAIL
-        logger.info(f"WITHDRAW {amount_to_deposited.ETHER} {token_to_withdraw.symbol}")
-
-        await self.acc.approve(
-            token_address=contract.address,
-            spender=contract.address,
-            amount=amount_to_deposited,
-        )
-        data = await self.get_data(
-            contract=contract,
-            function_of_contract="redeem",
-            args=(amount_to_deposited.WEI,),
-        )
-        if data is None:
-            logger.error("FAIL GET DATA")
-            return RESULT_TRANSACTION.FAIL
-        return await self._send_transaction(
-            from_token=token_to_withdraw, to_address=contract.address, data=data
-        )

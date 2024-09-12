@@ -139,14 +139,16 @@ class Web3Lending(Web3Client):
     async def withdraw(self, token_to_withdraw: config.TOKEN):
         logger.info("WITHDRAW")
         logger.info(f"DEX: {self.NAME} ")
+        logger.info(f"WALLET: {self.acc.address}")
+        logger.info(f"NETWORK: {self.acc.network.get(NETWORK_FIELDS.NAME)}")
 
         token_to_withdraw: Token_Info = await Token_Info.get_info_token(
             acc=self.acc, token_address=token_to_withdraw.address
         )
+        
         if token_to_withdraw is None:
+            logger.error("NOT INFO ABOUT WITHDRAW TOKEN")
             return RESULT_TRANSACTION.FAIL
-        logger.info(f"WALLET: {self.acc.address}")
-        logger.info(f"NETWORK: {self.acc.network.get(NETWORK_FIELDS.NAME)}")
         return await self._perform_withdraw(token_to_withdraw=token_to_withdraw)
 
     @abstractmethod
@@ -189,11 +191,6 @@ class Web3Lending(Web3Client):
                         # "max_balance": param.get(PARAMETR.MAX_BALANCE),
                     }
                 )
-
-                # else:
-                #     logger.error(
-                #         f"{acc.address} ({round(balance.ETHER,3)} {token_info.symbol}) ({param.get(PARAMETR.NETWORK)[NETWORK_FIELDS.NAME]}) don't add to DB"
-                #     )
         return database
 
     @staticmethod
@@ -205,9 +202,6 @@ class Web3Lending(Web3Client):
         database = await Web3Lending._create_database(
             wallets=wallets, params=settings.PARAMS
         )
-        random.shuffle(database)
-        random.shuffle(database)
-        random.shuffle(database)
         random.shuffle(database)
         counter = 1
         for data in database:
