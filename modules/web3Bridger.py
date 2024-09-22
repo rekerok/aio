@@ -183,17 +183,16 @@ class Web3Bridger(Web3Client):
     async def _create_database(wallets: list[str], params):
         database = list()
         for param in params:
-            for wallet in (
-                wallets
-                if param.get(PARAMETR.WALLETS_FILE) == ""
-                else await utils.files.read_file_lines(param.get(PARAMETR.WALLETS_FILE))
-            ):
-                to_token = random.choice(param.get(PARAMETR.TO_TOKENS))
-                acc = Account(private_key=wallet, network=param.get(PARAMETR.NETWORK))
+            for wallet in wallets:
+                from_data = random.choice(param.get(PARAMETR.FROM_DATA))
+                to_data = random.choice(param.get(PARAMETR.TO_DATA))
+                acc = Account(
+                    private_key=wallet, network=from_data.get(PARAMETR.NETWORK)
+                )
                 allow_transaction, balance, token_info = (
                     await Web3Client.check_min_balance(
                         acc=acc,
-                        token=param.get(PARAMETR.FROM_TOKEN),
+                        token=from_data.get(PARAMETR.FROM_TOKEN),
                         min_balance=param.get(PARAMETR.MIN_BALANCE),
                     )
                 )
@@ -201,18 +200,18 @@ class Web3Bridger(Web3Client):
                     database.append(
                         {
                             "private_key": wallet,
-                            "network": param.get(PARAMETR.NETWORK),
-                            "dex": random.choice(to_token.get(PARAMETR.DEXS)),
-                            "type_swap": param.get(PARAMETR.TYPE_TRANSACTION),
+                            "network": from_data.get(PARAMETR.NETWORK),
+                            "dex": random.choice(to_data.get(PARAMETR.DEXS)),
+                            "type_bridge": param.get(PARAMETR.TYPE_TRANSACTION),
                             "value": param.get(PARAMETR.VALUE),
-                            "from_token": param.get(PARAMETR.FROM_TOKEN),
+                            "from_token": from_data.get(PARAMETR.FROM_TOKEN),
                             "min_balance": param.get(PARAMETR.MIN_BALANCE),
-                            "to_network": to_token.get(PARAMETR.NETWORK),
-                            "to_token": to_token.get(PARAMETR.TO_TOKEN),
+                            "to_network": to_data.get(PARAMETR.NETWORK),
+                            "to_token": to_data.get(PARAMETR.TO_TOKEN),
                         }
                     )
                     logger.success(
-                        f"{acc.address} ({round(balance.ETHER,3)} {token_info.symbol}) ({param.get(PARAMETR.NETWORK)[NETWORK_FIELDS.NAME]}) add to DB"
+                        f"{acc.address} ({round(balance.ETHER,3)} {token_info.symbol}) ({from_data.get(PARAMETR.NETWORK)[NETWORK_FIELDS.NAME]}) add to DB"
                     )
                 else:
                     logger.error(
@@ -240,7 +239,7 @@ class Web3Bridger(Web3Client):
             dex = dex_class(
                 private_key=data.get("private_key"),
                 network=data.get("network"),
-                type_transfer=data.get("type_swap"),
+                type_transfer=data.get("type_bridge"),
                 value=data.get("value"),
                 min_balance=data.get("min_balance"),
                 slippage=settings.SLIPPAGE,

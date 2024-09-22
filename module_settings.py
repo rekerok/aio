@@ -188,16 +188,24 @@ class BRIDGE_SETTINGS:
 
     PARAMS = [
         {
-            PARAMETR.NETWORK: Client_Networks.scroll,
-            PARAMETR.TYPE_TRANSACTION: TYPES_OF_TRANSACTION.PERCENT,
-            PARAMETR.VALUE: (20, 20),
-            PARAMETR.FROM_TOKEN: TOKENS.SCROLL.ETH,
-            PARAMETR.MIN_BALANCE: 0,
-            PARAMETR.TO_TOKENS: [
+            PARAMETR.TYPE_TRANSACTION: TYPES_OF_TRANSACTION.AMOUNT,
+            PARAMETR.VALUE: (0.00001, 0.00001),
+            PARAMETR.FROM_DATA: [
+                # {
+                #     PARAMETR.NETWORK: Client_Networks.optimism,
+                #     PARAMETR.FROM_TOKEN: TOKENS.OPTIMISM.ETH,
+                # },
                 {
-                    PARAMETR.NETWORK: Network.BASE,
-                    PARAMETR.TO_TOKEN: TOKENS.BASE.ETH,
-                    PARAMETR.DEXS: [DEX.RELAY],
+                    PARAMETR.NETWORK: Client_Networks.arbitrum,
+                    PARAMETR.FROM_TOKEN: TOKENS.ARBITRUM.ETH,
+                },
+            ],
+            PARAMETR.MIN_BALANCE: 0,
+            PARAMETR.TO_DATA: [
+                {
+                    PARAMETR.NETWORK: Network.SEPOLIA,
+                    PARAMETR.TO_TOKEN: TOKENS.SEPOLIA.ETH,
+                    PARAMETR.DEXS: [DEX.TESTNET_BRIDGE],
                 },
             ],
             PARAMETR.WALLETS_FILE: "",
