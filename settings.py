@@ -33,7 +33,6 @@ class Client_Networks:
         NETWORK_FIELDS.NAME: Network.ARBITRUM,
         NETWORK_FIELDS.RPCS: [
             "https://rpc.ankr.com/arbitrum",
-
         ],
         NETWORK_FIELDS.EXPLORER: "https://arbiscan.io/",
         NETWORK_FIELDS.EIP1559: True,
@@ -45,7 +44,6 @@ class Client_Networks:
         NETWORK_FIELDS.NAME: Network.OPTIMISM,
         NETWORK_FIELDS.RPCS: [
             "https://rpc.ankr.com/optimism",
-
         ],
         NETWORK_FIELDS.EXPLORER: "https://optimistic.etherscan.io/",
         NETWORK_FIELDS.EIP1559: True,
@@ -92,10 +90,20 @@ class Client_Networks:
         NETWORK_FIELDS.NAME: Network.NOVA,
         NETWORK_FIELDS.RPCS: [
             "https://rpc.ankr.com/arbitrumnova",
-
         ],
         NETWORK_FIELDS.EXPLORER: "https://nova.arbiscan.io/",
         NETWORK_FIELDS.EIP1559: True,
+        NETWORK_FIELDS.NATIVE_TOKEN: "ETH",
+        NETWORK_FIELDS.CHECK_GAS: False,
+    }
+
+    sepolia = {
+        NETWORK_FIELDS.NAME: Network.SEPOLIA,
+        NETWORK_FIELDS.RPCS: [
+            "https://1rpc.io/sepolia",
+        ],
+        NETWORK_FIELDS.EXPLORER: "https://sepolia.etherscan.io/",
+        NETWORK_FIELDS.EIP1559: False,
         NETWORK_FIELDS.NATIVE_TOKEN: "ETH",
         NETWORK_FIELDS.CHECK_GAS: False,
     }
@@ -116,7 +124,6 @@ class Client_Networks:
         NETWORK_FIELDS.NAME: Network.AVALANCHE,
         NETWORK_FIELDS.RPCS: [
             "https://rpc.ankr.com/avalanche",
-
         ],
         NETWORK_FIELDS.EXPLORER: "https://snowtrace.io/",
         NETWORK_FIELDS.EIP1559: True,
@@ -128,7 +135,6 @@ class Client_Networks:
         NETWORK_FIELDS.NAME: Network.POLYGON,
         NETWORK_FIELDS.RPCS: [
             "https://rpc.ankr.com/polygon",
-
         ],
         NETWORK_FIELDS.EXPLORER: "https://polygonscan.com/",
         NETWORK_FIELDS.EIP1559: True,
@@ -151,7 +157,6 @@ class Client_Networks:
         NETWORK_FIELDS.NAME: Network.BSC,
         NETWORK_FIELDS.RPCS: [
             "https://rpc.ankr.com/bsc/",
-
         ],
         NETWORK_FIELDS.EXPLORER: "https://bscscan.com/",
         NETWORK_FIELDS.EIP1559: True,

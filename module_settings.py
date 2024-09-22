@@ -30,6 +30,7 @@ class DEX:
     NITRO = Nitro
     XY_FINANCE_BRIDGE = XY_finance_bridge
     RELAY = Relay
+    TESTNET_BRIDGE = Testnet_Bridge
     HYPERLANE_ETH = Hyperlane
     # RANGO_BRIDGE = Rango_Bridge
     RUBYSCORE_VOTE = rubyscore

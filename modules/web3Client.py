@@ -38,7 +38,8 @@ class Web3Client:
                 amount=amount_to_send,
             )
         else:
-            value = amount_to_send
+            if not value:
+                value = amount_to_send
         return await self.acc.send_transaction(
             to_address=eth_utils.address.to_checksum_address(to_address),
             data=data,
