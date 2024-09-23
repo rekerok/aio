@@ -97,17 +97,6 @@ class Client_Networks:
         NETWORK_FIELDS.CHECK_GAS: False,
     }
 
-    sepolia = {
-        NETWORK_FIELDS.NAME: Network.SEPOLIA,
-        NETWORK_FIELDS.RPCS: [
-            "https://1rpc.io/sepolia",
-        ],
-        NETWORK_FIELDS.EXPLORER: "https://sepolia.etherscan.io/",
-        NETWORK_FIELDS.EIP1559: False,
-        NETWORK_FIELDS.NATIVE_TOKEN: "ETH",
-        NETWORK_FIELDS.CHECK_GAS: False,
-    }
-
     linea = {
         NETWORK_FIELDS.NAME: Network.LINEA,
         NETWORK_FIELDS.RPCS: [
@@ -137,6 +126,39 @@ class Client_Networks:
             "https://1rpc.io/sepolia",
         ],
         NETWORK_FIELDS.EXPLORER: "https://sepolia.etherscan.io/",
+        NETWORK_FIELDS.EIP1559: True,
+        NETWORK_FIELDS.NATIVE_TOKEN: "ETH",
+        NETWORK_FIELDS.CHECK_GAS: False,
+    }
+
+    arbitrum_sepolia = {
+        NETWORK_FIELDS.NAME: Network.ARBITRUM,
+        NETWORK_FIELDS.RPCS: [
+            "https://sepolia-rollup.arbitrum.io/rpc",
+        ],
+        NETWORK_FIELDS.EXPLORER: "https://sepolia.arbiscan.io/",
+        NETWORK_FIELDS.EIP1559: True,
+        NETWORK_FIELDS.NATIVE_TOKEN: "ETH",
+        NETWORK_FIELDS.CHECK_GAS: False,
+    }
+    
+    base_sepolia = {
+        NETWORK_FIELDS.NAME: Network.BASE,
+        NETWORK_FIELDS.RPCS: [
+            "https://sepolia.base.org",
+        ],
+        NETWORK_FIELDS.EXPLORER: "https://sepolia.basescan.org/",
+        NETWORK_FIELDS.EIP1559: True,
+        NETWORK_FIELDS.NATIVE_TOKEN: "ETH",
+        NETWORK_FIELDS.CHECK_GAS: False,
+    }
+
+    optimism_sepolia = {
+        NETWORK_FIELDS.NAME: Network.OPTIMISM,
+        NETWORK_FIELDS.RPCS: [
+            "https://sepolia.optimism.io	",
+        ],
+        NETWORK_FIELDS.EXPLORER: "https://sepolia-optimism.etherscan.io/",
         NETWORK_FIELDS.EIP1559: True,
         NETWORK_FIELDS.NATIVE_TOKEN: "ETH",
         NETWORK_FIELDS.CHECK_GAS: False,

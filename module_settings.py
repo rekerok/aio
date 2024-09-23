@@ -31,6 +31,7 @@ class DEX:
     XY_FINANCE_BRIDGE = XY_finance_bridge
     RELAY = Relay
     TESTNET_BRIDGE_LAYERZERO = Testnet_Bridge_Layerzero
+    TESTNET_BRIDGES = Testnet_Bridges
     HYPERLANE_ETH = Hyperlane
     # RANGO_BRIDGE = Rango_Bridge
     RUBYSCORE_VOTE = rubyscore
@@ -205,7 +206,7 @@ class BRIDGE_SETTINGS:
                 {
                     PARAMETR.NETWORK: Network.SEPOLIA,
                     PARAMETR.TO_TOKEN: TOKENS.SEPOLIA.ETH,
-                    PARAMETR.DEXS: [DEX.TESTNET_BRIDGE],
+                    PARAMETR.DEXS: [DEX.TESTNET_BRIDGE_LAYERZERO],
                 },
             ],
             PARAMETR.WALLETS_FILE: "",
