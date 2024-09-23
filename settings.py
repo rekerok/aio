@@ -131,6 +131,17 @@ class Client_Networks:
         NETWORK_FIELDS.CHECK_GAS: False,
     }
 
+    sepolia = {
+        NETWORK_FIELDS.NAME: Network.SEPOLIA,
+        NETWORK_FIELDS.RPCS: [
+            "https://1rpc.io/sepolia",
+        ],
+        NETWORK_FIELDS.EXPLORER: "https://sepolia.etherscan.io/",
+        NETWORK_FIELDS.EIP1559: True,
+        NETWORK_FIELDS.NATIVE_TOKEN: "ETH",
+        NETWORK_FIELDS.CHECK_GAS: False,
+    }
+
     polygon = {
         NETWORK_FIELDS.NAME: Network.POLYGON,
         NETWORK_FIELDS.RPCS: [

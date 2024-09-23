@@ -16,8 +16,8 @@ from utils.token_info import Token_Info
 import eth_utils
 
 
-class Testnet_Bridge(Web3Bridger):
-    NAME = "TESTNET_BRIDGE"
+class Testnet_Bridge_Layerzero(Web3Bridger):
+    NAME = "TESTNET_BRIDGE_LAYERZERO"
 
     def __init__(
         self,
@@ -37,10 +37,10 @@ class Testnet_Bridge(Web3Bridger):
             slippage=0.5,
         )
         self.contract = self.acc.w3.eth.contract(
-            address=config.TESTNET_BRIDGE.CONTRACTS.get(
+            address=config.TESTNET_BRIDGE_LAYERZERO.CONTRACTS.get(
                 self.acc.network.get(NETWORK_FIELDS.NAME)
             ),
-            abi=config.TESTNET_BRIDGE.ABI,
+            abi=config.TESTNET_BRIDGE_LAYERZERO.ABI,
         )
 
     async def _perform_bridge(
@@ -55,7 +55,7 @@ class Testnet_Bridge(Web3Bridger):
             function_of_contract="swapAndBridge",
             args=(
                 amount_to_send.WEI,
-                0,
+                int(amount_to_send.WEI * random.uniform(1000, 5000)),
                 161,
                 self.acc.address,
                 self.acc.address,
@@ -67,7 +67,7 @@ class Testnet_Bridge(Web3Bridger):
         )
 
         value_to_send = Token_Amount(
-            amount=amount_to_send.ETHER * random.uniform(1.05, 1.3)
+            amount=amount_to_send.ETHER * random.uniform(1.5, 2)
         )
 
         return await self._send_transaction(

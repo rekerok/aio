@@ -25,6 +25,7 @@ class NETWORK_FIELDS(Enum):
 
 class PARAMETR(Enum):
     ID = auto()
+    ABI = auto()
     DEX = auto()
     DEXS = auto()
     NFTS = auto()

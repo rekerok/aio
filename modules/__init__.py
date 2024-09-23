@@ -16,7 +16,8 @@ from .bridges.xy_finance_bridge import XY_finance_bridge
 from .bridges.hyperlane_merkly import Hyperlane
 from .bridges.rango_bridge import Rango_Bridge
 from .bridges.relay import Relay
-from .bridges.testnet_bridge import Testnet_Bridge
+from .bridges.testnet_bridge_layerzero import Testnet_Bridge_Layerzero
+from .bridges.testnet_bridges import Testnet_Bridges
 from .others.check_nft import Check_NFT
 from .others.transfers import Transfers
 from .others.check_balance import check_balances
