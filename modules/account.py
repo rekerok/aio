@@ -286,14 +286,8 @@ class Account:
             tx_hash = await self.sign_transaction(tx=tx_params)
             verify = await self.verifi_tx(tx_hash=tx_hash)
             if verify:
-                logger.success(
-                    f"LINK {self.network[NETWORK_FIELDS.EXPLORER]}tx/{tx_hash}"
-                )
                 return RESULT_TRANSACTION.SUCCESS
             else:
-                logger.error(
-                    f"LINK {self.network[NETWORK_FIELDS.EXPLORER]}tx/{tx_hash}"
-                )
                 return RESULT_TRANSACTION.FAIL
         except Exception as error:
             logger.error(error)
