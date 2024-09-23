@@ -6,7 +6,7 @@ from loguru import logger
 from web3 import AsyncHTTPProvider, AsyncWeb3
 from modules.account import Account
 import utils
-from utils.enums import NETWORK_FIELDS
+from utils.enums import NETWORK_FIELDS, RESULT_TRANSACTION
 from utils.token_info import Token_Info
 from utils.token_amount import Token_Amount
 
@@ -40,11 +40,20 @@ class Web3Client:
         else:
             if not value:
                 value = amount_to_send
-        return await self.acc.send_transaction(
+        tx_params = await self.acc.prepare_transaction(
             to_address=eth_utils.address.to_checksum_address(to_address),
             data=data,
             value=value,
         )
+        if tx_params is None:
+            return RESULT_TRANSACTION.FAIL
+        tx_hash = await self.acc.sign_transaction(tx_params)
+        return await self.acc.verifi_tx(tx_hash=tx_hash)
+        # return await self.acc.send_transaction(
+        #     to_address=eth_utils.address.to_checksum_address(to_address),
+        #     data=data,
+        #     value=value,
+        # )
 
     async def choice_type_transaction(): ...
 

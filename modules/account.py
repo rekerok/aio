@@ -178,12 +178,6 @@ class Account:
                 ),
             )
 
-    async def _sign_transaction(self, tx: dict):
-        signed_tx = self.w3.eth.account.sign_transaction(tx, self.private_key)
-        raw_tx_hash = await self.w3.eth.send_raw_transaction(signed_tx.rawTransaction)
-        tx_hash = self.w3.to_hex(raw_tx_hash)
-        return tx_hash
-
     async def _get_eip1559_tx(self, tx_params: dict, increase_gas: float = 1.0):
         last_block = await self.w3.eth.get_block("latest")
         base_fee = int(last_block["baseFeePerGas"] * increase_gas)
@@ -192,16 +186,66 @@ class Account:
         tx_params["maxPriorityFeePerGas"] = max_priority_fee_per_gas
         return tx_params
 
-    async def _verifi_tx(self, tx_hash):
+    @retry_async(attempts=3)
+    async def prepare_transaction(
+        self,
+        to_address: str = None,
+        data: str = None,
+        value: Token_Amount = None,
+    ):
+        try:
+            logger.info("Begin transaction")
+            tx_params = {
+                "from": self.address,
+                "chainId": await self.w3.eth.chain_id,
+                "nonce": await self.w3.eth.get_transaction_count(self.address),
+            }
+
+            if to_address:
+                tx_params["to"] = self.w3.to_checksum_address(to_address)
+            if data:
+                tx_params["data"] = data
+
+            if value is None or value == 0:
+                tx_params["value"] = 0
+            else:
+                tx_params["value"] = value.WEI
+            increase_gas = random.uniform(GAS_MULTIPLAY[0], GAS_MULTIPLAY[1])
+            logger.info(f"GAS MULTIPLAY IS {increase_gas}")
+            if self.network[NETWORK_FIELDS.EIP1559]:
+                tx_params = await self._get_eip1559_tx(
+                    tx_params=tx_params, increase_gas=increase_gas
+                )
+
+            else:
+                tx_params["gasPrice"] = int(await self.w3.eth.gas_price * increase_gas)
+
+            tx_params["gas"] = int(await self.w3.eth.estimate_gas(tx_params))
+
+            return tx_params
+        except Exception as error:
+            logger.error(error)
+            None
+
+    async def sign_transaction(self, tx: dict):
+        signed_tx = self.w3.eth.account.sign_transaction(tx, self.private_key)
+        raw_tx_hash = await self.w3.eth.send_raw_transaction(signed_tx.rawTransaction)
+        tx_hash = self.w3.to_hex(raw_tx_hash)
+        return tx_hash
+
+    async def verifi_tx(self, tx_hash):
         try:
             data = await self.w3.eth.wait_for_transaction_receipt(tx_hash, timeout=400)
             if "status" in data and data["status"] == 1:
-                return True
-            else:
-                return False
+                logger.success(
+                    f"LINK {self.network[NETWORK_FIELDS.EXPLORER]}tx/{tx_hash}"
+                )
+                return RESULT_TRANSACTION.SUCCESS
         except Exception as error:
             logger.error(error)
-            return False
+            return RESULT_TRANSACTION.FAIL
+        logger.error(f"LINK {self.network[NETWORK_FIELDS.EXPLORER]}tx/{tx_hash}")
+        return RESULT_TRANSACTION.FAIL
 
     @retry_async(attempts=3)
     async def send_transaction(
@@ -239,8 +283,8 @@ class Account:
 
             tx_params["gas"] = int(await self.w3.eth.estimate_gas(tx_params))
 
-            tx_hash = await self._sign_transaction(tx=tx_params)
-            verify = await self._verifi_tx(tx_hash=tx_hash)
+            tx_hash = await self.sign_transaction(tx=tx_params)
+            verify = await self.verifi_tx(tx_hash=tx_hash)
             if verify:
                 logger.success(
                     f"LINK {self.network[NETWORK_FIELDS.EXPLORER]}tx/{tx_hash}"
