@@ -67,7 +67,7 @@ class Testnet_Bridge_Layerzero(Web3Bridger):
         )
 
         value_to_send = Token_Amount(
-            amount=amount_to_send.ETHER * random.uniform(1.5, 2)
+            amount=amount_to_send.WEI + 5627000000000, wei=True
         )
 
         return await self._send_transaction(
