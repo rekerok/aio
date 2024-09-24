@@ -1,4 +1,7 @@
 import random
+
+import eth_account
+import eth_account.account
 import config
 from typing import Union
 from loguru import logger
@@ -184,39 +187,65 @@ class Web3Bridger(Web3Client):
         database = list()
         for param in params:
             for wallet in wallets:
-                from_data = random.choice(param.get(PARAMETR.FROM_DATA))
-                to_data = random.choice(param.get(PARAMETR.TO_DATA))
-                acc = Account(
-                    private_key=wallet, network=from_data.get(PARAMETR.NETWORK)
-                )
-                allow_transaction, balance, token_info = (
-                    await Web3Client.check_min_balance(
-                        acc=acc,
-                        token=from_data.get(PARAMETR.FROM_TOKEN),
-                        min_balance=param.get(PARAMETR.MIN_BALANCE),
+                address = eth_account.account.Account.from_key(wallet).address
+                try:
+                    valid_networks = []
+                    logger.info(("-" * 5) + " " + address)
+                    logger.info(f"MIN = {param.get(PARAMETR.MIN_BALANCE)}")
+                    for data in param.get(PARAMETR.FROM_DATA):
+                        acc = Account(
+                            private_key=wallet, network=data.get(PARAMETR.NETWORK)
+                        )
+                        allow_transaction, balance, token_info = (
+                            await Web3Client.check_min_balance(
+                                acc=acc,
+                                token=data.get(PARAMETR.FROM_TOKEN),
+                                min_balance=param.get(PARAMETR.MIN_BALANCE),
+                            )
+                        )
+
+                        if allow_transaction:
+                            valid_networks.append(data)
+                            logger.success(
+                                f"{data.get(PARAMETR.NETWORK).get(NETWORK_FIELDS.NAME)} {balance.ETHER} {token_info.symbol}"
+                            )
+                        else:
+                            logger.error(
+                                f"{data.get(PARAMETR.NETWORK).get(NETWORK_FIELDS.NAME)} {balance.ETHER} {token_info.symbol}"
+                            )
+                    from_data = random.choice(valid_networks)
+                    to_data = random.choice(param.get(PARAMETR.TO_DATA))
+                    acc = Account(
+                        private_key=wallet, network=from_data.get(PARAMETR.NETWORK)
                     )
-                )
-                if allow_transaction:
-                    database.append(
-                        {
-                            "private_key": wallet,
-                            "network": from_data.get(PARAMETR.NETWORK),
-                            "dex": random.choice(to_data.get(PARAMETR.DEXS)),
-                            "type_bridge": param.get(PARAMETR.TYPE_TRANSACTION),
-                            "value": param.get(PARAMETR.VALUE),
-                            "from_token": from_data.get(PARAMETR.FROM_TOKEN),
-                            "min_balance": param.get(PARAMETR.MIN_BALANCE),
-                            "to_network": to_data.get(PARAMETR.NETWORK),
-                            "to_token": to_data.get(PARAMETR.TO_TOKEN),
-                        }
-                    )
-                    logger.success(
-                        f"{acc.address} ({round(balance.ETHER,3)} {token_info.symbol}) ({from_data.get(PARAMETR.NETWORK)[NETWORK_FIELDS.NAME]}) add to DB"
-                    )
-                else:
-                    logger.error(
-                        f"{acc.address} ({round(balance.ETHER,3)} {token_info.symbol}) ({param.get(PARAMETR.NETWORK)[NETWORK_FIELDS.NAME]}) don't add to DB"
-                    )
+
+                    if allow_transaction:
+                        database.append(
+                            {
+                                "private_key": wallet,
+                                "network": from_data.get(PARAMETR.NETWORK),
+                                "dex": random.choice(to_data.get(PARAMETR.DEXS)),
+                                "type_bridge": param.get(PARAMETR.TYPE_TRANSACTION),
+                                "value": param.get(PARAMETR.VALUE),
+                                "from_token": from_data.get(PARAMETR.FROM_TOKEN),
+                                "min_balance": param.get(PARAMETR.MIN_BALANCE),
+                                "to_network": to_data.get(PARAMETR.NETWORK),
+                                "to_token": to_data.get(PARAMETR.TO_TOKEN),
+                            }
+                        )
+                        logger.success(
+                            f"{acc.address} ({round(balance.ETHER,3)} {token_info.symbol}) ({from_data.get(PARAMETR.NETWORK)[NETWORK_FIELDS.NAME]}) add to DB"
+                        )
+                    else:
+                        logger.error(
+                            f"{acc.address} ({round(balance.ETHER,3)} {token_info.symbol}) ({param.get(PARAMETR.NETWORK)[NETWORK_FIELDS.NAME]}) don't add to DB"
+                        )
+                    logger.info("-" * 5)
+                except Exception as error:
+                    logger.error(f"WALLET {address} WITHOUT TRANSACTION")
+                    # logger.error(error)
+                    logger.info("-" * 5)
+                    continue
         return database
 
     @staticmethod
