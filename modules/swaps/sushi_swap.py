@@ -52,7 +52,7 @@ class SushiSwap(Web3Swapper):
     ) -> Token_Amount:
         try:
             amounts_out = await self.contract.functions.getAmountsOut(
-                amountIn.WEI,
+                amountIn.wei,
                 [
                     from_token.address,
                     to_token.address,
@@ -101,21 +101,21 @@ class SushiSwap(Web3Swapper):
             data = await Web3Client.get_data(
                 contract=self.contract,
                 function_of_contract="swapExactETHForTokens",
-                args=(amount_in.WEI, path, to, deadline),
+                args=(amount_in.wei, path, to, deadline),
             )
 
         elif await Token_Info.is_native_token(network=self.acc.network, token=to_token):
             data = await Web3Client.get_data(
                 contract=self.contract,
                 function_of_contract="swapExactTokensForETH",
-                args=(amount_out.WEI, amount_in.WEI, path, to, deadline),
+                args=(amount_out.wei, amount_in.wei, path, to, deadline),
             )
 
         else:
             data = await Web3Client.get_data(
                 contract=self.contract,
                 function_of_contract="swapExactTokensForTokens",
-                args=(amount_out.WEI, amount_in.WEI, path, to, deadline),
+                args=(amount_out.wei, amount_in.wei, path, to, deadline),
             )
 
         if data is None:

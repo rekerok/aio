@@ -47,7 +47,7 @@ class Zerox(Web3Swapper):
         params = {
             "sellToken": from_token.address,
             "buyToken": to_token.address,
-            "sellAmount": amount_to_send.WEI,
+            "sellAmount": amount_to_send.wei,
         }
 
         if settings.USE_REF:

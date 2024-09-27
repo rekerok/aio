@@ -56,7 +56,7 @@ class InchSwap(Web3Swapper):
         params = {
             "src": from_token.address,
             "dst": to_token.address,
-            "amount": amount.WEI,
+            "amount": amount.wei,
             "from": self.acc.address,
             "slippage": self.slippage,
         }

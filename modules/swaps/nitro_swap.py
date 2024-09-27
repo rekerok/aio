@@ -42,7 +42,7 @@ class NitroSwap(Web3Swapper):
     ):
         url = config.NITRO.QUOTE
         params = {
-            "amount": str(amount_to_send.WEI),
+            "amount": str(amount_to_send.wei),
             "fromTokenAddress": str(from_token.address),
             "fromTokenChainId": str(from_chain_id),
             "toTokenAddress": str(to_token.address),

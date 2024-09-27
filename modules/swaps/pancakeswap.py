@@ -145,7 +145,7 @@ class PancakeSwap(Web3Swapper):
         try:
             min_amount_out, _, _, _ = (
                 await self.contract_quoter.functions.quoteExactInput(
-                    path, amount_to_send.WEI
+                    path, amount_to_send.wei
                 ).call()
             )
             return int(min_amount_out - (min_amount_out * 0.1))
@@ -187,8 +187,8 @@ class PancakeSwap(Web3Swapper):
                 (
                     path,
                     recipient,
-                    amount_to_send.WEI,
-                    amount_in.WEI,
+                    amount_to_send.wei,
+                    amount_in.wei,
                 )
             ],
         )
@@ -217,7 +217,7 @@ class PancakeSwap(Web3Swapper):
             data_unwrup = await Web3Client.get_data(
                 contract=self.contract_router,
                 function_of_contract="unwrapWETH9",
-                args=[amount_in.WEI, self.acc.address],
+                args=[amount_in.wei, self.acc.address],
             )
             data_multicall = await Web3Client.get_data(
                 contract=self.contract_router,

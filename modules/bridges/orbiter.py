@@ -101,21 +101,21 @@ class Orbiter(Web3Bridger):
         commission = Token_Amount(
             amount=float(router["withholdingFee"]), decimals=from_token.decimals
         )
-        logger.info(f"FEE {commission.ETHER} {from_token.symbol}")
+        logger.info(f"FEE {commission.ether} {from_token.symbol}")
         code_chain = await self._get_chainId_orbiter(to_chain_id=to_chain_id)
-        if float(router["minAmt"]) > amount_to_send.ETHER:
+        if float(router["minAmt"]) > amount_to_send.ether:
             logger.error(
-                f"AMOUNT ERROR MIN_AMOUNT {float(router['minAmt'])} > VALUE {amount_to_send.ETHER}"
+                f"AMOUNT ERROR MIN_AMOUNT {float(router['minAmt'])} > VALUE {amount_to_send.ether}"
             )
             return RESULT_TRANSACTION.FAIL
         balance = await self.acc.get_balance(token_address=from_token.address)
-        if commission.ETHER + amount_to_send.ETHER > balance.ETHER:
+        if commission.ether + amount_to_send.ether > balance.ether:
             logger.error(
-                f"AMOUNT ERROR FEE + VALUE {commission.ETHER + amount_to_send.ETHER} > BALANCE {balance.ETHER}"
+                f"AMOUNT ERROR FEE + VALUE {commission.ether + amount_to_send.ether} > BALANCE {balance.ether}"
             )
             return RESULT_TRANSACTION.FAIL
         amount_to_send = Token_Amount(
-            amount=round(amount_to_send.WEI + commission.WEI, -4) + code_chain,
+            amount=round(amount_to_send.wei + commission.wei, -4) + code_chain,
             decimals=from_token.decimals,
             wei=True,
         )

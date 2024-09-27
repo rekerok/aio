@@ -97,7 +97,7 @@ class Account:
             #     token_address=token_address, spender=to_address, amount=amount
             # )
             data = contract.encodeABI(
-                "transfer", args=(self.w3.to_checksum_address(to_address), amount.WEI)
+                "transfer", args=(self.w3.to_checksum_address(to_address), amount.wei)
             )
             return await self.send_transaction(
                 data=data, to_address=token_address, value=0
@@ -144,25 +144,25 @@ class Account:
                 token_address=token_address, owner=self.address, spender=spender
             )
 
-            if allowanced.ETHER > amount.ETHER:
+            if allowanced.ether > amount.ether:
                 logger.info(f"Approve not need")
                 return
             else:
                 logger.info(f"Apptove need")
 
                 value_approove = Token_Amount(
-                    amount=amount.WEI + amount.WEI * random.uniform(0.01, 0.05),
-                    decimals=amount.DECIMAL,
+                    amount=amount.wei + amount.wei * random.uniform(0.01, 0.05),
+                    decimals=amount.decimal,
                     wei=True,
                 )
-                logger.info(f"Make approve for {value_approove.ETHER}")
+                logger.info(f"Make approve for {value_approove.ether}")
                 return await self.send_transaction(
                     to_address=token_address,
                     data=contract.encodeABI(
                         "approve",
                         args=(
                             self.w3.to_checksum_address(spender),
-                            int(value_approove.WEI),
+                            int(value_approove.wei),
                         ),
                     ),
                 )
@@ -173,7 +173,7 @@ class Account:
                     "approve",
                     args=(
                         self.w3.to_checksum_address(spender),
-                        int(amount.WEI),
+                        int(amount.wei),
                     ),
                 ),
             )
@@ -209,7 +209,7 @@ class Account:
             if value is None or value == 0:
                 tx_params["value"] = 0
             else:
-                tx_params["value"] = value.WEI
+                tx_params["value"] = value.wei
             increase_gas = random.uniform(GAS_MULTIPLAY[0], GAS_MULTIPLAY[1])
             logger.info(f"GAS MULTIPLAY IS {increase_gas}")
             if self.network[NETWORK_FIELDS.EIP1559]:
@@ -270,7 +270,7 @@ class Account:
             if value is None or value == 0:
                 tx_params["value"] = 0
             else:
-                tx_params["value"] = value.WEI
+                tx_params["value"] = value.wei
             increase_gas = random.uniform(GAS_MULTIPLAY[0], GAS_MULTIPLAY[1])
             logger.info(f"GAS MULTIPLAY IS {increase_gas}")
             if self.network[NETWORK_FIELDS.EIP1559]:

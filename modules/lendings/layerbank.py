@@ -45,7 +45,7 @@ class Layerbank(Web3Lending):
             function_of_contract="supply",
             args=(
                 eth_utils.address.to_checksum_address(config.LAYERBANK.WETH),
-                amount_to_deposit.WEI,
+                amount_to_deposit.wei,
             ),
         )
         if data is None:
@@ -65,14 +65,14 @@ class Layerbank(Web3Lending):
                 acc=self.acc, token_address=self.weth_token
             )
             balance = await self.acc.get_balance(deposit_token.address)
-            logger.info(f"DEPOSITED {balance.ETHER} {deposit_token.symbol}")
+            logger.info(f"DEPOSITED {balance.ether} {deposit_token.symbol}")
             withdraw_percent = random.uniform(self.value[0], self.value[1])
             logger.info(f"WITHDRAW PERCENT {withdraw_percent}")
             amount_to_withdraw = Token_Amount(
-                amount=balance.ETHER * withdraw_percent / 100
+                amount=balance.ether * withdraw_percent / 100
             )
             logger.info(
-                f"AMOUNT WITHDRAW {amount_to_withdraw.ETHER} {deposit_token.symbol}"
+                f"AMOUNT WITHDRAW {amount_to_withdraw.ether} {deposit_token.symbol}"
             )
 
             data = await self.get_data(
@@ -80,7 +80,7 @@ class Layerbank(Web3Lending):
                 function_of_contract=random.choice(["redeemUnderlying", "redeemToken"]),
                 args=(
                     eth_utils.address.to_checksum_address(config.LAYERBANK.WETH),
-                    amount_to_withdraw.WEI,
+                    amount_to_withdraw.wei,
                 ),
             )
             if data is None:

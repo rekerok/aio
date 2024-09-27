@@ -41,7 +41,7 @@ class L2Pass:
         )
         try:
             fee = await self.contract_l2pass.functions.estimateGasRefuelFee(
-                to_chain_id, amount_to_get.WEI, self.acc.address, False
+                to_chain_id, amount_to_get.wei, self.acc.address, False
             ).call()
             if fee is None:
                 logger.error("FAIL GET GAS")
@@ -55,7 +55,7 @@ class L2Pass:
                 args=(
                     to_chain_id,
                     config.GENERAL.ZERO_ADDRESS,
-                    amount_to_get.WEI,
+                    amount_to_get.wei,
                     self.acc.address,
                 ),
             )
@@ -64,7 +64,7 @@ class L2Pass:
             return RESULT_TRANSACTION.FAIL
         value = Token_Amount(amount=fee[0], wei=True)
         logger.info(
-            f"SEND {value.ETHER} {self.acc.network.get(NETWORK_FIELDS.NATIVE_TOKEN)}"
+            f"SEND {value.ether} {self.acc.network.get(NETWORK_FIELDS.NATIVE_TOKEN)}"
         )
         return await self.acc.send_transaction(
             to_address=self.contract_l2pass.address,

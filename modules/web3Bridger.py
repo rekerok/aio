@@ -68,11 +68,11 @@ class Web3Bridger(Web3Client):
     ):
         percent = random.uniform(self.value[0], self.value[1])
         amount_to_send = Token_Amount(
-            balance.ETHER * percent / 100, decimals=from_token.decimals
+            balance.ether * percent / 100, decimals=from_token.decimals
         )
 
         logger.info(f"PERCENT: {percent} %")
-        logger.info(f"SEND: {amount_to_send.ETHER} {from_token.symbol}")
+        logger.info(f"SEND: {amount_to_send.ether} {from_token.symbol}")
 
         return amount_to_send
 
@@ -86,15 +86,15 @@ class Web3Bridger(Web3Client):
             decimals=from_token.decimals,
         )
         amount_to_send = Token_Amount(
-            amount=balance.ETHER - keep_amount.ETHER, decimals=from_token.decimals
+            amount=balance.ether - keep_amount.ether, decimals=from_token.decimals
         )
 
-        if keep_amount.ETHER > balance.ETHER:
-            logger.error(f"KEEP AMOUNT:  {keep_amount.ETHER} > {balance.ETHER} BALANCE")
+        if keep_amount.ether > balance.ether:
+            logger.error(f"KEEP AMOUNT:  {keep_amount.ether} > {balance.ether} BALANCE")
             return None
 
-        logger.info(f"BALANCE: {balance.ETHER} {from_token.symbol}")
-        logger.info(f"SEND: {amount_to_send.ETHER} {from_token.symbol}")
+        logger.info(f"BALANCE: {balance.ether} {from_token.symbol}")
+        logger.info(f"SEND: {amount_to_send.ether} {from_token.symbol}")
 
         return amount_to_send
 
@@ -108,11 +108,11 @@ class Web3Bridger(Web3Client):
             decimals=from_token.decimals,
         )
 
-        if amount_to_send.ETHER > balance.ETHER:
-            logger.error(f"BALANCE: {balance.ETHER} < {amount_to_send.ETHER} SEND")
+        if amount_to_send.ether > balance.ether:
+            logger.error(f"BALANCE: {balance.ether} < {amount_to_send.ether} SEND")
             return None
 
-        logger.info(f"SEND: {amount_to_send.ETHER} {from_token.symbol}")
+        logger.info(f"SEND: {amount_to_send.ether} {from_token.symbol}")
 
         return amount_to_send
 
@@ -138,8 +138,8 @@ class Web3Bridger(Web3Client):
 
     async def bridge(
         self,
-        from_token: config.TOKEN,
-        to_token: config.TOKEN,
+        from_token: config.Token,
+        to_token: config.Token,
         to_network: config.Network,
     ):
         from_token: Token_Info = await Token_Info.get_info_token(
@@ -161,8 +161,8 @@ class Web3Bridger(Web3Client):
             f"{self.acc.network.get(NETWORK_FIELDS.NAME)} ({from_token.symbol}) -> {to_network} ({to_token.symbol})"
         )
         logger.info(f"DEX: {self.NAME} ")
-        if balance.ETHER < self.min_balance:
-            logger.error(f"Balance {balance.ETHER} < {self.min_balance}")
+        if balance.ether < self.min_balance:
+            logger.error(f"Balance {balance.ether} < {self.min_balance}")
             return RESULT_TRANSACTION.FAIL
 
         func_bridge = await self._choice_type_transaction()
@@ -187,63 +187,65 @@ class Web3Bridger(Web3Client):
         database = list()
         for param in params:
             for wallet in wallets:
-                address = eth_account.account.Account.from_key(wallet).address
                 try:
-                    valid_networks = []
+                    address = eth_account.account.Account.from_key(wallet).address
                     logger.info(("-" * 5) + " " + address)
                     logger.info(f"MIN = {param.get(PARAMETR.MIN_BALANCE)}")
+                    valid_networks = []
                     for data in param.get(PARAMETR.FROM_DATA):
                         acc = Account(
                             private_key=wallet, network=data.get(PARAMETR.NETWORK)
                         )
-                        allow_transaction, balance, token_info = (
-                            await Web3Client.check_min_balance(
-                                acc=acc,
-                                token=data.get(PARAMETR.FROM_TOKEN),
-                                min_balance=param.get(PARAMETR.MIN_BALANCE),
-                            )
+                        token_info: Token_Info = await Token_Info.get_info_token(
+                            acc=acc, token_address=data[PARAMETR.FROM_TOKEN].address
                         )
-
-                        if allow_transaction:
-                            valid_networks.append(data)
+                        balance = await acc.get_balance(
+                            token_address=data[PARAMETR.FROM_TOKEN].address
+                        )
+                        if balance.ether > param.get(PARAMETR.MIN_BALANCE):
+                            valid_networks.append(
+                                {
+                                    "token_info": token_info,
+                                    "balance": balance,
+                                    "token": data[PARAMETR.FROM_TOKEN],
+                                    "network": data.get(PARAMETR.NETWORK),
+                                }
+                            )
                             logger.success(
-                                f"{data.get(PARAMETR.NETWORK).get(NETWORK_FIELDS.NAME)} {balance.ETHER} {token_info.symbol}"
+                                f"{data.get(PARAMETR.NETWORK).get(NETWORK_FIELDS.NAME)} {balance.ether} {token_info.symbol}"
                             )
                         else:
                             logger.error(
-                                f"{data.get(PARAMETR.NETWORK).get(NETWORK_FIELDS.NAME)} {balance.ETHER} {token_info.symbol}"
+                                f"{data.get(PARAMETR.NETWORK).get(NETWORK_FIELDS.NAME)} {balance.ether} {token_info.symbol}"
                             )
+                    if len(valid_networks) == 0:
+                        logger.error(f"{acc.address} WITHOUT TRANSACTION")
+                        continue
                     from_data = random.choice(valid_networks)
                     to_data = random.choice(param.get(PARAMETR.TO_DATA))
-                    acc = Account(
-                        private_key=wallet, network=from_data.get(PARAMETR.NETWORK)
+                    acc = Account(private_key=wallet, network=from_data.get("network"))
+
+                    database.append(
+                        {
+                            "private_key": wallet,
+                            "network": from_data.get("network"),
+                            "dex": random.choice(to_data.get(PARAMETR.DEXS)),
+                            "type_bridge": param.get(PARAMETR.TYPE_TRANSACTION),
+                            "value": param.get(PARAMETR.VALUE),
+                            "from_token": from_data.get("token"),
+                            "min_balance": param.get(PARAMETR.MIN_BALANCE),
+                            "to_network": to_data.get(PARAMETR.NETWORK),
+                            "to_token": to_data.get(PARAMETR.TO_TOKEN),
+                        }
+                    )
+                    logger.success(
+                        f"{acc.address} ({round(balance.ether,3)} {token_info.symbol}) ({from_data['network'][NETWORK_FIELDS.NAME]}) add to DB"
                     )
 
-                    if allow_transaction:
-                        database.append(
-                            {
-                                "private_key": wallet,
-                                "network": from_data.get(PARAMETR.NETWORK),
-                                "dex": random.choice(to_data.get(PARAMETR.DEXS)),
-                                "type_bridge": param.get(PARAMETR.TYPE_TRANSACTION),
-                                "value": param.get(PARAMETR.VALUE),
-                                "from_token": from_data.get(PARAMETR.FROM_TOKEN),
-                                "min_balance": param.get(PARAMETR.MIN_BALANCE),
-                                "to_network": to_data.get(PARAMETR.NETWORK),
-                                "to_token": to_data.get(PARAMETR.TO_TOKEN),
-                            }
-                        )
-                        logger.success(
-                            f"{acc.address} ({round(balance.ETHER,3)} {token_info.symbol}) ({from_data.get(PARAMETR.NETWORK)[NETWORK_FIELDS.NAME]}) add to DB"
-                        )
-                    else:
-                        logger.error(
-                            f"{acc.address} ({round(balance.ETHER,3)} {token_info.symbol}) ({param.get(PARAMETR.NETWORK)[NETWORK_FIELDS.NAME]}) don't add to DB"
-                        )
                     logger.info("-" * 5)
                 except Exception as error:
-                    logger.error(f"WALLET {address} WITHOUT TRANSACTION")
-                    # logger.error(error)
+                    logger.error(f"{acc.address} WITHOUT TRANSACTION")
+                    logger.error(error)
                     logger.info("-" * 5)
                     continue
         return database
@@ -258,9 +260,7 @@ class Web3Bridger(Web3Client):
             wallets=wallets, params=settings.PARAMS
         )
         random.shuffle(database)
-        random.shuffle(database)
-        random.shuffle(database)
-        random.shuffle(database)
+
         counter = 1
         for data in database:
             logger.warning(f"OPERATION {counter}/{len(database)}")

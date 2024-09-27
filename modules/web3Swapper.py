@@ -35,11 +35,11 @@ class Web3Swapper(Web3Client):
     async def _make_swap_percent(self, from_token: Token_Info, balance: Token_Amount):
         percent = random.uniform(self.value[0], self.value[1])
         amount_to_send = Token_Amount(
-            balance.ETHER * percent / 100, decimals=from_token.decimals
+            balance.ether * percent / 100, decimals=from_token.decimals
         )
 
         logger.info(f"PERCENT: {percent} %")
-        logger.info(f"SEND: {amount_to_send.ETHER} {from_token.symbol}")
+        logger.info(f"SEND: {amount_to_send.ether} {from_token.symbol}")
 
         return amount_to_send
 
@@ -51,15 +51,15 @@ class Web3Swapper(Web3Client):
             decimals=from_token.decimals,
         )
         amount_to_send = Token_Amount(
-            amount=balance.ETHER - keep_amount.ETHER, decimals=from_token.decimals
+            amount=balance.ether - keep_amount.ether, decimals=from_token.decimals
         )
 
-        if keep_amount.ETHER > balance.ETHER:
-            logger.error(f"KEEP AMOUNT:  {keep_amount.ETHER} > {balance.ETHER} BALANCE")
+        if keep_amount.ether > balance.ether:
+            logger.error(f"KEEP AMOUNT:  {keep_amount.ether} > {balance.ether} BALANCE")
             return None
 
-        logger.info(f"BALANCE: {balance.ETHER} {from_token.symbol}")
-        logger.info(f"SEND: {amount_to_send.ETHER} {from_token.symbol}")
+        logger.info(f"BALANCE: {balance.ether} {from_token.symbol}")
+        logger.info(f"SEND: {amount_to_send.ether} {from_token.symbol}")
 
         return amount_to_send
 
@@ -69,26 +69,24 @@ class Web3Swapper(Web3Client):
             decimals=from_token.decimals,
         )
 
-        if amount_to_send.ETHER > balance.ETHER:
-            logger.info(f"BALANCE: {balance.ETHER} < {amount_to_send.ETHER} SEND")
+        if amount_to_send.ether > balance.ether:
+            logger.info(f"BALANCE: {balance.ether} < {amount_to_send.ether} SEND")
             return None
 
-        logger.info(f"SEND: {amount_to_send.ETHER} {from_token.symbol}")
+        logger.info(f"SEND: {amount_to_send.ether} {from_token.symbol}")
 
-        return await amount_to_send
+        return amount_to_send
 
-    async def _choice_type_transaction(
-        self,
-    ):
-        if self.type_transfer == TYPES_OF_TRANSACTION.PERCENT:
-            return self._make_swap_percent
-        elif self.type_transfer == TYPES_OF_TRANSACTION.ALL_BALANCE:
-            return self._make_swap_all_balance
-        else:
-            return self._make_swap_amount
+    async def _choice_type_transaction(self):
+        type_transaction_funcs = {
+            TYPES_OF_TRANSACTION.PERCENT: self._make_swap_percent,
+            TYPES_OF_TRANSACTION.ALL_BALANCE: self._make_swap_all_balance,
+            TYPES_OF_TRANSACTION.AMOUNT: self._make_swap_amount,
+        }
+        return type_transaction_funcs.get(self.type_transfer)
 
     async def swap(
-        self, from_token: config.TOKEN = None, to_token: config.TOKEN = None
+        self, from_token: config.Token = None, to_token: config.Token = None
     ):
         from_token: Token_Info = await Token_Info.get_info_token(
             acc=self.acc, token_address=from_token.address
@@ -105,9 +103,9 @@ class Web3Swapper(Web3Client):
         logger.info(f"DEX: {self.NAME} ")
         logger.info(f"{from_token.symbol} -> {to_token.symbol}")
 
-        if not self.min_balance <= balance.ETHER <= self.max_balance:
+        if not self.min_balance <= balance.ether <= self.max_balance:
             logger.error(
-                f"NOT {self.min_balance} < {balance.ETHER} < {self.max_balance}"
+                f"NOT {self.min_balance} < {balance.ether} < {self.max_balance}"
             )
             return RESULT_TRANSACTION.FAIL
 
@@ -138,17 +136,38 @@ class Web3Swapper(Web3Client):
     async def _create_database(wallets: list[str], params):
         database = list()
         for param in params:
+            logger.info(param.get(PARAMETR.NETWORK).get(NETWORK_FIELDS.NAME))
             for wallet in wallets:
-                to_token = random.choice(param.get(PARAMETR.TO_TOKENS))
-                acc = Account(private_key=wallet, network=param.get(PARAMETR.NETWORK))
-                allow_transaction, balance, token_info = (
-                    await Web3Client.check_min_balance(
-                        acc=acc,
-                        token=param.get(PARAMETR.FROM_TOKEN),
-                        min_balance=param.get(PARAMETR.MIN_BALANCE),
+                try:
+                    acc = Account(
+                        private_key=wallet, network=param.get(PARAMETR.NETWORK)
                     )
-                )
-                if allow_transaction:
+                    logger.info(("-" * 5) + " " + acc.address)
+                    logger.info(f"MIN = {param.get(PARAMETR.MIN_BALANCE)}")
+                    valid_tokens = []
+                    for token in param.get(PARAMETR.FROM_DATA):
+                        token_info: Token_Info = await Token_Info.get_info_token(
+                            acc=acc, token_address=token.address
+                        )
+                        balance = await acc.get_balance(token_address=token.address)
+                        if balance.ether > param.get(PARAMETR.MIN_BALANCE):
+                            valid_tokens.append(
+                                {
+                                    "token_info": token_info,
+                                    "balance": balance,
+                                    "token": token,
+                                }
+                            )
+                            logger.success(f"{balance.ether} {token_info.symbol}")
+                        else:
+                            logger.error(f"{balance.ether} {token_info.symbol}")
+                    logger.info("-" * 5)
+
+                    if len(valid_tokens) == 0:
+                        logger.error(f"{acc.address} WITHOUT TRANSACTION")
+                        continue
+                    from_token = random.choice(valid_tokens)
+                    to_token: config.Token = random.choice(param.get(PARAMETR.TO_DATA))
                     database.append(
                         {
                             "private_key": wallet,
@@ -156,19 +175,20 @@ class Web3Swapper(Web3Client):
                             "dex": random.choice(to_token.get(PARAMETR.DEXS)),
                             "type_swap": param.get(PARAMETR.TYPE_TRANSACTION),
                             "value": param.get(PARAMETR.VALUE),
-                            "from_token": param.get(PARAMETR.FROM_TOKEN),
+                            "from_token": from_token["token"],
+                            "to_token": to_token.get(PARAMETR.TO_TOKEN),
                             "min_balance": param.get(PARAMETR.MIN_BALANCE),
                             "max_balance": param.get(PARAMETR.MAX_BALANCE),
-                            "to_token": to_token.get(PARAMETR.TO_TOKEN),
                         }
                     )
                     logger.success(
-                        f"{acc.address} ({round(balance.ETHER,3)} {token_info.symbol}) ({param.get(PARAMETR.NETWORK)[NETWORK_FIELDS.NAME]}) add to DB"
+                        f"{acc.address} ({round(balance.ether,3)} {token_info.symbol}) ({param.get(PARAMETR.NETWORK)[NETWORK_FIELDS.NAME]}) is added to DB"
                     )
-                else:
-                    logger.error(
-                        f"{acc.address} ({round(balance.ETHER,3)} {token_info.symbol}) ({param.get(PARAMETR.NETWORK)[NETWORK_FIELDS.NAME]}) don't add to DB"
-                    )
+                except Exception as error:
+                    logger.error(f"{acc.address} WITHOUT TRANSACTION")
+                    logger.error(error)
+                    logger.info("-" * 5)
+                    continue
         return database
 
     @staticmethod
@@ -180,9 +200,7 @@ class Web3Swapper(Web3Client):
             wallets=wallets, params=settings.PARAMS
         )
         random.shuffle(database)
-        random.shuffle(database)
-        random.shuffle(database)
-        random.shuffle(database)
+
         counter = 1
         for data in database:
             logger.warning(f"OPERATION {counter}/{len(database)}")

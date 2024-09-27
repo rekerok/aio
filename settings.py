@@ -2,7 +2,7 @@ from config import Network
 from utils.enums import NETWORK_FIELDS
 
 LIMIT_GWEI = 30
-GAS_MULTIPLAY = (1.3, 1.6)
+GAS_MULTIPLAY = (1.1, 1.2)
 COUNT_CHECK_GAS = 1000000
 SLEEP_AFTER_APPROOVE = (50, 70)
 USE_PROXY = False
@@ -141,7 +141,7 @@ class Client_Networks:
         NETWORK_FIELDS.NATIVE_TOKEN: "ETH",
         NETWORK_FIELDS.CHECK_GAS: False,
     }
-    
+
     base_sepolia = {
         NETWORK_FIELDS.NAME: Network.BASE,
         NETWORK_FIELDS.RPCS: [

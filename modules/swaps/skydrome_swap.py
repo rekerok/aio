@@ -48,7 +48,7 @@ class Skydrome(SushiSwap):
     ) -> Token_Amount:
         try:
             amounts_out, swap_type = await self.contract.functions.getAmountOut(
-                amountIn.WEI,
+                amountIn.wei,
                 from_token.address,
                 to_token.address,
             ).call()
@@ -82,7 +82,7 @@ class Skydrome(SushiSwap):
         )  # Сколько токенов получаю
         deadline = int(time.time()) + 10000
         args = (
-            amount_in.WEI,
+            amount_in.wei,
             [[from_token.address, to_token.address, swap_type]],
             self.acc.address,
             deadline,
@@ -98,14 +98,14 @@ class Skydrome(SushiSwap):
             data = await self.get_data(
                 contract=self.contract,
                 function_of_contract="swapExactTokensForETH",
-                args=(amount_to_send.WEI, *args),
+                args=(amount_to_send.wei, *args),
             )
 
         else:
             data = await self.get_data(
                 contract=self.contract,
                 function_of_contract="swapExactTokensForTokens",
-                args=(amount_to_send.WEI, *args),
+                args=(amount_to_send.wei, *args),
             )
         if data is None:
             logger.error("FAIL GET DATA")

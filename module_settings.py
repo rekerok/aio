@@ -147,21 +147,21 @@ class TRANSFERS_SETTINGS:
 
 
 class SWAP_SETTINGS:
-    SLEEP = (50, 50)
-    SLIPPAGE = 5
+    SLEEP = (10, 50)
+    SLIPPAGE = 1
 
     PARAMS = [
         {
-            PARAMETR.NETWORK: Client_Networks.zksync,
+            PARAMETR.NETWORK: Client_Networks.arbitrum,
             PARAMETR.TYPE_TRANSACTION: TYPES_OF_TRANSACTION.PERCENT,
-            PARAMETR.VALUE: (5, 10),
-            PARAMETR.FROM_TOKEN: TOKENS.ZKSYNC.ETH,
+            PARAMETR.VALUE: (1, 2),
+            PARAMETR.FROM_DATA: [TOKENS.ARBITRUM.USDC, TOKENS.ARBITRUM.USDT],
             PARAMETR.MIN_BALANCE: 0,
             PARAMETR.MAX_BALANCE: 1000,
-            PARAMETR.TO_TOKENS: [
+            PARAMETR.TO_DATA: [
                 {
-                    PARAMETR.TO_TOKEN: TOKENS.ZKSYNC.USDC,
-                    PARAMETR.DEXS: [DEX.RANGO_SWAP],
+                    PARAMETR.TO_TOKEN: TOKENS.ARBITRUM.ETH,
+                    PARAMETR.DEXS: [DEX.ODOS, DEX.ONE_INCH],
                 },
             ],
             PARAMETR.WALLETS_FILE: "",

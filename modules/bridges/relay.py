@@ -66,7 +66,7 @@ class Relay(Web3Bridger):
             "user": self.acc.address,
             "originChainId": str(from_chaind_id),
             "destinationChainId": str(to_chain_id),
-            "txs": [{"to": self.acc.address, "value": amount.WEI, "data": "0x"}],
+            "txs": [{"to": self.acc.address, "value": amount.wei, "data": "0x"}],
             "source": "relay.link",
         }
         response = await utils.aiohttp.post_request(url=url, data=params)

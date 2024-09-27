@@ -95,7 +95,7 @@ class RangoSwap(Web3Swapper):
                 "symbol": to_token_info["symbol"],
                 "address": to_token_info["address"],
             },
-            "amount": amount_to_send.ETHER,
+            "amount": amount_to_send.ether,
             "slippage": 5,
             "checkPrerequisites": True,
             "selectedWallets": {blockchain_info["name"]: self.acc.address},

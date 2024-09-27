@@ -107,11 +107,11 @@ class Stargate(Web3Bridger):
             logger.error("DON'T GET FEE LAYERZERO")
             return RESULT_TRANSACTION.FAIL
         logger.info(
-            f"FEE {fee.ETHER} {self.acc.network.get(NETWORK_FIELDS.NATIVE_TOKEN)}"
+            f"FEE {fee.ether} {self.acc.network.get(NETWORK_FIELDS.NATIVE_TOKEN)}"
         )
         min_received_amount = Token_Amount(
-            amount=amount_to_send.ETHER * (1 - self.slippage / 100),
-            decimals=amount_to_send.DECIMAL,
+            amount=amount_to_send.ether * (1 - self.slippage / 100),
+            decimals=amount_to_send.decimal,
         )
         if from_token.symbol == "ETH":
             contract = self.acc.w3.eth.contract(
@@ -124,8 +124,8 @@ class Stargate(Web3Bridger):
                 to_chain_id,
                 self.acc.address,
                 self.acc.address,
-                amount_to_send.WEI,
-                min_received_amount.WEI,
+                amount_to_send.wei,
+                min_received_amount.wei,
             )
             data = await Web3Client.get_data(
                 contract=contract, function_of_contract="swapETH", args=args
@@ -138,8 +138,8 @@ class Stargate(Web3Bridger):
                 from_token=from_token,
                 to_address=contract.address,
                 amount_to_send=Token_Amount(
-                    amount=amount_to_send.WEI + fee.WEI * 1.05,
-                    decimals=amount_to_send.DECIMAL,
+                    amount=amount_to_send.wei + fee.wei * 1.05,
+                    decimals=amount_to_send.decimal,
                     wei=True,
                 ),
             )
@@ -149,8 +149,8 @@ class Stargate(Web3Bridger):
                 from_pool_id,  # source poolId
                 to_pool_id,  # destination poolId
                 self.acc.address,  # refund address. extra gas (if any) is returned to this address
-                amount_to_send.WEI,  # quantity to swap
-                min_received_amount.WEI,  # the min qty you would accept on the destination
+                amount_to_send.wei,  # quantity to swap
+                min_received_amount.wei,  # the min qty you would accept on the destination
                 [
                     0,  # extra gas, if calling smart contract
                     0,  # amount of dust dropped in destination wallet

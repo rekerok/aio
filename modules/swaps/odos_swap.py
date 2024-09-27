@@ -46,7 +46,7 @@ class OdosSwap(Web3Swapper):
         data = {
             "chainId": await self.acc.w3.eth.chain_id,
             "inputTokens": [
-                {"tokenAddress": from_token.address, "amount": str(amount_to_send.WEI)}
+                {"tokenAddress": from_token.address, "amount": str(amount_to_send.wei)}
             ],
             "outputTokens": [{"tokenAddress": to_token.address, "proportion": 1}],
             "userAddr": self.acc.address,

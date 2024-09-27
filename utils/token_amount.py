@@ -6,9 +6,9 @@ class Token_Amount:
         self, amount: Union[float, int], decimals: int = 18, wei: bool = False
     ) -> None:
         if wei:
-            self.WEI = int(amount)
-            self.ETHER = float(amount / pow(10, decimals))
+            self.wei = int(amount)
+            self.ether = float(amount / pow(10, decimals))
         else:
-            self.WEI = int(amount * pow(10, decimals))
-            self.ETHER = float(amount)
-        self.DECIMAL = decimals
+            self.wei = int(amount * pow(10, decimals))
+            self.ether = float(amount)
+        self.decimal = decimals

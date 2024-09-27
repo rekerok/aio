@@ -26,6 +26,7 @@ from .others.okx import OKX
 from .others.deployer import Deployer
 from .others.create_wallets import Create_Wallets
 from .others.dep_networks import dep_to_network
+
 # from .others.esxai import esxai_reedemption
 from .others.approver_mode import warmup_approver_mode
 from .swaps.inch_swap import InchSwap
@@ -47,6 +48,7 @@ from .swaps.arb_swap import ArbSwap
 from .swaps.xy_finance_swap import XY_finance_swap
 from .swaps.rango import RangoSwap
 from .swaps.skydrome_swap import Skydrome
+from .swaps.warmup_swaps import WarmUPSwaps
 from .swaps.spacefi import SpaceFi
 from .lendings.aave import Aave
 from .lendings.basilisk import Basilisk

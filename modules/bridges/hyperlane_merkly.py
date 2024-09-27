@@ -46,7 +46,7 @@ class Hyperlane(Web3Bridger):
         try:
             return Token_Amount(
                 amount=await contract.functions.quoteBridge(
-                    to_chain_id, amount_to_send.WEI
+                    to_chain_id, amount_to_send.wei
                 ).call(),
                 wei=True,
             )
@@ -73,11 +73,11 @@ class Hyperlane(Web3Bridger):
         if fee is None:
             logger.error("DON'T GET FEE")
             return RESULT_TRANSACTION.FAIL
-        logger.info(f"FEE {fee.ETHER} ETH")
+        logger.info(f"FEE {fee.ether} ETH")
         data = await Web3Client.get_data(
             contract=self.contract,
             function_of_contract="bridgeETH",
-            args=(to_chain_id, amount_to_send.WEI),
+            args=(to_chain_id, amount_to_send.wei),
         )
         if data is None:
             logger.error("DON'T GET DATA")
@@ -86,7 +86,7 @@ class Hyperlane(Web3Bridger):
         return await self._send_transaction(
             from_token=from_token,
             to_address=self.contract.address,
-            amount_to_send=Token_Amount(amount=fee.ETHER + amount_to_send.ETHER),
+            amount_to_send=Token_Amount(amount=fee.ether + amount_to_send.ether),
             data=data,
         )
 
@@ -125,6 +125,6 @@ class Hyperlane(Web3Bridger):
                 if fee is None:
                     continue
                 logger.info(
-                    f"{network[NETWORK_FIELDS.NAME]} -> {check_network[NETWORK_FIELDS.NAME]} = {fee.ETHER:.5f} ETH"
+                    f"{network[NETWORK_FIELDS.NAME]} -> {check_network[NETWORK_FIELDS.NAME]} = {fee.ether:.5f} ETH"
                 )
             print()

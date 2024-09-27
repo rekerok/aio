@@ -47,11 +47,11 @@ class Web3Lending(Web3Client):
     ):
         percent = random.uniform(self.value[0], self.value[1])
         amount_to_deposit = Token_Amount(
-            balance.ETHER * percent / 100, decimals=token_to_deposit.decimals
+            balance.ether * percent / 100, decimals=token_to_deposit.decimals
         )
 
         logger.info(f"PERCENT: {percent} %")
-        logger.info(f"DEPOSIT: {amount_to_deposit.ETHER} {token_to_deposit.symbol}")
+        logger.info(f"DEPOSIT: {amount_to_deposit.ether} {token_to_deposit.symbol}")
 
         return await self._perform_deposit(
             amount_to_deposit=amount_to_deposit, token_to_deposit=token_to_deposit
@@ -65,15 +65,15 @@ class Web3Lending(Web3Client):
             decimals=token_to_deposit.decimals,
         )
         amount_to_deposit = Token_Amount(
-            amount=balance.ETHER - keep_amount.ETHER, decimals=token_to_deposit.decimals
+            amount=balance.ether - keep_amount.ether, decimals=token_to_deposit.decimals
         )
 
-        if keep_amount.ETHER > balance.ETHER:
-            logger.error(f"KEEP AMOUNT:  {keep_amount.ETHER} > {balance.ETHER} BALANCE")
+        if keep_amount.ether > balance.ether:
+            logger.error(f"KEEP AMOUNT:  {keep_amount.ether} > {balance.ether} BALANCE")
             return RESULT_TRANSACTION.FAIL
 
         # logger.info(f"BALANCE: {balance.ETHER} {from_token.symbol}")
-        logger.info(f"DEPOSIT: {amount_to_deposit.ETHER} {token_to_deposit.symbol}")
+        logger.info(f"DEPOSIT: {amount_to_deposit.ether} {token_to_deposit.symbol}")
 
         return await self._perform_deposit(
             amount_to_deposit=amount_to_deposit, token_to_deposit=token_to_deposit
@@ -87,11 +87,11 @@ class Web3Lending(Web3Client):
             decimals=token_to_deposit.decimals,
         )
 
-        if amount_to_deposit.ETHER > balance.ETHER:
-            logger.info(f"BALANCE: {balance.ETHER} < {amount_to_deposit.ETHER} SEND")
+        if amount_to_deposit.ether > balance.ether:
+            logger.info(f"BALANCE: {balance.ether} < {amount_to_deposit.ether} SEND")
             return RESULT_TRANSACTION.FAIL
 
-        logger.info(f"DEPOSIT: {amount_to_deposit.ETHER} {token_to_deposit.symbol}")
+        logger.info(f"DEPOSIT: {amount_to_deposit.ether} {token_to_deposit.symbol}")
 
         return await self._perform_deposit(
             amount_to_deposit=amount_to_deposit, token_to_deposit=token_to_deposit
@@ -107,7 +107,7 @@ class Web3Lending(Web3Client):
         else:
             return self._make_deposit_amount
 
-    async def deposit(self, token_to_deposit: config.TOKEN):
+    async def deposit(self, token_to_deposit: config.Token):
         logger.info("DEPOSIT")
         token_to_deposit: Token_Info = await Token_Info.get_info_token(
             acc=self.acc, token_address=token_to_deposit.address
@@ -118,12 +118,12 @@ class Web3Lending(Web3Client):
 
         logger.info(f"WALLET: {self.acc.address}")
         logger.info(f"NETWORK: {self.acc.network.get(NETWORK_FIELDS.NAME)}")
-        logger.info(f"BALANCE: {balance.ETHER} {token_to_deposit.symbol}")
+        logger.info(f"BALANCE: {balance.ether} {token_to_deposit.symbol}")
         logger.info(f"DEX: {self.NAME} ")
 
-        if not self.min_balance <= balance.ETHER <= self.max_balance:
+        if not self.min_balance <= balance.ether <= self.max_balance:
             logger.error(
-                f"NOT {self.min_balance} < {balance.ETHER} < {self.max_balance}"
+                f"NOT {self.min_balance} < {balance.ether} < {self.max_balance}"
             )
             return RESULT_TRANSACTION.FAIL
 
@@ -136,7 +136,7 @@ class Web3Lending(Web3Client):
             balance=balance,
         )
 
-    async def withdraw(self, token_to_withdraw: config.TOKEN):
+    async def withdraw(self, token_to_withdraw: config.Token):
         logger.info("WITHDRAW")
         logger.info(f"DEX: {self.NAME} ")
         logger.info(f"WALLET: {self.acc.address}")

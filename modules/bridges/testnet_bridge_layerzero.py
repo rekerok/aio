@@ -54,8 +54,8 @@ class Testnet_Bridge_Layerzero(Web3Bridger):
             contract=self.contract,
             function_of_contract="swapAndBridge",
             args=(
-                amount_to_send.WEI,
-                int(amount_to_send.WEI * random.uniform(1000, 5000)),
+                amount_to_send.wei,
+                int(amount_to_send.wei * random.uniform(1000, 5000)),
                 161,
                 self.acc.address,
                 self.acc.address,
@@ -67,7 +67,7 @@ class Testnet_Bridge_Layerzero(Web3Bridger):
         )
 
         value_to_send = Token_Amount(
-            amount=amount_to_send.WEI + 5627000000000, wei=True
+            amount=amount_to_send.wei + 5627000000000 * 3, wei=True
         )
 
         return await self._send_transaction(

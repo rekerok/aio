@@ -47,7 +47,7 @@ class OpenoceanSwap(Web3Swapper):
             "chain": chain_id,
             "inTokenAddress": from_token.address,
             "outTokenAddress": to_token.address,
-            "amount": f"{amount.ETHER}",
+            "amount": f"{amount.ether}",
             "gasPrice": str(
                 self.acc.w3.from_wei(int(await self.acc.w3.eth.gas_price * 1.5), "gwei")
             ),

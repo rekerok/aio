@@ -22,7 +22,7 @@ class Transfers:
         value: tuple[Union[int, float]],
         type_transfer: TYPES_OF_TRANSACTION,
         to_address: str = None,
-        token: config.TOKEN = None,
+        token: config.Token = None,
         min_balance: float = 0,
     ) -> None:
         self.acc = Account(private_key=private_key, network=network)
@@ -37,12 +37,12 @@ class Transfers:
     ) -> None:
         percent = random.uniform(self.value[0], self.value[1])
         amount_to_send = Token_Amount(
-            amount=balance.ETHER * percent / 100,
+            amount=balance.ether * percent / 100,
             decimals=token_info.decimals,
         )
         logger.info(f"PERCENT: {percent} %")
-        logger.info(f"BALANCE: {balance.ETHER} {token_info.symbol}")
-        logger.info(f"SEND: {amount_to_send.ETHER} {token_info.symbol}")
+        logger.info(f"BALANCE: {balance.ether} {token_info.symbol}")
+        logger.info(f"SEND: {amount_to_send.ether} {token_info.symbol}")
 
         return await self.acc.transfer(
             to_address=self.to_address,
@@ -57,12 +57,12 @@ class Transfers:
             amount=random.uniform(*self.value), decimals=token_info.decimals
         )
         amount_to_send = Token_Amount(
-            amount=balance.ETHER - kepp_amount.ETHER, decimals=token_info.decimals
+            amount=balance.ether - kepp_amount.ether, decimals=token_info.decimals
         )
-        logger.info(f"BALANCE: {balance.ETHER} {token_info.symbol}")
-        logger.info(f"SEND: {balance.ETHER-kepp_amount.ETHER} {token_info.symbol}")
-        if kepp_amount.ETHER > balance.ETHER:
-            logger.error(f"Keep amount {kepp_amount.ETHER} > {balance.ETHER}")
+        logger.info(f"BALANCE: {balance.ether} {token_info.symbol}")
+        logger.info(f"SEND: {balance.ether-kepp_amount.ether} {token_info.symbol}")
+        if kepp_amount.ether > balance.ether:
+            logger.error(f"Keep amount {kepp_amount.ether} > {balance.ether}")
             return RESULT_TRANSACTION.FAIL
 
         return await self.acc.transfer(
@@ -78,11 +78,11 @@ class Transfers:
         amount_to_send = Token_Amount(
             amount=amount_to_send, decimals=token_info.decimals
         )
-        logger.info(f"BALANCE: {balance.ETHER} {token_info.symbol}")
-        logger.info(f"SEND: {amount_to_send.ETHER} {token_info.symbol}")
+        logger.info(f"BALANCE: {balance.ether} {token_info.symbol}")
+        logger.info(f"SEND: {amount_to_send.ether} {token_info.symbol}")
 
-        if amount_to_send.WEI > balance.WEI:
-            logger.error(f"BALANCE: {balance.ETHER} < {amount_to_send}")
+        if amount_to_send.wei > balance.wei:
+            logger.error(f"BALANCE: {balance.ether} < {amount_to_send}")
             return RESULT_TRANSACTION.FAIL
         return await self.acc.transfer(
             to_address=self.to_address,
@@ -103,8 +103,8 @@ class Transfers:
             logger.info(f"NETWORK: {self.acc.network.get(NETWORK_FIELDS.NAME)}")
             logger.info(f"TOKEN: {token_info.symbol}")
 
-            if balance.ETHER < self.min_balance:
-                logger.error(f"BALANCE: {balance.ETHER} < {self.min_balance}")
+            if balance.ether < self.min_balance:
+                logger.error(f"BALANCE: {balance.ether} < {self.min_balance}")
                 return RESULT_TRANSACTION.FAIL
 
             if self.type_transfer == TYPES_OF_TRANSACTION.PERCENT:
@@ -149,11 +149,11 @@ class Transfers:
                         }
                     )
                     logger.success(
-                        f"{acc.address} ({round(balance.ETHER,3)} {token_info.symbol}) ({param.get(PARAMETR.NETWORK)[NETWORK_FIELDS.NAME]}) add to DB"
+                        f"{acc.address} ({round(balance.ether,3)} {token_info.symbol}) ({param.get(PARAMETR.NETWORK)[NETWORK_FIELDS.NAME]}) add to DB"
                     )
                 else:
                     logger.error(
-                        f"{acc.address} ({round(balance.ETHER,3)} {token_info.symbol}) ({param.get(PARAMETR.NETWORK)[NETWORK_FIELDS.NAME]}) don't add to DB"
+                        f"{acc.address} ({round(balance.ether,3)} {token_info.symbol}) ({param.get(PARAMETR.NETWORK)[NETWORK_FIELDS.NAME]}) don't add to DB"
                     )
         return database
 

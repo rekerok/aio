@@ -26,7 +26,7 @@ class NFT2ME(Web3Nft):
                 amount=await contract.functions.mintPrice().call(), decimals=18, wei=True
             )
             logger.info(f'NAME NFT "{name_nft}"')
-            logger.info(f"PRICE {mint_price.ETHER} ETH")
+            logger.info(f"PRICE {mint_price.ether} ETH")
             data = await self.get_data(contract=contract, function_of_contract="mint")
             if data is None:
                 logger.error("FAIL GET DATA")

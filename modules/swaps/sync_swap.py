@@ -70,7 +70,7 @@ class SyncSwap(Web3Swapper):
     ):
         try:
             reserve = await contract.functions.getAmountOut(
-                token_in.address, amount_in.WEI, sender
+                token_in.address, amount_in.wei, sender
             ).call()
             return reserve
         except Exception as error:
@@ -126,7 +126,7 @@ class SyncSwap(Web3Swapper):
                 "tokenIn": config.GENERAL.ZERO_ADDRESS
                 if from_token.symbol == "ETH"
                 else from_token.address,
-                "amountIn": amount_to_send.WEI,
+                "amountIn": amount_to_send.wei,
             }
         ]
         deadline = int(time.time()) + 1000000
@@ -135,7 +135,7 @@ class SyncSwap(Web3Swapper):
             function_of_contract="swap",
             args=(
                 paths,  # path
-                amount_in.WEI,  # amountOutMin
+                amount_in.wei,  # amountOutMin
                 deadline,  # deadline 30 min
             ),
         )

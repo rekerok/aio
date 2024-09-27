@@ -42,7 +42,7 @@ class Across(Web3Bridger):
         params = {
             "token": from_token.address,
             "destinationChainId": to_chain_id,
-            "amount": amount_to_send.WEI,
+            "amount": amount_to_send.wei,
             "originChainId": from_chain_id,
         }
         response = await utils.aiohttp.get_json_aiohttp(url=url, params=params)
@@ -117,7 +117,7 @@ class Across(Web3Bridger):
             logger.error("DON'T GET LIMITS FOR BRIDGE")
         if not (
             int(limits.get("minDeposit"))
-            <= amount_to_send.WEI
+            <= amount_to_send.wei
             <= int(limits.get("maxDeposit"))
         ):
             logger.error("FAIL LIMITS")
@@ -139,7 +139,7 @@ class Across(Web3Bridger):
         args = [
             self.acc.address,
             from_token.address,
-            amount_to_send.WEI,
+            amount_to_send.wei,
             to_chain_id,
             int(info.get("relayFeePct")),
             int(info.get("timestamp")),

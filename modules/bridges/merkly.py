@@ -55,7 +55,7 @@ class Merkly:
             return RESULT_TRANSACTION.FAIL
         value = Token_Amount(amount=estimate_send_fee[0] * 1.01, wei=True)
         logger.info(
-            f"SEND {value.ETHER} {self.acc.network.get(NETWORK_FIELDS.NATIVE_TOKEN)}"
+            f"SEND {value.ether} {self.acc.network.get(NETWORK_FIELDS.NATIVE_TOKEN)}"
         )
         return await self.acc.send_transaction(
             to_address=self.contract.address,
@@ -78,7 +78,7 @@ class Merkly:
                 [
                     2,
                     int(gas_limit * 1.5),
-                    amount_to_get.WEI,
+                    amount_to_get.wei,
                     address,
                 ],
             )

@@ -24,7 +24,7 @@ class L2pass_NFT(Web3Nft):
                 await contract.functions.mintPrice().call(), wei=True
             )
             logger.info(
-                f"MINT PRICE = {mint_price.ETHER} {self.acc.network.get(NETWORK_FIELDS.NATIVE_TOKEN)}"
+                f"MINT PRICE = {mint_price.ether} {self.acc.network.get(NETWORK_FIELDS.NATIVE_TOKEN)}"
             )
             data = await self.get_data(
                 contract=contract, function_of_contract="mint", args=(1,)

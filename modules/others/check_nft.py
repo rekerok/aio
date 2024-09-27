@@ -33,11 +33,11 @@ class Check_NFT:
                                 continue
                             test.append(
                                 {
-                                    f"{param.get(PARAMETR.NETWORK).get(NETWORK_FIELDS.NAME)}-{nft.get(PARAMETR.NETWORK)}": amount.WEI
+                                    f"{param.get(PARAMETR.NETWORK).get(NETWORK_FIELDS.NAME)}-{nft.get(PARAMETR.NETWORK)}": amount.wei
                                 }
                             )
                             logger.info(
-                                f'NFT "{nft.get(PARAMETR.NAME)}" : {amount.WEI}'
+                                f'NFT "{nft.get(PARAMETR.NAME)}" : {amount.wei}'
                             )
                             break
                         except Exception as e:

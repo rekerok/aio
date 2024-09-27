@@ -45,7 +45,7 @@ class XY_finance_swap(Web3Swapper):
         params = {
             "srcChainId": chain_id,
             "srcQuoteTokenAddress": from_token.address,
-            "srcQuoteTokenAmount": amount_to_send.WEI,
+            "srcQuoteTokenAmount": amount_to_send.wei,
             "dstChainId": chain_id,
             "dstQuoteTokenAddress": to_token.address,
             "slippage": self.slippage,
@@ -83,7 +83,7 @@ class XY_finance_swap(Web3Swapper):
         params = {
             "srcChainId": chain_id,
             "srcQuoteTokenAddress": from_token.address,
-            "srcQuoteTokenAmount": amount_to_send.WEI,
+            "srcQuoteTokenAmount": amount_to_send.wei,
             "dstChainId": chain_id,
             "dstQuoteTokenAddress": to_token.address,
             "slippage": self.slippage,

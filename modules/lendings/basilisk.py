@@ -71,18 +71,18 @@ class Basilisk(Web3Lending):
             min_balance = Token_Amount(
                 amount=self.min_balance,
             )
-            if liquidity_balance.WEI < min_balance.WEI:
-                logger.error(f"DEPOSIT < {min_balance.ETHER}")
+            if liquidity_balance.wei < min_balance.wei:
+                logger.error(f"DEPOSIT < {min_balance.ether}")
                 return RESULT_TRANSACTION.FAIL
         except Exception as error:
             logger.error(error)
             return RESULT_TRANSACTION.FAIL
-        logger.info(f"WITHDRAW {liquidity_balance.ETHER} {token_to_withdraw.symbol}")
+        logger.info(f"WITHDRAW {liquidity_balance.ether} {token_to_withdraw.symbol}")
 
         data = await Web3Client.get_data(
             contract=self.liquidity_contract,
             function_of_contract=random.choice(self.withdraw_fuctions),
-            args=(liquidity_balance.WEI,),
+            args=(liquidity_balance.wei,),
         )
         return await self._send_transaction(
             from_token=token_to_withdraw,

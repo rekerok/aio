@@ -122,7 +122,7 @@ class Rango_Bridge(Web3Bridger):
                 "symbol": to_token_info["symbol"],
                 "address": to_token_info["address"],
             },
-            "amount": amount_to_send.ETHER,
+            "amount": amount_to_send.ether,
             "slippage": self.slippage,
             "checkPrerequisites": True,
             "selectedWallets": {

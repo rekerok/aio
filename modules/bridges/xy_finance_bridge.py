@@ -46,7 +46,7 @@ class XY_finance_bridge(Web3Bridger):
         params = {
             "srcChainId": str(from_chain_id),
             "fromTokenAddress": from_token.address,
-            "amount": str(amount_to_send.WEI),
+            "amount": str(amount_to_send.wei),
             "destChainId": str(to_chain_id),
             "toTokenAddress": to_token.address,
             # "slippage": self.slippage,
@@ -73,7 +73,7 @@ class XY_finance_bridge(Web3Bridger):
         params = {
             "srcChainId": str(from_chain_id),
             "fromTokenAddress": from_token.address,
-            "amount": str(amount_to_send.WEI),
+            "amount": str(amount_to_send.wei),
             "destChainId": str(to_chain_id),
             "toTokenAddress": to_token.address,
             "slippage": str(self.slippage),

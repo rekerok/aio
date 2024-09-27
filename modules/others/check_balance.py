@@ -27,11 +27,11 @@ async def collect_balance(wallet, params):
                 )
                 if not balance_of_wallet is None:
                     logger.success(
-                        f"{wallet} {param.get(PARAMETR.NETWORK).get(NETWORK_FIELDS.NAME)} {balance_of_wallet.ETHER} {token_info.symbol}"
+                        f"{wallet} {param.get(PARAMETR.NETWORK).get(NETWORK_FIELDS.NAME)} {balance_of_wallet.ether} {token_info.symbol}"
                     )
                     balances.append(
                         {
-                            token_info.symbol: str(balance_of_wallet.ETHER).replace(
+                            token_info.symbol: str(balance_of_wallet.ether).replace(
                                 ".", ","
                             )
                         }

@@ -42,7 +42,7 @@ class WoofiSwap(Web3Swapper):
     ):
         try:
             amounts_out = await self.contract.functions.querySwap(
-                fromToken.address, toToken.address, fromAmount.WEI
+                fromToken.address, toToken.address, fromAmount.wei
             ).call()
             return amounts_out
         except Exception as error:
@@ -80,8 +80,8 @@ class WoofiSwap(Web3Swapper):
             args=(
                 from_token.address,  # fromToken
                 to_token.address,  # toToken
-                amount_to_send.WEI,  # fromAmount
-                amount_in.WEI,  # minToAmount
+                amount_to_send.wei,  # fromAmount
+                amount_in.wei,  # minToAmount
                 self.acc.address,  # to
                 self.acc.address,  # rebateTo
             ),

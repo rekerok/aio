@@ -44,7 +44,7 @@ async def warmup_approver_mode(settings):
             decimals=token_info.decimals,
         )
         logger.info(f"wallet: {acc.address}")
-        logger.info(f"approve: {amount.ETHER} {token_info.symbol}")
+        logger.info(f"approve: {amount.ether} {token_info.symbol}")
         result = await acc.approve(
             token_address=token_info.address,
             spender=data["contract"],
