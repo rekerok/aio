@@ -66,13 +66,20 @@ class Testnet_Bridge_Layerzero(Web3Bridger):
             ),
         )
 
-        value_to_send = Token_Amount(
-            amount=amount_to_send.wei + 5627000000000 * 3, wei=True
-        )
-
-        return await self._send_transaction(
-            data=data,
-            from_token=from_token,
-            to_address=self.contract.address,
-            value=value_to_send,
-        )
+        # value_to_send = Token_Amount(
+        #     amount=amount_to_send.wei + 5627000000000 * 3, wei=True
+        # )
+        for i in range(3):
+            fee = Token_Amount(
+                amount=5627000000000 * random.uniform(i + 3, i + 5), wei=True
+            )
+            logger.info(f"FEE = {fee.ether} ETH")
+            value_to_send = Token_Amount(amount=amount_to_send.wei + fee.wei, wei=True)
+            tx_params = await self.acc.prepare_transaction(
+                to_address=self.contract.address, data=data, value=value_to_send
+            )
+            if tx_params == RESULT_TRANSACTION.FAIL:
+                continue
+            tx_hash = await self.acc.sign_transaction(tx_params)
+            return await self.acc.verifi_tx(tx_hash=tx_hash)
+        return RESULT_TRANSACTION.FAIL
