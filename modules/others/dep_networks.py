@@ -1,7 +1,7 @@
 import random
 import eth_account
 from loguru import logger
-from modules.others.okx import OKX
+from modules.others.exchange import OKX
 import utils
 from utils.enums import (
     NETWORK_FIELDS,
@@ -19,9 +19,9 @@ async def dep_to_network(settings):
     random.shuffle(wallets)
 
     okx = OKX(
-        apiKey=settings.OKX.get(PARAMETR.OKX_API_KEY),
-        secret=settings.OKX.get(PARAMETR.OKX_API_SECRET),
-        password=settings.OKX.get(PARAMETR.OKX_PASSWORD),
+        apiKey=settings.OKX.get(PARAMETR.API_KEY),
+        secret=settings.OKX.get(PARAMETR.API_SECRET),
+        password=settings.OKX.get(PARAMETR.PASSWORD),
         attempt=settings.OKX.get(PARAMETR.ATTEMPT),
         check_send=True,
     )
