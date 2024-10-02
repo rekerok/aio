@@ -24,7 +24,7 @@ class WarmUPSwaps:
             balance = await acc.get_balance(
                 token_address=token.get(PARAMETR.TOKEN).address
             )
-            if balance.ETHER > token.get(PARAMETR.MIN_BALANCE):
+            if balance.ether > token.get(PARAMETR.MIN_BALANCE):
                 from_token = token
                 break
         # Выбрать случайный токен "to", отличающийся от "from"
@@ -63,12 +63,12 @@ class WarmUPSwaps:
                 # logger.info("=" * 20)
 
                 balance_in_usd: Token_Amount = Token_Amount(
-                    amount=balance.ETHER * price_token,
+                    amount=balance.ether * price_token,
                     decimals=token_info.decimals,
                 )
                 token.update(
                     {
-                        "price_usd": balance_in_usd.ETHER,
+                        "price_usd": balance_in_usd.ether,
                         "token_info": token_info,
                         "balance": balance,
                     }
@@ -80,7 +80,7 @@ class WarmUPSwaps:
         sorted_data = sorted(tokens, key=lambda x: x["price_usd"], reverse=True)
         for token in sorted_data:
             logger.info(
-                f"{token['balance'].ETHER} {token['token_info'].symbol} = {token['price_usd']} USD"
+                f"{token['balance'].ether} {token['token_info'].symbol} = {token['price_usd']} USD"
             )
         return (sorted_data[0], random.choice(sorted_data[1:]))
 

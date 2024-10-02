@@ -72,7 +72,6 @@ class Web3Lending(Web3Client):
             logger.error(f"KEEP AMOUNT:  {keep_amount.ether} > {balance.ether} BALANCE")
             return RESULT_TRANSACTION.FAIL
 
-        # logger.info(f"BALANCE: {balance.ETHER} {from_token.symbol}")
         logger.info(f"DEPOSIT: {amount_to_deposit.ether} {token_to_deposit.symbol}")
 
         return await self._perform_deposit(

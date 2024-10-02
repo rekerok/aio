@@ -85,7 +85,6 @@ class Account:
     async def transfer(
         self, to_address: str, amount: Token_Amount, token_address: str = None
     ):
-        # logger.info(f"WILL SEND {amount.ETHER} to {to_address}")
         if token_address is None or token_address == "":
             return await self.send_transaction(to_address=to_address, value=amount)
         else:

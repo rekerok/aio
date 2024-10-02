@@ -122,9 +122,9 @@ class Merkly:
 
             fees.update({from_chain.get(NETWORK_FIELDS.NAME): fees_for_network})
         fees = {
-            key: sorted(value, key=lambda x: x["fee"].ETHER)
+            key: sorted(value, key=lambda x: x["fee"].ether)
             for key, value in fees.items()
         }
         for network, list_fees in fees.items():
             for fee in list_fees:
-                logger.info(f"{network} -> {fee['name']} {fee['fee'].ETHER:.10f}")
+                logger.info(f"{network} -> {fee['name']} {fee['fee'].ether:.10f}")
