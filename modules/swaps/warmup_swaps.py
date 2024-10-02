@@ -20,14 +20,22 @@ class WarmUPSwaps:
         random.shuffle(tokens)
         random.shuffle(tokens)
         from_token = None
+        valid_tokens = []
         for token in tokens:
             balance = await acc.get_balance(
                 token_address=token.get(PARAMETR.TOKEN).address
             )
+            token_info = await Token_Info.get_info_token(
+                acc=acc,
+                token_address=token.get(PARAMETR.TOKEN).address,
+            )
             if balance.ether > token.get(PARAMETR.MIN_BALANCE):
-                from_token = token
-                break
+                valid_tokens.append(token)
+                logger.success(f"{balance.ether} {token_info.symbol}")
+            else:
+                logger.error(f"{balance.ether} {token_info.symbol}")
         # Выбрать случайный токен "to", отличающийся от "from"
+        from_token = random.choice(valid_tokens)
         if from_token is None:
             return (None, None)
         to_token = random.choice(
@@ -120,6 +128,7 @@ class WarmUPSwaps:
                 private_key=data.get("private_key"),
                 network=data.get("network"),
             )
+            logger.info(f"WALLET {acc.address}")
             if settings.USE_MAX_BALANCE:
                 pair_tokens = await WarmUPSwaps._get_pair_with_max_for_swap(
                     tokens=data.get("tokens"), acc=acc
