@@ -20,14 +20,22 @@ class WarmUPSwaps:
         random.shuffle(tokens)
         random.shuffle(tokens)
         from_token = None
+        valid_tokens = []
         for token in tokens:
             balance = await acc.get_balance(
                 token_address=token.get(PARAMETR.TOKEN).address
             )
-            if balance.ETHER > token.get(PARAMETR.MIN_BALANCE):
-                from_token = token
-                break
+            token_info = await Token_Info.get_info_token(
+                acc=acc,
+                token_address=token.get(PARAMETR.TOKEN).address,
+            )
+            if balance.ether > token.get(PARAMETR.MIN_BALANCE):
+                valid_tokens.append(token)
+                logger.success(f"{balance.ether} {token_info.symbol}")
+            else:
+                logger.error(f"{balance.ether} {token_info.symbol}")
         # Выбрать случайный токен "to", отличающийся от "from"
+        from_token = random.choice(valid_tokens)
         if from_token is None:
             return (None, None)
         to_token = random.choice(
@@ -63,12 +71,12 @@ class WarmUPSwaps:
                 # logger.info("=" * 20)
 
                 balance_in_usd: Token_Amount = Token_Amount(
-                    amount=balance.ETHER * price_token,
+                    amount=balance.ether * price_token,
                     decimals=token_info.decimals,
                 )
                 token.update(
                     {
-                        "price_usd": balance_in_usd.ETHER,
+                        "price_usd": balance_in_usd.ether,
                         "token_info": token_info,
                         "balance": balance,
                     }
@@ -80,7 +88,7 @@ class WarmUPSwaps:
         sorted_data = sorted(tokens, key=lambda x: x["price_usd"], reverse=True)
         for token in sorted_data:
             logger.info(
-                f"{token['balance'].ETHER} {token['token_info'].symbol} = {token['price_usd']} USD"
+                f"{token['balance'].ether} {token['token_info'].symbol} = {token['price_usd']} USD"
             )
         return (sorted_data[0], random.choice(sorted_data[1:]))
 
@@ -120,6 +128,7 @@ class WarmUPSwaps:
                 private_key=data.get("private_key"),
                 network=data.get("network"),
             )
+            logger.info(f"WALLET {acc.address}")
             if settings.USE_MAX_BALANCE:
                 pair_tokens = await WarmUPSwaps._get_pair_with_max_for_swap(
                     tokens=data.get("tokens"), acc=acc
