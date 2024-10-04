@@ -6,6 +6,7 @@ from utils import TYPES_OF_TRANSACTION, PARAMETR
 
 class EXCHANGES:
     OKX = OKX
+    BINANCE = Binance
 
 
 class DEX:
@@ -81,7 +82,7 @@ class OKX_settings:
     ATTEMPT_WAIT_WITHDRAW = 15
     PROXY: str = ""  # "http://user:pass@ip:port"
 
-    KEYS: list[dict] = [
+    DATA: list[dict] = [
         {
             PARAMETR.TYPE_EXCHANGE: EXCHANGES.OKX,
             PARAMETR.API_KEY: "",
