@@ -12,7 +12,7 @@ def retry_async(attempts: int = 3):
         async def wrapper(*args, **kwargs):
             for attempt in range(attempts):
                 result = await func(*args, **kwargs)
-                if result == RESULT_TRANSACTION.SUCCESS or result:
+                if result is not None:
                     return result
                 logger.warning(f"Retry attempt {attempt + 1} failed.")
             return RESULT_TRANSACTION.FAIL

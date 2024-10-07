@@ -224,7 +224,7 @@ class Account:
             return tx_params
         except Exception as error:
             logger.error(error)
-            None
+            return None
 
     async def sign_transaction(self, tx: dict):
         signed_tx = self.w3.eth.account.sign_transaction(tx, self.private_key)
