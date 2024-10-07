@@ -37,7 +37,7 @@ class Client_Networks:
         NETWORK_FIELDS.EXPLORER: "https://arbiscan.io/",
         NETWORK_FIELDS.EIP1559: True,
         NETWORK_FIELDS.NATIVE_TOKEN: "ETH",
-        NETWORK_FIELDS.CHECK_GAS: True,
+        NETWORK_FIELDS.CHECK_GAS: False,
     }
 
     optimism = {
