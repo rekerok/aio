@@ -45,7 +45,7 @@ class Web3Client:
             data=data,
             value=value,
         )
-        if tx_params is None:
+        if tx_params == RESULT_TRANSACTION.FAIL:
             return RESULT_TRANSACTION.FAIL
         tx_hash = await self.acc.sign_transaction(tx_params)
         return await self.acc.verifi_tx(tx_hash=tx_hash)

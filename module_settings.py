@@ -15,10 +15,8 @@ class DEX:
     PANCAKESWAP = PancakeSwap
     ODOS = OdosSwap
     OPENOCEAN = OpenoceanSwap
-    # ARBSAWP = ArbSwap
-    # SUSHI = SushiSwap
+    SUSHI = SushiSwap
     SYNCSWAP = SyncSwap
-    # WOOFI = WoofiSwap
     ZKSWAP = ZkSwap
     BASESWAP = BaseSwap
     ZEROX = Zerox
@@ -162,14 +160,14 @@ class SWAP_SETTINGS:
         {
             PARAMETR.NETWORK: Client_Networks.arbitrum,
             PARAMETR.TYPE_TRANSACTION: TYPES_OF_TRANSACTION.PERCENT,
-            PARAMETR.VALUE: (1, 2),
-            PARAMETR.FROM_DATA: [TOKENS.ARBITRUM.USDC, TOKENS.ARBITRUM.USDT],
+            PARAMETR.VALUE: (2, 5),
+            PARAMETR.FROM_DATA: [TOKENS.ARBITRUM.ETH],
             PARAMETR.MIN_BALANCE: 0,
             PARAMETR.MAX_BALANCE: 1000,
             PARAMETR.TO_DATA: [
                 {
-                    PARAMETR.TO_TOKEN: TOKENS.ARBITRUM.ETH,
-                    PARAMETR.DEXS: [DEX.ODOS, DEX.ONE_INCH],
+                    PARAMETR.TO_TOKEN: TOKENS.ARBITRUM.USDT,
+                    PARAMETR.DEXS: [DEX.SUSHI],
                 },
             ],
             PARAMETR.WALLETS_FILE: "",
