@@ -182,9 +182,11 @@ class Binance(Exchange):
                             "fromEmail": mail["email"],
                             "asset": balance["asset"],
                             "amount": balance["free"],
+                            "fromAccountType": "SPOT",
+                            "toAccountType": "SPOT",
                             # "timestamp": int(time.time()),
                         }
-                        self.binance.sapiPostManagedSubaccountWithdraw(params=params)
+                        self.binance.sapiPostSubAccountUniversalTransfer(params=params)
                         logger.success(
                             f"WITHDRAW {balance['free']} {balance['asset']} TO MAIN ACCOUNT"
                         )
@@ -222,6 +224,7 @@ class Binance(Exchange):
     async def withdraw(
         self, address: str, currency: str, chain: str, amount: float
     ): ...
+    
     async def create_file_csv(self):
         try:
             with open("files/binance.csv", "w") as file:
@@ -254,9 +257,7 @@ async def withdraw_use_database(settings):
         password=settings.DATA[0][PARAMETR.PASSWORD],
     )
     await exchange.withdraw_from_sub_accs()
-    # balance = await exchange.get_balances()
-    # print(sum([i["amount"] for i in balance]))
-    # await exchange.create_file_csv()
+    await exchange.create_file_csv()
     # await exchange.withdraw(
     #     address="",
     #     currency="USDT",
