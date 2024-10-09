@@ -227,10 +227,14 @@ class Account:
             return None
 
     async def sign_transaction(self, tx: dict):
-        signed_tx = self.w3.eth.account.sign_transaction(tx, self.private_key)
-        raw_tx_hash = await self.w3.eth.send_raw_transaction(signed_tx.rawTransaction)
-        tx_hash = self.w3.to_hex(raw_tx_hash)
-        return tx_hash
+        try:
+            signed_tx = self.w3.eth.account.sign_transaction(tx, self.private_key)
+            raw_tx_hash = await self.w3.eth.send_raw_transaction(signed_tx.rawTransaction)
+            tx_hash = self.w3.to_hex(raw_tx_hash)
+            return tx_hash
+        except Exception as error:
+            logger.error(error)
+            return None
 
     async def verifi_tx(self, tx_hash):
         try:

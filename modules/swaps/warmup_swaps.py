@@ -13,39 +13,43 @@ class WarmUPSwaps:
 
     @staticmethod
     async def _get_random_pair_for_swap(tokens: list, acc: Account):
-        if len(tokens) == 0 or len(tokens) == 1:
-            return (None, None)
-        random.shuffle(tokens)
-        random.shuffle(tokens)
-        random.shuffle(tokens)
-        random.shuffle(tokens)
-        from_token = None
-        valid_tokens = []
-        for token in tokens:
-            balance = await acc.get_balance(
-                token_address=token.get(PARAMETR.TOKEN).address
+        try:
+            if len(tokens) == 0 or len(tokens) == 1:
+                return (None, None)
+            random.shuffle(tokens)
+            random.shuffle(tokens)
+            random.shuffle(tokens)
+            random.shuffle(tokens)
+            from_token = None
+            valid_tokens = []
+            for token in tokens:
+                balance = await acc.get_balance(
+                    token_address=token.get(PARAMETR.TOKEN).address
+                )
+                token_info = await Token_Info.get_info_token(
+                    acc=acc,
+                    token_address=token.get(PARAMETR.TOKEN).address,
+                )
+                if balance.ether > token.get(PARAMETR.MIN_BALANCE):
+                    valid_tokens.append(token)
+                    logger.success(f"{balance.ether} {token_info.symbol}")
+                else:
+                    logger.error(f"{balance.ether} {token_info.symbol}")
+            # Выбрать случайный токен "to", отличающийся от "from"
+            from_token = random.choice(valid_tokens)
+            if from_token is None:
+                return (None, None)
+            to_token = random.choice(
+                [
+                    token
+                    for token in tokens
+                    if token.get(PARAMETR.TOKEN) != from_token.get(PARAMETR.TOKEN)
+                ]
             )
-            token_info = await Token_Info.get_info_token(
-                acc=acc,
-                token_address=token.get(PARAMETR.TOKEN).address,
-            )
-            if balance.ether > token.get(PARAMETR.MIN_BALANCE):
-                valid_tokens.append(token)
-                logger.success(f"{balance.ether} {token_info.symbol}")
-            else:
-                logger.error(f"{balance.ether} {token_info.symbol}")
-        # Выбрать случайный токен "to", отличающийся от "from"
-        from_token = random.choice(valid_tokens)
-        if from_token is None:
+            return (from_token, to_token)
+        except Exception as error:
+            logger.error(error)
             return (None, None)
-        to_token = random.choice(
-            [
-                token
-                for token in tokens
-                if token.get(PARAMETR.TOKEN) != from_token.get(PARAMETR.TOKEN)
-            ]
-        )
-        return (from_token, to_token)
 
     async def _get_pair_with_max_for_swap(tokens: list, acc: Account):
         if len(tokens) == 0 or len(tokens) == 1:
