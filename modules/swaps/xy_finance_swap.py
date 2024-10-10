@@ -104,7 +104,7 @@ class XY_finance_swap(Web3Swapper):
             params=params,
         )
         if response is None or not response["success"]:
-            logger.error(response["errorMsg"])
+            # logger.error(response["errorMsg"])
             return None
         return response
 
