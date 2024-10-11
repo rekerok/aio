@@ -48,6 +48,8 @@ class Web3Client:
         if tx_params == RESULT_TRANSACTION.FAIL:
             return RESULT_TRANSACTION.FAIL
         tx_hash = await self.acc.sign_transaction(tx_params)
+        if tx_hash is None:
+            return RESULT_TRANSACTION.FAIL
         return await self.acc.verifi_tx(tx_hash=tx_hash)
         # return await self.acc.send_transaction(
         #     to_address=eth_utils.address.to_checksum_address(to_address),
