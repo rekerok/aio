@@ -21,6 +21,7 @@ class DEX:
     MUTE = Mute
     SPACEFI = SpaceFi
     ZEBRA = Zebra
+    SYMBIOSIS = Symbiosis
     NITRO_SWAP = NitroSwap
     ACROSS = Across
     STARGATE = Stargate

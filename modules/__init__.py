@@ -49,6 +49,7 @@ from .swaps.rango import RangoSwap
 from .swaps.skydrome_swap import Skydrome
 from .swaps.warmup_swaps import WarmUPSwaps
 from .swaps.spacefi import SpaceFi
+from .swaps.symbiosis import Symbiosis
 from .lendings.aave import Aave
 from .lendings.basilisk import Basilisk
 from .lendings.eralend import Eralend
