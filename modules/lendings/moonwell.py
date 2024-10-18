@@ -72,11 +72,15 @@ class Moonwell(Web3Lending):
             )
             balance = await self.acc.get_balance(deposit_token.address)
             logger.info(f"DEPOSITED {balance.ether} {deposit_token.symbol}")
+            if self.min_balance > balance.ether:
+                logger.error(f"DEPOSIT {balance.ether} < {self.min_balance}")
+                return RESULT_TRANSACTION.FAIL
             withdraw_percent = random.uniform(self.value[0], self.value[1])
             logger.info(f"WITHDRAW PERCENT {withdraw_percent}")
             amount_to_withdraw = Token_Amount(
                 amount=balance.ether * withdraw_percent / 100
             )
+
             logger.info(
                 f"AMOUNT WITHDRAW {amount_to_withdraw.ether} {deposit_token.symbol}"
             )
