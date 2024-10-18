@@ -155,6 +155,89 @@ class OKX(Exchange):
             logger.error(e)
 
 
+class Bitget(Exchange):
+    def __init__(
+        self, apikey: str = None, secret: str = None, password: str = None
+    ) -> None:
+        super().__init__(apikey, secret, password)
+        self.bitget = ccxt.bitget(
+            {
+                "apiKey": self._apikey,
+                "secret": self._secret,
+                "password": self._password,
+                "enableRateLimit": True,
+                "options": {"defaultType": "spot"},
+            }
+        )
+
+    async def convert_usdce_to_usdc(self):
+        pass
+
+    # balances = self.bitget.fetch_balance()["info"]
+
+    # for i in balances:
+    #     try:
+    #         quote = self.bitget.fetch_convert_quote(
+    #             fromCode=i["coin"], toCode="USDC", amount=i["available"]
+    #         )
+    #         pprint.pprint(quote)
+    #     except Exception as error:
+    #         logger.error(error)
+
+    async def withdraw_from_sub_accs(
+        self,
+    ):
+        info = self.bitget.privateSpotGetV2SpotAccountSubaccountAssets()
+        # main_user = self.bitget
+        for asset in info["data"]:
+            for balance in asset["assetsList"]:
+                self.bitget.privateSpotPostV2SpotWalletSubaccountTransfer(
+                    params={
+                        "fromType": "spot",
+                        "toType": "spot",
+                        "amount": balance["available"],
+                        "coin": balance["coin"],
+                        "fromUserId": asset["userId"],
+                        "toUserId": asset["userId"],
+                    }
+                )
+
+    async def get_balances(self):
+        await self.convert_usdce_to_usdc()
+        await self.withdraw_from_sub_accs()
+        try:
+            balances = self.bitget.fetch_balance()["info"]
+
+            data = []
+            for i in balances:
+                price = float(
+                    1
+                    if i["coin"] == "USDT"
+                    else self.bitget.fetch_ticker(f"{i['coin']}/USDT")["last"]
+                )
+                data.append(
+                    {
+                        "symbol": i["coin"],
+                        "balance": float(i["available"]),
+                        "price": price,
+                        "amount": float(i["available"]) * price,
+                    }
+                )
+            return data
+        except Exception as error:
+            logger.error(error)
+            return None
+
+    async def _get_data_network(self, currency: str, chain: str):
+        pass
+
+    async def withdraw(self, address: str, currency: str, chain: str, amount: float):
+        pass
+
+    async def create_file_csv(self):
+        pass
+
+
 class Binance(Exchange):
     def __init__(
         self, apikey: str = None, secret: str = None, password: str = None
@@ -224,7 +307,7 @@ class Binance(Exchange):
     async def withdraw(
         self, address: str, currency: str, chain: str, amount: float
     ): ...
-    
+
     async def create_file_csv(self):
         try:
             with open("files/binance.csv", "w") as file:
@@ -256,8 +339,9 @@ async def withdraw_use_database(settings):
         secret=settings.DATA[0][PARAMETR.API_SECRET],
         password=settings.DATA[0][PARAMETR.PASSWORD],
     )
-    await exchange.withdraw_from_sub_accs()
-    await exchange.create_file_csv()
+    print(await exchange.get_balances())
+    # await exchange.withdraw_from_sub_accs()
+    # await exchange.create_file_csv()
     # await exchange.withdraw(
     #     address="",
     #     currency="USDT",
