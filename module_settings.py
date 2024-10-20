@@ -7,6 +7,7 @@ from utils import TYPES_OF_TRANSACTION, PARAMETR
 class EXCHANGES:
     OKX = OKX
     BINANCE = Binance
+    BITGET = Bitget
 
 
 class DEX:

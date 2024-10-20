@@ -1,4 +1,5 @@
 import csv
+import pprint
 import ccxt
 from loguru import logger
 import time
@@ -188,19 +189,28 @@ class Bitget(Exchange):
         self,
     ):
         info = self.bitget.privateSpotGetV2SpotAccountSubaccountAssets()
-        # main_user = self.bitget
+        main_user = self.bitget.privateSpotGetV2SpotAccountInfo()
         for asset in info["data"]:
             for balance in asset["assetsList"]:
-                self.bitget.privateSpotPostV2SpotWalletSubaccountTransfer(
-                    params={
-                        "fromType": "spot",
-                        "toType": "spot",
-                        "amount": balance["available"],
-                        "coin": balance["coin"],
-                        "fromUserId": asset["userId"],
-                        "toUserId": asset["userId"],
-                    }
-                )
+                try:
+                    self.bitget.privateSpotPostV2SpotWalletSubaccountTransfer(
+                        params={
+                            "fromType": "spot",
+                            "toType": "spot",
+                            "amount": balance["available"],
+                            "coin": balance["coin"],
+                            "fromUserId": asset["userId"],
+                            "toUserId": main_user["data"]["userId"],
+                        }
+                    )
+                    logger.success(
+                        f"TRANSFER {balance['available']} {balance['coin']} TO MAIN ACC"
+                    )
+                except Exception as error:
+                    logger.error(error)
+                    logger.error(
+                        f"ERROR WITHDRAW {balance['available']} {balance['coin']} TO MAIN ACC"
+                    )
 
     async def get_balances(self):
         await self.convert_usdce_to_usdc()
@@ -223,6 +233,9 @@ class Bitget(Exchange):
                         "amount": float(i["available"]) * price,
                     }
                 )
+                logger.info(
+                    f"FIND {i['available']} {i['coin']}\t=\t{round(float(i['available']) * price,2)} USD"
+                )
             return data
         except Exception as error:
             logger.error(error)
@@ -235,7 +248,34 @@ class Bitget(Exchange):
         pass
 
     async def create_file_csv(self):
-        pass
+        data = self.bitget.fetch_currencies()
+        try:
+            with open("files/bitget.csv", "w") as file:
+                writer = csv.writer(file)
+                writer.writerow(
+                    (
+                        "token",
+                        "network",
+                        "fee",
+                        "min",
+                    )
+                )
+                for token, info_token in data.items():
+                    for network, info_network in info_token["networks"].items():
+                        if info_network["active"]:
+                            fee = info_network["fee"]
+                            min_output = info_network["limits"]["min"]
+                            writer.writerow(
+                                (
+                                    token["coin"],
+                                    network["id"],
+                                    fee,
+                                    min_output,
+                                )
+                            )
+            logger.success("CREATE bitget.csv")
+        except Exception as e:
+            logger.error(e)
 
 
 class Binance(Exchange):
@@ -339,7 +379,8 @@ async def withdraw_use_database(settings):
         secret=settings.DATA[0][PARAMETR.API_SECRET],
         password=settings.DATA[0][PARAMETR.PASSWORD],
     )
-    print(await exchange.get_balances())
+    print(await exchange.create_file_csv())
+    # print(await exchange.get_balances())
     # await exchange.withdraw_from_sub_accs()
     # await exchange.create_file_csv()
     # await exchange.withdraw(
