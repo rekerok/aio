@@ -55,7 +55,7 @@ async def dep_to_network(settings):
                 != to_withdraw[PARAMETR.NETWORK][NETWORK_FIELDS.NAME]
             ]
             dep_to = random.choice(remaining_elements)
-        dex_class = random.choice(to_withdraw[PARAMETR.DEXS])
+        dex_class = random.choice(to_withdraw[PARAMETR.DEXES])
         dex = dex_class(
             private_key=wallet[0],
             network=to_withdraw[PARAMETR.NETWORK],

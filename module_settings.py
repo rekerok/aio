@@ -169,7 +169,7 @@ class SWAP_SETTINGS:
             PARAMETR.TO_DATA: [
                 {
                     PARAMETR.TO_TOKEN: TOKENS.ARBITRUM.USDT,
-                    PARAMETR.DEXS: [DEX.SUSHI],
+                    PARAMETR.DEXES: [DEX.ODOS],
                 },
             ],
             PARAMETR.WALLETS_FILE: "",
@@ -214,7 +214,7 @@ class BRIDGE_SETTINGS:
                 {
                     PARAMETR.NETWORK: Network.SEPOLIA,
                     PARAMETR.TO_TOKEN: TOKENS.SEPOLIA.ETH,
-                    PARAMETR.DEXS: [DEX.TESTNET_BRIDGE_LAYERZERO],
+                    PARAMETR.DEXES: [DEX.TESTNET_BRIDGE_LAYERZERO],
                 },
             ],
             PARAMETR.WALLETS_FILE: "",
@@ -256,7 +256,7 @@ class DEP_TO_NETWORK_SETTINGS:
             {
                 PARAMETR.TOKEN: TOKENS.BASE.ETH,
                 PARAMETR.NETWORK: Client_Networks.base,
-                PARAMETR.DEXS: [
+                PARAMETR.DEXES: [
                     DEX.STARGATE,
                 ],
             },
@@ -362,7 +362,7 @@ class WARMUPSWAPS_SETTINGS:
         {
             PARAMETR.NETWORK: Client_Networks.zksync,
             PARAMETR.COUNT_TRANSACTION: (2, 4),
-            PARAMETR.DEXS: [DEX.XY_FINANCE_SWAP, DEX.ODOS, DEX.ZKSWAP],
+            PARAMETR.DEXES: [DEX.XY_FINANCE_SWAP, DEX.ODOS, DEX.ZKSWAP],
             PARAMETR.TOKENS: [
                 {
                     PARAMETR.TOKEN: TOKENS.ZKSYNC.USDT,
@@ -386,7 +386,7 @@ class WARMUPSWAPS_SETTINGS:
         },
         {
             PARAMETR.NETWORK: Client_Networks.base,
-            PARAMETR.DEXS: [
+            PARAMETR.DEXES: [
                 DEX.ODOS,
                 # DEX.XY_FINANCE_SWAP,
                 DEX.ZEROX,
@@ -680,7 +680,7 @@ class MULTITASKS_SETTINGS:
                         PARAMETR.TO_TOKENS: [
                             {
                                 PARAMETR.TO_TOKEN: TOKENS.ZKSYNC.USDC,
-                                PARAMETR.DEXS: [
+                                PARAMETR.DEXES: [
                                     DEX.ODOS,
                                     DEX.IZUMI,
                                     DEX.SPACEFI,
@@ -690,7 +690,7 @@ class MULTITASKS_SETTINGS:
                             },
                             {
                                 PARAMETR.TO_TOKEN: TOKENS.ZKSYNC.USDT,
-                                PARAMETR.DEXS: [
+                                PARAMETR.DEXES: [
                                     DEX.ODOS,
                                     DEX.IZUMI,
                                     DEX.SPACEFI,
@@ -720,7 +720,7 @@ class MULTITASKS_SETTINGS:
                         PARAMETR.TO_TOKENS: [
                             {
                                 PARAMETR.TO_TOKEN: TOKENS.ZKSYNC.USDT,
-                                PARAMETR.DEXS: [
+                                PARAMETR.DEXES: [
                                     DEX.ODOS,
                                     DEX.IZUMI,
                                     DEX.SPACEFI,
@@ -742,7 +742,7 @@ class MULTITASKS_SETTINGS:
                         PARAMETR.TO_TOKENS: [
                             {
                                 PARAMETR.TO_TOKEN: TOKENS.ZKSYNC.USDC,
-                                PARAMETR.DEXS: [
+                                PARAMETR.DEXES: [
                                     DEX.ODOS,
                                     DEX.IZUMI,
                                     DEX.SPACEFI,
@@ -771,7 +771,7 @@ class MULTITASKS_SETTINGS:
                         PARAMETR.TO_TOKENS: [
                             {
                                 PARAMETR.TO_TOKEN: TOKENS.ZKSYNC.ETH,
-                                PARAMETR.DEXS: [
+                                PARAMETR.DEXES: [
                                     DEX.ODOS,
                                     DEX.IZUMI,
                                     DEX.SPACEFI,
@@ -793,7 +793,7 @@ class MULTITASKS_SETTINGS:
                         PARAMETR.TO_TOKENS: [
                             {
                                 PARAMETR.TO_TOKEN: TOKENS.ZKSYNC.ETH,
-                                PARAMETR.DEXS: [
+                                PARAMETR.DEXES: [
                                     DEX.ODOS,
                                     DEX.IZUMI,
                                     DEX.SPACEFI,

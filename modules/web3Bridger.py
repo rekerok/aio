@@ -229,7 +229,7 @@ class Web3Bridger(Web3Client):
                         {
                             "private_key": wallet,
                             "network": from_data.get("network"),
-                            "dex": random.choice(to_data.get(PARAMETR.DEXS)),
+                            "dex": random.choice(to_data.get(PARAMETR.DEXES)),
                             "type_bridge": param.get(PARAMETR.TYPE_TRANSACTION),
                             "value": param.get(PARAMETR.VALUE),
                             "from_token": from_data.get("token"),

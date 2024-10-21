@@ -172,7 +172,7 @@ class Web3Swapper(Web3Client):
                         {
                             "private_key": wallet,
                             "network": param.get(PARAMETR.NETWORK),
-                            "dex": random.choice(to_token.get(PARAMETR.DEXS)),
+                            "dex": random.choice(to_token.get(PARAMETR.DEXES)),
                             "type_swap": param.get(PARAMETR.TYPE_TRANSACTION),
                             "value": param.get(PARAMETR.VALUE),
                             "from_token": from_token["token"],
@@ -218,6 +218,7 @@ class Web3Swapper(Web3Client):
                 from_token=data.get("from_token"),
                 to_token=data.get("to_token"),
             )
+
             if result == RESULT_TRANSACTION.SUCCESS:
                 await utils.time.sleep_view(settings.SLEEP)
             else:

@@ -106,7 +106,7 @@ class WarmUPSwaps:
                         {
                             "private_key": wallet,
                             "network": param.get(PARAMETR.NETWORK),
-                            "dexs": param.get(PARAMETR.DEXS),
+                            "dexs": param.get(PARAMETR.DEXES),
                             "tokens": param.get(PARAMETR.TOKENS),
                         }
                     )

@@ -29,7 +29,8 @@ async def read_file_lines(path: str) -> list[str]:
 
 
 async def get_wallets_recipients(
-    wallets_path: str, recipients_path: str
+    wallets_path: str = "files/wallets.txt",
+    recipients_path: str = "files/recipients.txt",
 ) -> list[tuple]:
     list_wallets = await read_file_lines(wallets_path)
     list_recipients = await read_file_lines(recipients_path)

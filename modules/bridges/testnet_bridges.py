@@ -60,7 +60,7 @@ class Testnet_Bridges(Web3Bridger):
                 abi=config.TESTNET_BRIDGES.PARAMS[config.Network.BASE][PARAMETR.ABI],
             )
             extraData = random.choice(
-                config.TESTNET_BRIDGES.PARAMS[to_chain][PARAMETR.DEXS]
+                config.TESTNET_BRIDGES.PARAMS[to_chain][PARAMETR.DEXES]
             )
             data = await Web3Client.get_data(
                 contract=contract,
