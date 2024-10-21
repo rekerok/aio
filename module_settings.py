@@ -83,7 +83,7 @@ class OKX_settings:
 
     DATA: list[dict] = [
         {
-            PARAMETR.TYPE_EXCHANGE: EXCHANGES.OKX,
+            PARAMETR.TYPE_EXCHANGE: EXCHANGES.BITGET,
             PARAMETR.API_KEY: "",
             PARAMETR.API_SECRET: "",
             PARAMETR.PASSWORD: "",
@@ -92,7 +92,7 @@ class OKX_settings:
 
     PARAMS: list[dict] = [
         {
-            PARAMETR.TOKENS: [TOKENS.ARBITRUM.ETH, TOKENS.OPTIMISM.ETH],
+            PARAMETR.TOKENS: [{PARAMETR.NETWORK: "BASE", PARAMETR.TOKEN: "ETH"}],
             PARAMETR.VALUE: (0.1, 0.1),
             PARAMETR.ROUND: (0, 3),
             PARAMETR.RECIPIENTS_FILE: "",
@@ -811,7 +811,7 @@ class MULTITASKS_SETTINGS:
 
 
 ### NOT CHANGE ###
-async def okx_withdrawer():
+async def exhange_withdrawer():
     await withdraw_use_database(settings=OKX_settings)
 
 

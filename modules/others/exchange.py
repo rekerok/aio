@@ -1,8 +1,7 @@
 import csv
-import pprint
+import time
 import ccxt
 from loguru import logger
-import time
 from utils.enums import PARAMETR
 
 
@@ -171,20 +170,6 @@ class Bitget(Exchange):
             }
         )
 
-    async def convert_usdce_to_usdc(self):
-        pass
-
-    # balances = self.bitget.fetch_balance()["info"]
-
-    # for i in balances:
-    #     try:
-    #         quote = self.bitget.fetch_convert_quote(
-    #             fromCode=i["coin"], toCode="USDC", amount=i["available"]
-    #         )
-    #         pprint.pprint(quote)
-    #     except Exception as error:
-    #         logger.error(error)
-
     async def withdraw_from_sub_accs(
         self,
     ):
@@ -213,7 +198,6 @@ class Bitget(Exchange):
                     )
 
     async def get_balances(self):
-        await self.convert_usdce_to_usdc()
         await self.withdraw_from_sub_accs()
         try:
             balances = self.bitget.fetch_balance()["info"]
@@ -241,11 +225,39 @@ class Bitget(Exchange):
             logger.error(error)
             return None
 
-    async def _get_data_network(self, currency: str, chain: str):
-        pass
+    async def _get_status_withdraw(self, id: str):
+        try:
+            time_now = int(time.time())
+
+            withdraw_data = self.bitget.privateSpotGetSpotV1WalletWithdrawalList(
+                {
+                    "startTime": str(1),
+                    "endTime": str(time_now),
+                    # "orderId": id,
+                }
+            )
+            print(withdraw_data)
+        except Exception as error:
+            logger.error(error)
+            return None
 
     async def withdraw(self, address: str, currency: str, chain: str, amount: float):
-        pass
+        try:
+            await self.withdraw_from_sub_accs()
+            id = self.bitget.withdraw(
+                code=currency,
+                amount=amount,
+                address=address,
+                tag=None,
+                params={"network": chain},
+            )["info"]["data"]["orderId"]
+            print(id)
+            # await self._get_status_withdraw(id=id)
+            logger.success(f"Withdraw {amount} {currency}-{chain} to {address}"),
+            return True
+        except Exception as e:
+            logger.error(e)
+            return False
 
     async def create_file_csv(self):
         data = self.bitget.fetch_currencies()
@@ -264,13 +276,13 @@ class Bitget(Exchange):
                     for network, info_network in info_token["networks"].items():
                         if info_network["active"]:
                             fee = info_network["fee"]
-                            min_output = info_network["limits"]["min"]
+                            min_output = info_network["limits"]["withdraw"]["min"]
                             writer.writerow(
                                 (
-                                    token["coin"],
-                                    network["id"],
-                                    fee,
-                                    min_output,
+                                    info_token["code"],
+                                    info_network["network"],
+                                    f"{format(fee, 'f')} ",
+                                    f"{format(min_output, 'f')}",
                                 )
                             )
             logger.success("CREATE bitget.csv")
