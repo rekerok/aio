@@ -4,6 +4,12 @@ from settings import Client_Networks
 from utils import TYPES_OF_TRANSACTION, PARAMETR
 
 
+class EXCHANGES:
+    OKX = OKX
+    BINANCE = Binance
+    BITGET = Bitget
+
+
 class DEX:
     ONE_INCH = InchSwap
     IZUMI = IzumiSwap
@@ -76,15 +82,18 @@ class OKX_settings:
     ATTEMPT_WAIT_WITHDRAW = 15
     PROXY: str = ""  # "http://user:pass@ip:port"
 
-    KEYS: dict = {
-        PARAMETR.OKX_API_KEY: "",
-        PARAMETR.OKX_API_SECRET: "",
-        PARAMETR.OKX_PASSWORD: "",
-    }
+    DATA: list[dict] = [
+        {
+            PARAMETR.TYPE_EXCHANGE: EXCHANGES.BITGET,
+            PARAMETR.API_KEY: "",
+            PARAMETR.API_SECRET: "",
+            PARAMETR.PASSWORD: "",
+        }
+    ]
 
     PARAMS: list[dict] = [
         {
-            PARAMETR.TOKENS: [TOKENS.ARBITRUM.ETH, TOKENS.OPTIMISM.ETH],
+            PARAMETR.TOKENS: [{PARAMETR.NETWORK: "BASE", PARAMETR.TOKEN: "ETH"}],
             PARAMETR.VALUE: (0.1, 0.1),
             PARAMETR.ROUND: (0, 3),
             PARAMETR.RECIPIENTS_FILE: "",
@@ -233,9 +242,9 @@ class DEP_TO_NETWORK_SETTINGS:
         PARAMETR.BETWEEN_WALLETS: (60 * 10, 60 * 20),
     }
     OKX = {
-        PARAMETR.OKX_API_KEY: "",
-        PARAMETR.OKX_API_SECRET: "",
-        PARAMETR.OKX_PASSWORD: "",
+        PARAMETR.API_KEY: "",
+        PARAMETR.API_SECRET: "",
+        PARAMETR.PASSWORD: "",
         PARAMETR.ATTEMPT: 15,
     }
     CHANGE_NETWORK = (
@@ -803,8 +812,8 @@ class MULTITASKS_SETTINGS:
 
 
 ### NOT CHANGE ###
-async def okx_withdrawer():
-    await OKX.withdraw_use_database(settings=OKX_settings)
+async def exhange_withdrawer():
+    await withdraw_use_database(settings=OKX_settings)
 
 
 async def transfers():

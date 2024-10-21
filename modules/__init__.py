@@ -22,7 +22,7 @@ from .others.check_nft import Check_NFT
 from .others.transfers import Transfers
 from .others.check_balance import check_balances
 from .others.rybyscore import rubyscore
-from .others.okx import OKX
+from .others.exchange import *
 from .others.deployer import Deployer
 from .others.create_wallets import Create_Wallets
 from .others.dep_networks import dep_to_network
