@@ -91,14 +91,14 @@ class OKX_settings:
         }
     ]
 
-    PARAMS: list[dict] = [
-        {
-            PARAMETR.TOKENS: [{PARAMETR.NETWORK: "BASE", PARAMETR.TOKEN: "ETH"}],
-            PARAMETR.VALUE: (0.1, 0.1),
-            PARAMETR.ROUND: (0, 3),
-            PARAMETR.RECIPIENTS_FILE: "",
-        },
-    ]
+    PARAMS: list[dict] = {
+        PARAMETR.TOKENS: [
+            {PARAMETR.NETWORK: "ARBONE", PARAMETR.TOKEN: "ETH"},
+
+        ],
+        PARAMETR.VALUE: (0.00105, 0.00105),
+        PARAMETR.ROUND: (5, 5),
+    }
 
     ######### NOT CHANGE #########
     def __init__(
@@ -816,6 +816,10 @@ async def exhange_withdrawer():
     await withdraw_use_database(settings=OKX_settings)
 
 
+async def exhange_create_csv():
+    await create_file_csv(settings=OKX_settings)
+
+
 async def transfers():
     await Transfers.transfer_use_database(settings=TRANSFERS_SETTINGS)
 
@@ -848,8 +852,8 @@ async def warm_up_swaps():
     await WarmUPSwaps.warmup(settings=WARMUPSWAPS_SETTINGS)
 
 
-# async def warm_up_refuel():
-#     await WarmUpRefuel.warm_up_refuel(settings=REFUEL_SETTINGS)
+async def warm_up_refuel():
+    await WarmUpRefuel.warm_up_refuel(settings=MERKLY_REFUEL_SETTINGS)
 
 
 async def approve_warmup():

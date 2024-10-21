@@ -1,7 +1,9 @@
 import csv
+import random
 import time
 import ccxt
 from loguru import logger
+import utils
 from utils.enums import PARAMETR
 
 
@@ -113,38 +115,40 @@ class OKX(Exchange):
             await self.withdraw_from_sub_accs()
             data_network = await self._get_data_network(currency=currency, chain=chain)
             id = self.okx.withdraw(
-                currency,
-                amount,
-                address,
-                {
-                    "ccy": currency,
-                    "amt": f"{amount}",
+                code=currency,
+                amount=amount,
+                address=address,
+                tag=None,
+                params={
                     "dest": 4,
-                    "toAddr": address,
-                    "fee": currency,
-                    "chain": chain,
-                    "pwd": "-",
+                    "fee": data_network["fee"],
+                    "chain": data_network["id"],
                 },
             )["info"]["wdId"]
             logger.success(f"Withdraw {amount} {currency}-{chain} to {address}"),
+            return True
         except Exception as e:
             logger.error(e)
+            return False
 
     async def create_file_csv(self):
         try:
             with open("files/okx.csv", "w") as file:
                 writer = csv.writer(file)
                 writer.writerow(("token", "network", "fee", "min", "max"))
-                for token, data in self.okx.fetch_currencies().items():
+                currencies = self.okx.fetch_currencies()
+                for token, data in currencies.items():
                     for network, date_network in data["networks"].items():
                         if date_network["active"]:
                             fee = date_network["fee"]
                             min_output = date_network["limits"]["withdraw"]["min"]
                             max_output = date_network["limits"]["withdraw"]["max"]
+                            print(date_network["id"].split("-"))
+                            token, chain = date_network["id"].split("-")
                             writer.writerow(
                                 (
                                     token,
-                                    network,
+                                    chain,
                                     fee,
                                     min_output,
                                     max_output,
@@ -391,13 +395,23 @@ async def withdraw_use_database(settings):
         secret=settings.DATA[0][PARAMETR.API_SECRET],
         password=settings.DATA[0][PARAMETR.PASSWORD],
     )
-    print(await exchange.create_file_csv())
-    # print(await exchange.get_balances())
-    # await exchange.withdraw_from_sub_accs()
-    # await exchange.create_file_csv()
-    # await exchange.withdraw(
-    #     address="",
-    #     currency="USDT",
-    #     chain="ARBONE",
-    #     amount=1,
-    # )
+    recipients = await utils.files.read_file_lines("files/recipients.txt")
+    for recipient in recipients:
+        token = random.choice(settings.PARAMS[PARAMETR.TOKENS])
+        await exchange.withdraw(
+            address=recipient,
+            currency=token[PARAMETR.TOKEN],
+            chain=token[PARAMETR.NETWORK],
+            amount=random.uniform(
+                settings.PARAMS[PARAMETR.VALUE][0], settings.PARAMS[PARAMETR.VALUE][1]
+            ),
+        )
+
+
+async def create_file_csv(settings):
+    exchange = settings.DATA[0][PARAMETR.TYPE_EXCHANGE](
+        apikey=settings.DATA[0][PARAMETR.API_KEY],
+        secret=settings.DATA[0][PARAMETR.API_SECRET],
+        password=settings.DATA[0][PARAMETR.PASSWORD],
+    )
+    await exchange.create_file_csv()
