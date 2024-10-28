@@ -155,7 +155,7 @@ class Account:
                     wei=True,
                 )
                 logger.info(f"Make approve for {value_approove.ether}")
-                return await self.send_transaction(
+                result_approve = await self.send_transaction(
                     to_address=token_address,
                     data=contract.encodeABI(
                         "approve",
@@ -165,6 +165,10 @@ class Account:
                         ),
                     ),
                 )
+                if result_approve == RESULT_TRANSACTION.SUCCESS:
+                    await utils.time.sleep_view(settings.SLEEP_AFTER_APPROOVE)
+                else:
+                    return RESULT_TRANSACTION.FAIL
         else:
             return await self.send_transaction(
                 to_address=token_address,
@@ -229,7 +233,9 @@ class Account:
     async def sign_transaction(self, tx: dict):
         try:
             signed_tx = self.w3.eth.account.sign_transaction(tx, self.private_key)
-            raw_tx_hash = await self.w3.eth.send_raw_transaction(signed_tx.rawTransaction)
+            raw_tx_hash = await self.w3.eth.send_raw_transaction(
+                signed_tx.rawTransaction
+            )
             tx_hash = self.w3.to_hex(raw_tx_hash)
             return tx_hash
         except Exception as error:

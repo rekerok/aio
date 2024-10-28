@@ -2,9 +2,9 @@ from config import Network
 from utils.enums import NETWORK_FIELDS
 
 LIMIT_GWEI = 30
-GAS_MULTIPLAY = (1.1, 1.2)
+GAS_MULTIPLAY = (1.3, 1.9)
 COUNT_CHECK_GAS = 1000000
-SLEEP_AFTER_APPROOVE = (50, 70)
+SLEEP_AFTER_APPROOVE = (60, 150)
 USE_PROXY = False
 
 ### API KEYS ###
@@ -77,7 +77,7 @@ class Client_Networks:
     scroll = {
         NETWORK_FIELDS.NAME: Network.SCROLL,
         NETWORK_FIELDS.RPCS: [
-            "https://rpc.ankr.com/scroll",
+            "https://scroll-mainnet.public.blastapi.io",
         ],
         NETWORK_FIELDS.EXPLORER: "https://scrollscan.com/",
         NETWORK_FIELDS.EIP1559: False,
