@@ -85,11 +85,11 @@ class Moonwell(Web3Lending):
                 f"AMOUNT WITHDRAW {amount_to_withdraw.ether} {deposit_token.symbol}"
             )
 
-            await self.acc.approve(
-                token_address=withdraw_contract.address,
-                spender=withdraw_contract.address,
-                amount=amount_to_withdraw,
-            )
+            # await self.acc.approve(
+            #     token_address=withdraw_contract.address,
+            #     spender=withdraw_contract.address,
+            #     amount=amount_to_withdraw,
+            # )
             data = await self.get_data(
                 contract=withdraw_contract,
                 function_of_contract="redeem",
