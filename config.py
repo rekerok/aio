@@ -188,6 +188,7 @@ class ODOS:
         Network.ZKSYNC: "0x4bBa932E9792A2b917D47830C93a9BC79320E4f7",
         Network.FANTOM: "0xD0c22A5435F4E8E5770C1fAFb5374015FC12F7cD",
         Network.SCROLL: "0xbFe03C9E20a9Fc0b37de01A172F207004935E0b1",
+        Network.LINEA: "0x2d8879046f1559E53eb052E949e9544bCB72f414",
     }
 
 
@@ -836,7 +837,7 @@ class TOKENS:
             exchange_name="ETH",
         )
         WETH = Token(address="0x2C1b868d6596a18e32E61B901E4060C872647b6C")
-        USDT = Token(address="0x2C1b868d6596a18e32E61B901E4060C872647b6C")
+        USDT = Token(address="0xA219439258ca9da29E9Cc4cE5596924745e12B93")
         USDC = Token(address="0x176211869cA2b568f2A7D4EE941E073a821EE1ff")
         DAI = Token(address="0x4AF15ec2A0BD43Db75dd04E62FAA3B8EF36b00d5")
         WBTC = Token(address="0x3aAB2285ddcDdaD8edf438C1bAB47e1a9D05a9b4")
