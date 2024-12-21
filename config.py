@@ -32,6 +32,7 @@ class Network(Enum):
     GNOSIS = auto()
     FANTOM = auto()
     MANTLE = auto()
+    ECLIPSE = auto()
     HARMONY = auto()
     DEXALOT = auto()
     POLYGON = auto()
@@ -126,6 +127,7 @@ class GENERAL:
         Network.ZKSYNC: 324,
         Network.SCROLL: 534352,
         Network.LINEA: 59144,
+        Network.ECLIPSE: 9286185,
         Network.POLYGON: 137,
         Network.AVALANCHE: 43114,
         Network.HOLESKY: 17000,
@@ -617,7 +619,8 @@ class RELAY:
     API_ENDPOINT = "https://api.relay.link/"
     CHAINS = API_ENDPOINT + "chains"
     CONFIG = API_ENDPOINT + "config/v2"
-    BRIDGE_DATA = API_ENDPOINT + "execute/call"
+    QUOTE = API_ENDPOINT + "quote"
+    BRIDGE_DATA = API_ENDPOINT + "execute/bridge"
 
 
 class TESTNET_BRIDGE_LAYERZERO:

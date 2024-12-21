@@ -55,24 +55,72 @@ class Relay(Web3Bridger):
             return None
         return response
 
-    async def get_bridge_data(
+    async def get_quote(
         self,
         from_chaind_id: int,
         to_chain_id: int,
         amount: Token_Amount,
+        recipient: str = None,
     ):
-        url = config.RELAY.BRIDGE_DATA
+        url = config.RELAY.QUOTE
         params = {
-            "user": self.acc.address,
-            "originChainId": str(from_chaind_id),
-            "destinationChainId": str(to_chain_id),
-            "txs": [{"to": self.acc.address, "value": amount.wei, "data": "0x"}],
-            "source": "relay.link",
+            "user": str(self.acc.address),
+            "originChainId": int(from_chaind_id),
+            "destinationChainId": int(to_chain_id),
+            "originCurrency": "0x0000000000000000000000000000000000000000",
+            "destinationCurrency": "11111111111111111111111111111111",
+            "amount": str(int(amount.wei)),
+            "recipient": str(recipient),
+            "tradeType": "EXACT_INPUT",
+            "refferTo": "relay.link/swap",
         }
         response = await utils.aiohttp.post_request(url=url, data=params)
         if response is None:
             return None
         return response
+
+    # async def get_quote(
+    #     self,
+    #     from_chaind_id: int,
+    #     to_chain_id: int,
+    #     amount: Token_Amount,
+    #     recipient: str = None,
+    # ):
+    #     url = config.RELAY.BRIDGE_DATA
+    #     params = {
+    #         "user": str(self.acc.address),
+    #         "originChainId": str(from_chaind_id),
+    #         "destinationChainId": str(to_chain_id),
+    #         "recipient": str(recipient),
+    #         "amount": str(amount.wei),
+    #         "currency": "eth",
+    #         # "source": "relay.link",
+    #     }
+    #     response = await utils.aiohttp.post_request(url=url, data=params)
+    #     if response is None:
+    #         return None
+    #     return response
+    # async def get_bridge_data(
+    #     self,
+    #     from_chaind_id: int,
+    #     to_chain_id: int,
+    #     amount: Token_Amount,
+    #     recipient: str = None,
+    # ):
+    #     url = config.RELAY.BRIDGE_DATA
+    #     params = {
+    #         "user": str(self.acc.address),
+    #         "originChainId": int(from_chaind_id),
+    #         "destinationChainId": int(to_chain_id),
+    #         "currency": "eth",
+    #         "amount": str(amount.wei),
+    #         "recipient": "0xa5F565650890fBA1824Ee0F21EbBbF660a179934",
+    #         "useExactInput": True,  # "source": "relay.link",
+    #     }
+    #     response = await utils.aiohttp.post_request(url=url, data=params)
+    #     if response is None:
+    #         return None
+    #     return response
 
     async def _perform_bridge(
         self,
@@ -80,6 +128,7 @@ class Relay(Web3Bridger):
         from_token: Token_Info,
         to_chain: config.Network,
         to_token: Token_Info = None,
+        recipient: str = None,
     ):
         from_chain_id: int = int(await self.acc.w3.eth.chain_id)
         to_chain_id: int = int(config.GENERAL.CHAIN_IDS.get(to_chain))
@@ -90,14 +139,27 @@ class Relay(Web3Bridger):
         if not (config_transaction["enabled"] and config_transaction is not None):
             logger.error(f"BRIGE NOT ENABLE OR NOT CONFIG")
             return RESULT_TRANSACTION.FAIL
-        bridge_data = await self.get_bridge_data(
-            from_chaind_id=from_chain_id, to_chain_id=to_chain_id, amount=amount_to_send
+        quote = await self.get_quote(
+            from_chaind_id=from_chain_id,
+            to_chain_id=to_chain_id,
+            amount=amount_to_send,
+            recipient=recipient,
         )
-        if bridge_data is None:
-            logger.error(f"NOT BRIDGE DATA")
+        # bridge_data = await self.get_bridge_data(
+        #     from_chaind_id=from_chain_id,
+        #     to_chain_id=to_chain_id,
+        #     amount=amount_to_send,
+        #     recipient=recipient,
+        # )
+        if quote is None:
+            logger.error(f"NOT QUOTE")
             return RESULT_TRANSACTION.FAIL
+        # pprint.pprint(quote)
+        # if bridge_data is None:
+        #     logger.error(f"NOT BRIDGE DATA")
+        #     return RESULT_TRANSACTION.FAIL
         return await self.acc.send_transaction(
-            to_address=bridge_data["steps"][0]["items"][0]["data"]["to"],
-            data=bridge_data["steps"][0]["items"][0]["data"]["data"],
+            to_address=quote["steps"][0]["items"][0]["data"]["to"],
+            data=quote["steps"][0]["items"][0]["data"]["data"],
             value=amount_to_send,
         )

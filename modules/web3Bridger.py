@@ -141,6 +141,7 @@ class Web3Bridger(Web3Client):
         from_token: config.Token,
         to_token: config.Token,
         to_network: config.Network,
+        recipient: str = None,
     ):
         from_token: Token_Info = await Token_Info.get_info_token(
             acc=self.acc, token_address=from_token.address
@@ -180,6 +181,7 @@ class Web3Bridger(Web3Client):
             from_token=from_token,
             to_chain=to_network,
             to_token=to_token,
+            recipient=recipient,
         )
 
     @staticmethod
@@ -188,13 +190,13 @@ class Web3Bridger(Web3Client):
         for param in params:
             for wallet in wallets:
                 try:
-                    address = eth_account.account.Account.from_key(wallet).address
+                    address = eth_account.account.Account.from_key(wallet[0]).address
                     logger.info(("-" * 5) + " " + address)
                     logger.info(f"MIN = {param.get(PARAMETR.MIN_BALANCE)}")
                     valid_networks = []
                     for data in param.get(PARAMETR.FROM_DATA):
                         acc = Account(
-                            private_key=wallet, network=data.get(PARAMETR.NETWORK)
+                            private_key=wallet[0], network=data.get(PARAMETR.NETWORK)
                         )
                         token_info: Token_Info = await Token_Info.get_info_token(
                             acc=acc, token_address=data[PARAMETR.FROM_TOKEN].address
@@ -223,11 +225,14 @@ class Web3Bridger(Web3Client):
                         continue
                     from_data = random.choice(valid_networks)
                     to_data = random.choice(param.get(PARAMETR.TO_DATA))
-                    acc = Account(private_key=wallet, network=from_data.get("network"))
+                    acc = Account(
+                        private_key=wallet[0], network=from_data.get("network")
+                    )
 
                     database.append(
                         {
-                            "private_key": wallet,
+                            "private_key": wallet[0],
+                            "recipient": wallet[1],
                             "network": from_data.get("network"),
                             "dex": random.choice(to_data.get(PARAMETR.DEXES)),
                             "type_bridge": param.get(PARAMETR.TYPE_TRANSACTION),
@@ -253,11 +258,9 @@ class Web3Bridger(Web3Client):
     @staticmethod
     async def swap_use_database(settings, wallets: list[str] = None):
         if wallets is None:
-            wallets = await utils.files.read_file_lines(
-                path="files/wallets.txt",
-            )
+            wallets_recipients = await utils.files.get_wallets_recipients()
         database = await Web3Bridger._create_database(
-            wallets=wallets, params=settings.PARAMS
+            wallets=wallets_recipients, params=settings.PARAMS
         )
         random.shuffle(database)
 
@@ -277,6 +280,7 @@ class Web3Bridger(Web3Client):
                 from_token=data.get("from_token"),
                 to_token=data.get("to_token"),
                 to_network=data.get("to_network"),
+                recipient=data.get("recipient"),
             )
             if result == RESULT_TRANSACTION.SUCCESS:
                 await utils.time.sleep_view(settings.SLEEP)

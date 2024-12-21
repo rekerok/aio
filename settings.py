@@ -51,6 +51,17 @@ class Client_Networks:
         NETWORK_FIELDS.CHECK_GAS: False,
     }
 
+    # eclipse = {
+    #     NETWORK_FIELDS.NAME: Network.ECLIPSE,
+    #     NETWORK_FIELDS.RPCS: [
+    #         "https://mainnetbeta-rpc.eclipse.xyz",
+    #     ],
+    #     NETWORK_FIELDS.EXPLORER: "https://explorer.eclipse.xyz/",
+    #     NETWORK_FIELDS.EIP1559: True,
+    #     NETWORK_FIELDS.NATIVE_TOKEN: "ETH",
+    #     NETWORK_FIELDS.CHECK_GAS: False,
+    # }
+
     base = {
         NETWORK_FIELDS.NAME: Network.BASE,
         NETWORK_FIELDS.RPCS: [
