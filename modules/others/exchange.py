@@ -1,4 +1,5 @@
 import csv
+import pprint
 import random
 import time
 import ccxt
@@ -143,8 +144,17 @@ class OKX(Exchange):
                             fee = date_network["fee"]
                             min_output = date_network["limits"]["withdraw"]["min"]
                             max_output = date_network["limits"]["withdraw"]["max"]
-                            print(date_network["id"].split("-"))
-                            token, chain = date_network["id"].split("-")
+                            data = date_network["id"].split("-")
+                            token, chain = data[0], "-".join(data[1:])
+                            logger.info(
+                                (
+                                    token,
+                                    chain,
+                                    fee,
+                                    min_output,
+                                    max_output,
+                                )
+                            )
                             writer.writerow(
                                 (
                                     token,
@@ -396,16 +406,27 @@ async def withdraw_use_database(settings):
         password=settings.DATA[0][PARAMETR.PASSWORD],
     )
     recipients = await utils.files.read_file_lines("files/recipients.txt")
+    random.shuffle(recipients)
     for recipient in recipients:
         token = random.choice(settings.PARAMS[PARAMETR.TOKENS])
-        await exchange.withdraw(
+        if await exchange.withdraw(
             address=recipient,
             currency=token[PARAMETR.TOKEN],
             chain=token[PARAMETR.NETWORK],
-            amount=random.uniform(
-                settings.PARAMS[PARAMETR.VALUE][0], settings.PARAMS[PARAMETR.VALUE][1]
+            amount=round(
+                random.uniform(
+                    settings.PARAMS[PARAMETR.VALUE][0],
+                    settings.PARAMS[PARAMETR.VALUE][1],
+                ),
+                random.randint(
+                    settings.PARAMS[PARAMETR.ROUND][0],
+                    settings.PARAMS[PARAMETR.ROUND][1],
+                ),
             ),
-        )
+        ):
+            await utils.time.sleep_view(settings.SLEEP)
+        else:
+            await utils.time.sleep_view((5, 7))
 
 
 async def create_file_csv(settings):
