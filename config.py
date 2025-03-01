@@ -28,6 +28,7 @@ class Network(Enum):
     KLAYTN = auto()
     AURORA = auto()
     ZKSYNC = auto()
+    SAHARA = auto()
     SCROLL = auto()
     GNOSIS = auto()
     FANTOM = auto()

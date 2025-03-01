@@ -156,11 +156,22 @@ class Client_Networks:
     optimism_sepolia = {
         NETWORK_FIELDS.NAME: Network.OPTIMISM,
         NETWORK_FIELDS.RPCS: [
-            "https://sepolia.optimism.io	",
+            "https://sepolia.optimism.io",
         ],
         NETWORK_FIELDS.EXPLORER: "https://sepolia-optimism.etherscan.io/",
         NETWORK_FIELDS.EIP1559: True,
         NETWORK_FIELDS.NATIVE_TOKEN: "ETH",
+        NETWORK_FIELDS.CHECK_GAS: False,
+    }
+
+    sahara = {
+        NETWORK_FIELDS.NAME: Network.SAHARA,
+        NETWORK_FIELDS.RPCS: [
+            "https://mainnet.saharalabs.ai",
+        ],
+        NETWORK_FIELDS.EXPLORER: "https://explorer.saharaa.info/",
+        NETWORK_FIELDS.EIP1559: False,
+        NETWORK_FIELDS.NATIVE_TOKEN: "SAHARA",
         NETWORK_FIELDS.CHECK_GAS: False,
     }
 
