@@ -84,7 +84,7 @@ class OKX_settings:
 
     DATA: list[dict] = [
         {
-            PARAMETR.TYPE_EXCHANGE: EXCHANGES.BITGET,
+            PARAMETR.TYPE_EXCHANGE: EXCHANGES.OKX,
             PARAMETR.API_KEY: "",
             PARAMETR.API_SECRET: "",
             PARAMETR.PASSWORD: "",
@@ -93,10 +93,9 @@ class OKX_settings:
 
     PARAMS: list[dict] = {
         PARAMETR.TOKENS: [
-            {PARAMETR.NETWORK: "ARBONE", PARAMETR.TOKEN: "ETH"},
-
+            {PARAMETR.NETWORK: "ARBONE", PARAMETR.TOKEN: "USDT"},
         ],
-        PARAMETR.VALUE: (0.00105, 0.00105),
+        PARAMETR.VALUE: (0.5, 0.5),
         PARAMETR.ROUND: (5, 5),
     }
 
@@ -197,24 +196,20 @@ class BRIDGE_SETTINGS:
 
     PARAMS = [
         {
-            PARAMETR.TYPE_TRANSACTION: TYPES_OF_TRANSACTION.AMOUNT,
-            PARAMETR.VALUE: (0.00001, 0.00001),
+            PARAMETR.TYPE_TRANSACTION: TYPES_OF_TRANSACTION.PERCENT,
+            PARAMETR.VALUE: (5, 10),
             PARAMETR.FROM_DATA: [
-                # {
-                #     PARAMETR.NETWORK: Client_Networks.optimism,
-                #     PARAMETR.FROM_TOKEN: TOKENS.OPTIMISM.ETH,
-                # },
                 {
-                    PARAMETR.NETWORK: Client_Networks.arbitrum,
-                    PARAMETR.FROM_TOKEN: TOKENS.ARBITRUM.ETH,
+                    PARAMETR.NETWORK: Client_Networks.linea,
+                    PARAMETR.FROM_TOKEN: TOKENS.LINEA.ETH,
                 },
             ],
             PARAMETR.MIN_BALANCE: 0,
             PARAMETR.TO_DATA: [
                 {
-                    PARAMETR.NETWORK: Network.SEPOLIA,
-                    PARAMETR.TO_TOKEN: TOKENS.SEPOLIA.ETH,
-                    PARAMETR.DEXES: [DEX.TESTNET_BRIDGE_LAYERZERO],
+                    PARAMETR.NETWORK: Network.ARBITRUM,
+                    PARAMETR.TO_TOKEN: TOKENS.ARBITRUM.ETH,
+                    PARAMETR.DEXES: [DEX.STARGATE],
                 },
             ],
             PARAMETR.WALLETS_FILE: "",
@@ -619,10 +614,6 @@ class CHECK_BALANCES_SETTINGS:
         {
             PARAMETR.NETWORK: Client_Networks.base,
             PARAMETR.TOKENS: [TOKENS.BASE.ETH, TOKENS.BASE.USDbC],
-        },
-        {
-            PARAMETR.NETWORK: Client_Networks.nova,
-            PARAMETR.TOKENS: [TOKENS.NOVA.ETH],
         },
         {
             PARAMETR.NETWORK: Client_Networks.scroll,

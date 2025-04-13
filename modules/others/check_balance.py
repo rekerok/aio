@@ -37,7 +37,9 @@ async def collect_balance(wallet, params):
                         }
                     )
                     break
-                logger.error(f"NOT BALANCE INFO {acc.address}")
+                logger.error(
+                    f"NOT BALANCE INFO {acc.address} {acc.network[NETWORK_FIELDS.NAME]}"
+                )
                 await acc.change_connection()
         balance.append({param.get(PARAMETR.NETWORK).get(NETWORK_FIELDS.NAME): balances})
     return {wallet: balance}

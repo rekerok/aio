@@ -32,7 +32,7 @@ class Client_Networks:
     arbitrum = {
         NETWORK_FIELDS.NAME: Network.ARBITRUM,
         NETWORK_FIELDS.RPCS: [
-            "https://rpc.ankr.com/arbitrum",
+            "https://arbitrum-one.public.blastapi.io",
         ],
         NETWORK_FIELDS.EXPLORER: "https://arbiscan.io/",
         NETWORK_FIELDS.EIP1559: True,
@@ -44,6 +44,7 @@ class Client_Networks:
         NETWORK_FIELDS.NAME: Network.OPTIMISM,
         NETWORK_FIELDS.RPCS: [
             "https://rpc.ankr.com/optimism",
+            "https://optimism.meowrpc.com",
         ],
         NETWORK_FIELDS.EXPLORER: "https://optimistic.etherscan.io/",
         NETWORK_FIELDS.EIP1559: True,
@@ -55,6 +56,7 @@ class Client_Networks:
         NETWORK_FIELDS.NAME: Network.BASE,
         NETWORK_FIELDS.RPCS: [
             "https://rpc.ankr.com/base",
+            "https://base.llamarpc.com",
         ],
         NETWORK_FIELDS.EXPLORER: "https://basescan.org/",
         NETWORK_FIELDS.EIP1559: True,
@@ -78,6 +80,7 @@ class Client_Networks:
         NETWORK_FIELDS.NAME: Network.SCROLL,
         NETWORK_FIELDS.RPCS: [
             "https://scroll-mainnet.public.blastapi.io",
+            "https://rpc.scroll.io",
         ],
         NETWORK_FIELDS.EXPLORER: "https://scrollscan.com/",
         NETWORK_FIELDS.EIP1559: False,
@@ -102,6 +105,7 @@ class Client_Networks:
         NETWORK_FIELDS.RPCS: [
             "https://linea.blockpi.network/v1/rpc/public",
             "https://rpc.linea.build",
+            "https://1rpc.io/linea",
         ],
         NETWORK_FIELDS.EXPLORER: "https://lineascan.build/",
         NETWORK_FIELDS.EIP1559: False,
@@ -113,6 +117,7 @@ class Client_Networks:
         NETWORK_FIELDS.NAME: Network.AVALANCHE,
         NETWORK_FIELDS.RPCS: [
             "https://rpc.ankr.com/avalanche",
+            "wss://0xrpc.io/avax",
         ],
         NETWORK_FIELDS.EXPLORER: "https://snowtrace.io/",
         NETWORK_FIELDS.EIP1559: True,
@@ -163,6 +168,16 @@ class Client_Networks:
         NETWORK_FIELDS.NATIVE_TOKEN: "ETH",
         NETWORK_FIELDS.CHECK_GAS: False,
     }
+    optimism_sepolia = {
+        NETWORK_FIELDS.NAME: Network.OPTIMISM,
+        NETWORK_FIELDS.RPCS: [
+            "https://sepolia.optimism.io",
+        ],
+        NETWORK_FIELDS.EXPLORER: "https://sepolia-optimism.etherscan.io/",
+        NETWORK_FIELDS.EIP1559: True,
+        NETWORK_FIELDS.NATIVE_TOKEN: "ETH",
+        NETWORK_FIELDS.CHECK_GAS: False,
+    }
 
     sahara = {
         NETWORK_FIELDS.NAME: Network.SAHARA,
@@ -174,11 +189,23 @@ class Client_Networks:
         NETWORK_FIELDS.NATIVE_TOKEN: "SAHARA",
         NETWORK_FIELDS.CHECK_GAS: False,
     }
+    
+    t3rn = {
+        NETWORK_FIELDS.NAME: Network.T3RN,
+        NETWORK_FIELDS.RPCS: [
+            "https://brn.rpc.caldera.xyz/http",
+        ],
+        NETWORK_FIELDS.EXPLORER: "https://brn.explorer.caldera.xyz/",
+        NETWORK_FIELDS.EIP1559: False,
+        NETWORK_FIELDS.NATIVE_TOKEN: "BRN",
+        NETWORK_FIELDS.CHECK_GAS: False,
+    }
 
     polygon = {
         NETWORK_FIELDS.NAME: Network.POLYGON,
         NETWORK_FIELDS.RPCS: [
             "https://rpc.ankr.com/polygon",
+            "https://polygon.rpc.subquery.network/public",
         ],
         NETWORK_FIELDS.EXPLORER: "https://polygonscan.com/",
         NETWORK_FIELDS.EIP1559: True,
@@ -201,6 +228,7 @@ class Client_Networks:
         NETWORK_FIELDS.NAME: Network.BSC,
         NETWORK_FIELDS.RPCS: [
             "https://rpc.ankr.com/bsc/",
+            "https://1rpc.io/bnb",
         ],
         NETWORK_FIELDS.EXPLORER: "https://bscscan.com/",
         NETWORK_FIELDS.EIP1559: True,

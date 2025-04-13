@@ -136,7 +136,9 @@ class OKX(Exchange):
         try:
             with open("files/okx.csv", "w") as file:
                 writer = csv.writer(file)
-                writer.writerow(("token", "network", "fee", "min", "max"))
+                writer.writerow(
+                    ("token", "chain", "symbol network", "fee", "min", "max")
+                )
                 currencies = self.okx.fetch_currencies()
                 for token, data in currencies.items():
                     for network, date_network in data["networks"].items():
@@ -150,6 +152,7 @@ class OKX(Exchange):
                                 (
                                     token,
                                     chain,
+                                    network,
                                     fee,
                                     min_output,
                                     max_output,
@@ -159,6 +162,7 @@ class OKX(Exchange):
                                 (
                                     token,
                                     chain,
+                                    network,
                                     fee,
                                     min_output,
                                     max_output,

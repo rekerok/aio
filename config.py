@@ -13,6 +13,7 @@ class Network(Enum):
     NOVA = auto()
     BASE = auto()
     FUSE = auto()
+    T3RN = auto()
     CELO = auto()
     BEAM = auto()
     XPLA = auto()
