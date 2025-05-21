@@ -411,7 +411,9 @@ async def withdraw_use_database(settings):
     )
     recipients = await utils.files.read_file_lines("files/recipients.txt")
     random.shuffle(recipients)
+    count = 0
     for recipient in recipients:
+        logger.info(f"Count {count}/{len(recipients)}") 
         token = random.choice(settings.PARAMS[PARAMETR.TOKENS])
         if await exchange.withdraw(
             address=recipient,
@@ -428,8 +430,10 @@ async def withdraw_use_database(settings):
                 ),
             ),
         ):
+            count += 1
             await utils.time.sleep_view(settings.SLEEP)
         else:
+            count += 1
             await utils.time.sleep_view((5, 7))
 
 
