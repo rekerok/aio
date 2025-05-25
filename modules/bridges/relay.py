@@ -1,10 +1,11 @@
-import pprint
 from loguru import logger
 import config
 from typing import Union
+from modules.account import Account
 from modules.web3Bridger import Web3Bridger
 import utils
 from utils.enums import (
+    NETWORK_FIELDS,
     RESULT_TRANSACTION,
     TYPES_OF_TRANSACTION,
 )
@@ -83,6 +84,12 @@ class Relay(Web3Bridger):
     ):
         from_chain_id: int = int(await self.acc.w3.eth.chain_id)
         to_chain_id: int = int(config.GENERAL.CHAIN_IDS.get(to_chain))
+        to_chain_info = await super()._get_to_network(to_chain=to_chain)
+        if to_chain_id == 1:  ## ETHEREUM
+            if not await super().wait_gas(
+                acc=Account(network=to_chain_info)
+            ):
+                return RESULT_TRANSACTION.FAIL
         # chains = await self.get_networks()
         config_transaction = await self.get_config(
             from_chaind_id=from_chain_id, to_chain_id=to_chain_id

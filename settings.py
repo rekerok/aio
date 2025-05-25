@@ -21,12 +21,13 @@ class Client_Networks:
     ethereum = {
         NETWORK_FIELDS.NAME: Network.ETHEREUM,
         NETWORK_FIELDS.RPCS: [
-            "https://rpc.ankr.com/eth",
+            "https://eth.drpc.org",
         ],
         NETWORK_FIELDS.EXPLORER: "https://etherscan.io/",
         NETWORK_FIELDS.EIP1559: True,
         NETWORK_FIELDS.NATIVE_TOKEN: "ETH",
         NETWORK_FIELDS.CHECK_GAS: True,
+        NETWORK_FIELDS.LIMIT_GAS: 0.00001,
     }
 
     arbitrum = {

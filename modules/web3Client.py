@@ -80,22 +80,11 @@ class Web3Client:
             return False, balance, token_info
 
     @staticmethod
-    async def wait_gas(acc):
+    async def wait_gas(acc, limit_gwei=settings.LIMIT_GWEI):
         if acc.network.get(NETWORK_FIELDS.CHECK_GAS):
-            network_name = acc.network.get(NETWORK_FIELDS.NAME)
-            valid_networks = [
-                config.Network.SCROLL,
-                config.Network.BASE,
-            ]
 
-            if network_name in valid_networks:
-                endpoint_uri = random.choice(acc.network.get(NETWORK_FIELDS.RPCS))
-                limit = acc.network.get(NETWORK_FIELDS.LIMIT_GAS)
-            else:
-                endpoint_uri = random.choice(
-                    settings.Client_Networks.ethereum.get(NETWORK_FIELDS.RPCS)
-                )
-                limit = settings.LIMIT_GWEI
+            endpoint_uri = random.choice(acc.network.get(NETWORK_FIELDS.RPCS))
+            limit = acc.network.get(NETWORK_FIELDS.LIMIT_GAS)
 
             w3 = AsyncWeb3(AsyncHTTPProvider(endpoint_uri=endpoint_uri))
             return await utils.time.wait_gas(w3=w3, LIMIT_GWEI=limit)

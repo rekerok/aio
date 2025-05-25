@@ -61,6 +61,17 @@ class Web3Bridger(Web3Client):
         else:
             return None
 
+    async def _get_to_network(self, to_chain: config.Network) -> Client_Networks:
+        found_variable = None
+        for network_name, network_dict in Client_Networks.__dict__.items():
+            if (
+                isinstance(network_dict, dict)
+                and network_dict.get(NETWORK_FIELDS.NAME) == to_chain
+            ):
+                found_variable = network_name
+                break
+        return getattr(Client_Networks, found_variable)
+    
     async def _make_bridge_percent(
         self,
         from_token: Token_Info,
