@@ -43,6 +43,7 @@ class Network(Enum):
     HOLESKY = auto()
     SEPOLIA = auto()
     HORIZEN = auto()
+    ABSTRACT = auto()
     STARKNET = auto()
     ETHEREUM = auto()
     OPTIMISM = auto()
@@ -843,6 +844,9 @@ class TOKENS:
         USDC = Token(address="0x176211869cA2b568f2A7D4EE941E073a821EE1ff")
         DAI = Token(address="0x4AF15ec2A0BD43Db75dd04E62FAA3B8EF36b00d5")
         WBTC = Token(address="0x3aAB2285ddcDdaD8edf438C1bAB47e1a9D05a9b4")
+
+    class ABSTRACT:
+        ETH = Token(address="")
 
     class SCROLL:
         ETH = Token(address="")

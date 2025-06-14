@@ -41,6 +41,17 @@ class Client_Networks:
         NETWORK_FIELDS.CHECK_GAS: False,
     }
 
+    absract = {
+        NETWORK_FIELDS.NAME: Network.ABSTRACT,
+        NETWORK_FIELDS.RPCS: [
+            "https://api.mainnet.abs.xyz",
+        ],
+        NETWORK_FIELDS.EXPLORER: "https://explorer.mainnet.abs.xyz/",
+        NETWORK_FIELDS.EIP1559: True,
+        NETWORK_FIELDS.NATIVE_TOKEN: "ETH",
+        NETWORK_FIELDS.CHECK_GAS: False,
+    }
+
     optimism = {
         NETWORK_FIELDS.NAME: Network.OPTIMISM,
         NETWORK_FIELDS.RPCS: [
