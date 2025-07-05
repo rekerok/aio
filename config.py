@@ -619,7 +619,7 @@ class NITRO:
 class RELAY:
     API_ENDPOINT = "https://api.relay.link/"
     CHAINS = API_ENDPOINT + "chains"
-    CONFIG = API_ENDPOINT + "config/v2"
+    QUOTE = API_ENDPOINT + "quote"
     BRIDGE_DATA = API_ENDPOINT + "execute/call"
 
 

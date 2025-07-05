@@ -1,3 +1,4 @@
+import pprint
 from loguru import logger
 import config
 from typing import Union
@@ -43,15 +44,20 @@ class Relay(Web3Bridger):
             return None
         return response
 
-    async def get_config(self, from_chaind_id: int, to_chain_id: int):
-        url = config.RELAY.CONFIG
+    async def get_quote(
+        self, from_chaind_id: int, to_chain_id: int, amount: Token_Amount
+    ):
+        url = config.RELAY.QUOTE
         params = {
-            "originChainId": str(from_chaind_id),
-            "destinationChainId": str(to_chain_id),
             "user": self.acc.address,
-            "currency": "eth",
+            "originChainId": from_chaind_id,
+            "destinationChainId": to_chain_id,
+            "originCurrency": config.GENERAL.ZERO_ADDRESS,
+            "destinationCurrency": config.GENERAL.ZERO_ADDRESS,
+            "amount": str(amount.wei),
+            "tradeType": "EXACT_INPUT",
         }
-        response = await utils.aiohttp.get_json_aiohttp(url=url, params=params)
+        response = await utils.aiohttp.post_request(url=url, data=params)
         if response is None:
             return None
         return response
@@ -86,25 +92,25 @@ class Relay(Web3Bridger):
         to_chain_id: int = int(config.GENERAL.CHAIN_IDS.get(to_chain))
         to_chain_info = await super()._get_to_network(to_chain=to_chain)
         if to_chain_id == 1:  ## ETHEREUM
-            if not await super().wait_gas(
-                acc=Account(network=to_chain_info)
-            ):
+            if not await super().wait_gas(acc=Account(network=to_chain_info)):
                 return RESULT_TRANSACTION.FAIL
-        # chains = await self.get_networks()
-        config_transaction = await self.get_config(
-            from_chaind_id=from_chain_id, to_chain_id=to_chain_id
+        config_transaction = await self.get_quote(
+            from_chaind_id=from_chain_id,
+            to_chain_id=to_chain_id,
+            amount=amount_to_send,
         )
-        if not (config_transaction["enabled"] and config_transaction is not None):
+        pprint.pprint(config_transaction)
+        if config_transaction is None:
             logger.error(f"BRIGE NOT ENABLE OR NOT CONFIG")
             return RESULT_TRANSACTION.FAIL
-        bridge_data = await self.get_bridge_data(
-            from_chaind_id=from_chain_id, to_chain_id=to_chain_id, amount=amount_to_send
-        )
-        if bridge_data is None:
-            logger.error(f"NOT BRIDGE DATA")
-            return RESULT_TRANSACTION.FAIL
+        # bridge_data = await self.get_bridge_data(
+        #     from_chaind_id=from_chain_id, to_chain_id=to_chain_id, amount=amount_to_send
+        # )
+        # if bridge_data is None:
+        #     logger.error(f"NOT BRIDGE DATA")
+        #     return RESULT_TRANSACTION.FAIL
         return await self.acc.send_transaction(
-            to_address=bridge_data["steps"][0]["items"][0]["data"]["to"],
-            data=bridge_data["steps"][0]["items"][0]["data"]["data"],
+            to_address=config_transaction["steps"][0]["items"][0]["data"]["to"],
+            data=config_transaction["steps"][0]["items"][0]["data"]["data"],
             value=amount_to_send,
         )
