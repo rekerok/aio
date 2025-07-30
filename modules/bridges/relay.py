@@ -99,7 +99,7 @@ class Relay(Web3Bridger):
             to_chain_id=to_chain_id,
             amount=amount_to_send,
         )
-        pprint.pprint(config_transaction)
+        # pprint.pprint(config_transaction)
         if config_transaction is None:
             logger.error(f"BRIGE NOT ENABLE OR NOT CONFIG")
             return RESULT_TRANSACTION.FAIL
