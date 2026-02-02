@@ -1,8 +1,8 @@
 from config import Network
 from utils.enums import NETWORK_FIELDS
 
-LIMIT_GWEI = 30
-GAS_MULTIPLAY = (1.3, 1.9)
+LIMIT_GWEI = 0.15
+GAS_MULTIPLAY = (1.05, 1.1)
 COUNT_CHECK_GAS = 1000000
 SLEEP_AFTER_APPROOVE = (60, 150)
 USE_PROXY = False

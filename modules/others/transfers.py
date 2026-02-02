@@ -107,6 +107,9 @@ class Transfers:
                 logger.error(f"BALANCE: {balance.ether} < {self.min_balance}")
                 return RESULT_TRANSACTION.FAIL
 
+            if not await Web3Client.wait_gas(acc=self.acc):
+                return RESULT_TRANSACTION.FAIL
+
             if self.type_transfer == TYPES_OF_TRANSACTION.PERCENT:
                 return await self._make_tranfer_percent(
                     balance=balance, token_info=token_info
