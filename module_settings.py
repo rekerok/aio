@@ -11,35 +11,35 @@ class EXCHANGES:
 
 
 class DEX:
-    ONE_INCH = InchSwap
-    IZUMI = IzumiSwap
-    PANCAKESWAP = PancakeSwap
+    # ONE_INCH = InchSwap
+    # IZUMI = IzumiSwap
+    # PANCAKESWAP = PancakeSwap
     ODOS = OdosSwap
-    OPENOCEAN = OpenoceanSwap
-    SUSHI = SushiSwap
-    SYNCSWAP = SyncSwap
-    ZKSWAP = ZkSwap
-    BASESWAP = BaseSwap
-    ZEROX = Zerox
-    XY_FINANCE_SWAP = XY_finance_swap
-    RANGO_SWAP = RangoSwap
-    SKYDROME = Skydrome
-    MUTE = Mute
-    SPACEFI = SpaceFi
-    ZEBRA = Zebra
-    SYMBIOSIS = Symbiosis
-    NITRO_SWAP = NitroSwap
-    ACROSS = Across
-    STARGATE = Stargate
-    ORBITER = Orbiter
-    NITRO = Nitro
-    XY_FINANCE_BRIDGE = XY_finance_bridge
-    RELAY = Relay
-    TESTNET_BRIDGE_LAYERZERO = Testnet_Bridge_Layerzero
-    TESTNET_BRIDGES = Testnet_Bridges
-    HYPERLANE_ETH = Hyperlane
+    # OPENOCEAN = OpenoceanSwap
+    # SUSHI = SushiSwap
+    # SYNCSWAP = SyncSwap
+    # ZKSWAP = ZkSwap
+    # BASESWAP = BaseSwap
+    # ZEROX = Zerox
+    # XY_FINANCE_SWAP = XY_finance_swap
+    # RANGO_SWAP = RangoSwap
+    # SKYDROME = Skydrome
+    # MUTE = Mute
+    # SPACEFI = SpaceFi
+    # ZEBRA = Zebra
+    # SYMBIOSIS = Symbiosis
+    # NITRO_SWAP = NitroSwap
+    # ACROSS = Across
+    # STARGATE = Stargate
+    # ORBITER = Orbiter
+    # NITRO = Nitro
+    # XY_FINANCE_BRIDGE = XY_finance_bridge
+    # RELAY = Relay
+    # TESTNET_BRIDGE_LAYERZERO = Testnet_Bridge_Layerzero
+    # TESTNET_BRIDGES = Testnet_Bridges
+    # HYPERLANE_ETH = Hyperlane
     # RANGO_BRIDGE = Rango_Bridge
-    RUBYSCORE_VOTE = rubyscore
+    # RUBYSCORE_VOTE = rubyscore
 
 
 class LENDINGS:

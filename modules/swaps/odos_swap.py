@@ -42,7 +42,7 @@ class OdosSwap(Web3Swapper):
     async def _get_quote(
         self, from_token: Token_Info, to_token: Token_Info, amount_to_send: Token_Amount
     ):
-        url = "https://api.odos.xyz/sor/quote/v2"
+        url = "https://api.odos.xyz/sor/quote/v3"
         data = {
             "chainId": await self.acc.w3.eth.chain_id,
             "inputTokens": [
@@ -54,8 +54,6 @@ class OdosSwap(Web3Swapper):
             "compact": False,
         }
 
-        if settings.USE_REF:
-            data.update({"referralCode": 2334531771})
         response = await aiohttp.post_request(url=url, data=data)
         if not response:
             return None
@@ -67,7 +65,6 @@ class OdosSwap(Web3Swapper):
         data = {
             "userAddr": self.acc.address,
             "pathId": path_id,
-            "simulate": False,
         }
 
         response = await aiohttp.post_request(url=url, data=data)
