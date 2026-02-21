@@ -22,18 +22,24 @@ class Client_Networks:
         NETWORK_FIELDS.NAME: Network.ETHEREUM,
         NETWORK_FIELDS.RPCS: [
             "https://eth.drpc.org",
+            "https://eth.api.onfinality.io/public",
+            "https://eth.llamarpc.com",
+            "https://0xrpc.io/eth",
         ],
         NETWORK_FIELDS.EXPLORER: "https://etherscan.io/",
         NETWORK_FIELDS.EIP1559: True,
         NETWORK_FIELDS.NATIVE_TOKEN: "ETH",
         NETWORK_FIELDS.CHECK_GAS: True,
-        NETWORK_FIELDS.LIMIT_GAS: 0.00001,
+        NETWORK_FIELDS.LIMIT_GAS: 0.15,
     }
 
     arbitrum = {
         NETWORK_FIELDS.NAME: Network.ARBITRUM,
         NETWORK_FIELDS.RPCS: [
             "https://arbitrum-one.public.blastapi.io",
+            "https://arbitrum.drpc.org",
+            "https://arbitrum.meowrpc.com",
+            "https://public-arb-mainnet.fastnode.io",
         ],
         NETWORK_FIELDS.EXPLORER: "https://arbiscan.io/",
         NETWORK_FIELDS.EIP1559: True,
@@ -55,8 +61,10 @@ class Client_Networks:
     optimism = {
         NETWORK_FIELDS.NAME: Network.OPTIMISM,
         NETWORK_FIELDS.RPCS: [
-            "https://rpc.ankr.com/optimism",
+            "https://1rpc.io/op",
             "https://optimism.meowrpc.com",
+            "https://mainnet.optimism.io",
+            "https://optimism-public.nodies.app",
         ],
         NETWORK_FIELDS.EXPLORER: "https://optimistic.etherscan.io/",
         NETWORK_FIELDS.EIP1559: True,
@@ -67,8 +75,7 @@ class Client_Networks:
     base = {
         NETWORK_FIELDS.NAME: Network.BASE,
         NETWORK_FIELDS.RPCS: [
-            "https://rpc.ankr.com/base",
-            "https://base.llamarpc.com",
+            "https://base.lava.build",
         ],
         NETWORK_FIELDS.EXPLORER: "https://basescan.org/",
         NETWORK_FIELDS.EIP1559: True,
@@ -91,8 +98,7 @@ class Client_Networks:
     scroll = {
         NETWORK_FIELDS.NAME: Network.SCROLL,
         NETWORK_FIELDS.RPCS: [
-            "https://scroll-mainnet.public.blastapi.io",
-            "https://rpc.scroll.io",
+            "https://1rpc.io/scroll",
         ],
         NETWORK_FIELDS.EXPLORER: "https://scrollscan.com/",
         NETWORK_FIELDS.EIP1559: False,
@@ -115,9 +121,7 @@ class Client_Networks:
     linea = {
         NETWORK_FIELDS.NAME: Network.LINEA,
         NETWORK_FIELDS.RPCS: [
-            "https://linea.blockpi.network/v1/rpc/public",
             "https://rpc.linea.build",
-            "https://1rpc.io/linea",
         ],
         NETWORK_FIELDS.EXPLORER: "https://lineascan.build/",
         NETWORK_FIELDS.EIP1559: False,
@@ -201,7 +205,7 @@ class Client_Networks:
         NETWORK_FIELDS.NATIVE_TOKEN: "SAHARA",
         NETWORK_FIELDS.CHECK_GAS: False,
     }
-    
+
     t3rn = {
         NETWORK_FIELDS.NAME: Network.T3RN,
         NETWORK_FIELDS.RPCS: [

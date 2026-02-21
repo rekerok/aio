@@ -324,26 +324,27 @@ class MUTE:
 
 class ZEROX:
     ABI = '[{"inputs":[{"internalType":"address","name":"bootstrapper","type":"address"}],"stateMutability":"nonpayable","type":"constructor"},{"stateMutability":"payable","type":"fallback"},{"inputs":[{"internalType":"bytes4","name":"selector","type":"bytes4"}],"name":"getFunctionImplementation","outputs":[{"internalType":"address","name":"impl","type":"address"}],"stateMutability":"view","type":"function"},{"stateMutability":"payable","type":"receive"}]'
-    URLS = {
-        Network.ETHEREUM: "https://api.0x.org/",
-        Network.ARBITRUM: "https://arbitrum.api.0x.org/",
-        Network.OPTIMISM: "https://optimism.api.0x.org/",
-        Network.AVALANCHE: "https://avalanche.api.0x.org/",
-        Network.BASE: "https://base.api.0x.org/",
-        Network.BSC: "https://bsc.api.0x.org/",
-        Network.FANTOM: "https://fantom.api.0x.org/",
-        Network.POLYGON: "https://polygon.api.0x.org/",
-    }
-    CONTRACTS = {
-        Network.ETHEREUM: "0xdef1c0ded9bec7f1a1670819833240f027b25eff",
-        Network.ARBITRUM: "0xdef1c0ded9bec7f1a1670819833240f027b25eff",
-        Network.OPTIMISM: "0xdef1abe32c034e558cdd535791643c58a13acc10",
-        Network.AVALANCHE: "0xdef1c0ded9bec7f1a1670819833240f027b25eff",
-        Network.BASE: "0xdef1c0ded9bec7f1a1670819833240f027b25eff",
-        Network.BSC: "0xdef1c0ded9bec7f1a1670819833240f027b25eff",
-        Network.FANTOM: "0xdef189deaef76e379df891899eb5a00a94cbc250",
-        Network.POLYGON: "0xdef1c0ded9bec7f1a1670819833240f027b25eff",
-    }
+    # URLS = {
+    #     Network.ETHEREUM: "https://api.0x.org/",
+    #     Network.ARBITRUM: "https://arbitrum.api.0x.org/",
+    #     Network.OPTIMISM: "https://optimism.api.0x.org/",
+    #     Network.AVALANCHE: "https://avalanche.api.0x.org/",
+    #     Network.BASE: "https://base.api.0x.org/",
+    #     Network.BSC: "https://bsc.api.0x.org/",
+    #     Network.FANTOM: "https://fantom.api.0x.org/",
+    #     Network.POLYGON: "https://polygon.api.0x.org/",
+    # }
+    URL = "https://api.0x.org/"
+    # CONTRACTS = {
+    #     Network.ETHEREUM: "0xdef1c0ded9bec7f1a1670819833240f027b25eff",
+    #     Network.ARBITRUM: "0xdef1c0ded9bec7f1a1670819833240f027b25eff",
+    #     Network.OPTIMISM: "0xdef1abe32c034e558cdd535791643c58a13acc10",
+    #     Network.AVALANCHE: "0xdef1c0ded9bec7f1a1670819833240f027b25eff",
+    #     Network.BASE: "0xdef1c0ded9bec7f1a1670819833240f027b25eff",
+    #     Network.BSC: "0xdef1c0ded9bec7f1a1670819833240f027b25eff",
+    #     Network.FANTOM: "0xdef189deaef76e379df891899eb5a00a94cbc250",
+    #     Network.POLYGON: "0xdef1c0ded9bec7f1a1670819833240f027b25eff",
+    # }
 
 
 class XY_FINANCE:

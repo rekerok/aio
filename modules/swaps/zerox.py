@@ -1,3 +1,4 @@
+import random
 import utils
 import config
 import settings
@@ -32,22 +33,28 @@ class Zerox(Web3Swapper):
             max_balance=max_balance,
             slippage=slippage,
         )
-        self.url = config.ZEROX.URLS.get(self.acc.network.get(NETWORK_FIELDS.NAME))
-        self.contract = self.acc.w3.eth.contract(
-            address=eth_utils.address.to_checksum_address(
-                config.ZEROX.CONTRACTS.get(self.acc.network.get(NETWORK_FIELDS.NAME))
-            ),
-            abi=config.ZEROX.ABI,
-        )
+        self.url = config.ZEROX.URL
+        # self.contract = self.acc.w3.eth.contract(
+        #     address=eth_utils.address.to_checksum_address(
+        #         config.ZEROX.CONTRACTS.get(self.acc.network.get(NETWORK_FIELDS.NAME))
+        #     ),
+        #     abi=config.ZEROX.ABI,
+        # )
 
     async def _get_quote(
         self, from_token: Token_Info, to_token: Token_Info, amount_to_send: Token_Amount
     ):
-        headers = {"0x-api-key": settings.ZEROX_KEY}
+        headers = {
+            "0x-api-key": settings.ZEROX_KEY,
+            "0x-version": "v2",
+            "Content-Type": "application/json",
+        }
         params = {
+            "chainId": await self.acc.w3.eth.chain_id,
             "sellToken": from_token.address,
             "buyToken": to_token.address,
             "sellAmount": amount_to_send.wei,
+            "taker": self.acc.address,
         }
 
         if settings.USE_REF:
@@ -59,7 +66,7 @@ class Zerox(Web3Swapper):
             )
 
         response = await utils.aiohttp.get_json_aiohttp(
-            url=self.url + "/swap/v1/quote",
+            url=self.url + f"swap/{random.choice(["allowance-holder/quote","permit2/quote"])}",
             headers=headers,
             params=params,
         )
@@ -84,8 +91,8 @@ class Zerox(Web3Swapper):
             logger.warning("CHECK API KEY")
             return RESULT_TRANSACTION.FAIL
         return await self._send_transaction(
-            data=quote.get("data"),
+            data=quote["transaction"]["data"],
             from_token=from_token,
-            to_address=quote.get("to"),
+            to_address=quote["transaction"]["to"],
             amount_to_send=amount_to_send,
         )

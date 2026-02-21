@@ -20,7 +20,7 @@ class DEX:
     # SYNCSWAP = SyncSwap
     # ZKSWAP = ZkSwap
     # BASESWAP = BaseSwap
-    # ZEROX = Zerox
+    ZEROX = Zerox
     # XY_FINANCE_SWAP = XY_finance_swap
     # RANGO_SWAP = RangoSwap
     # SKYDROME = Skydrome
@@ -34,11 +34,11 @@ class DEX:
     # ORBITER = Orbiter
     # NITRO = Nitro
     # XY_FINANCE_BRIDGE = XY_finance_bridge
-    # RELAY = Relay
+    RELAY = Relay
     # TESTNET_BRIDGE_LAYERZERO = Testnet_Bridge_Layerzero
     # TESTNET_BRIDGES = Testnet_Bridges
     # HYPERLANE_ETH = Hyperlane
-    # RANGO_BRIDGE = Rango_Bridge
+    RANGO_BRIDGE = Rango_Bridge
     # RUBYSCORE_VOTE = rubyscore
 
 
