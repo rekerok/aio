@@ -45,7 +45,7 @@ class Web3Bridger(Web3Client):
         for network_name, network_dict in Client_Networks.__dict__.items():
             if (
                 isinstance(network_dict, dict)
-                and network_dict.get(NETWORK_FIELDS.NAME) == to_chain
+                and network_dict.get(NETWORK_FIELDS.NAME) == to_chain.get(NETWORK_FIELDS.NAME)
             ):
                 found_variable = network_name
                 break
@@ -66,7 +66,7 @@ class Web3Bridger(Web3Client):
         for network_name, network_dict in Client_Networks.__dict__.items():
             if (
                 isinstance(network_dict, dict)
-                and network_dict.get(NETWORK_FIELDS.NAME) == to_chain
+                and network_dict.get(NETWORK_FIELDS.NAME) == to_chain.get(NETWORK_FIELDS.NAME)
             ):
                 found_variable = network_name
                 break
@@ -169,7 +169,7 @@ class Web3Bridger(Web3Client):
             return RESULT_TRANSACTION.FAIL
         logger.info(f"WALLET: {self.acc.address}")
         logger.info(
-            f"{self.acc.network.get(NETWORK_FIELDS.NAME)} ({from_token.symbol}) -> {to_network} ({to_token.symbol})"
+            f"{self.acc.network.get(NETWORK_FIELDS.NAME)} ({from_token.symbol}) -> {to_network.get(NETWORK_FIELDS.NAME)} ({to_token.symbol})"
         )
         logger.info(f"DEX: {self.NAME} ")
         if balance.ether < self.min_balance:

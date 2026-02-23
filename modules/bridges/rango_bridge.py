@@ -41,7 +41,7 @@ class Rango_Bridge(Web3Bridger):
         for network_name, network_dict in Client_Networks.__dict__.items():
             if (
                 isinstance(network_dict, dict)
-                and network_dict.get(NETWORK_FIELDS.NAME) == to_chain
+                and network_dict.get(NETWORK_FIELDS.NAME) == to_chain.get(NETWORK_FIELDS.NAME)
             ):
                 found_variable = network_name
                 break
@@ -188,14 +188,14 @@ class Rango_Bridge(Web3Bridger):
         to_token: Token_Info = None,
     ):
         from_chain_id = await self.acc.w3.eth.chain_id
-        to_chain_id = int(config.GENERAL.CHAIN_IDS.get(to_chain))
+        to_chain_id = int(config.GENERAL.CHAIN_IDS.get(to_chain.get(NETWORK_FIELDS.NAME)))
         to_network = await self._get_to_network(to_chain=to_chain)
         info = await self._get_info()
         if info is None:
             logger.error("FAIL GET CHAIN INFO")
             return RESULT_TRANSACTION.FAIL
         from_chain_id_hex = hex(await self.acc.w3.eth.chain_id)
-        to_chain_id_hex = hex(int(config.GENERAL.CHAIN_IDS.get(to_chain)))
+        to_chain_id_hex = hex(int(config.GENERAL.CHAIN_IDS.get(to_chain.get(NETWORK_FIELDS.NAME))))
 
         quote = await self._get_quote(
             from_token=from_token,

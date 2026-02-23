@@ -89,7 +89,7 @@ class Relay(Web3Bridger):
         to_token: Token_Info = None,
     ):
         from_chain_id: int = int(await self.acc.w3.eth.chain_id)
-        to_chain_id: int = int(config.GENERAL.CHAIN_IDS.get(to_chain))
+        to_chain_id: int = int(config.GENERAL.CHAIN_IDS.get(to_chain.get(NETWORK_FIELDS.NAME)))
         to_chain_info = await super()._get_to_network(to_chain=to_chain)
         if to_chain_id == 1:  ## ETHEREUM
             if not await super().wait_gas(acc=Account(network=to_chain_info)):
