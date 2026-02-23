@@ -30,7 +30,7 @@ class DEX:
     # SYMBIOSIS = Symbiosis
     # NITRO_SWAP = NitroSwap
     # ACROSS = Across
-    # STARGATE = Stargate
+    STARGATE = Stargate
     # ORBITER = Orbiter
     # NITRO = Nitro
     # XY_FINANCE_BRIDGE = XY_finance_bridge
@@ -121,17 +121,17 @@ class OKX_settings:
 
 
 class TRANSFERS_SETTINGS:
-    SLEEP: tuple[int] = (1000, 4000)
+    SLEEP: tuple[int] = (60*5, 60*10)
     WALLETS_FILE: str = ""  # DEFAULT files/wallets.txt
     RECIPIENTS_FILE: str = ""  # DEFAULT files/recipients.txt
 
     PARAMS: list[dict] = [
         {
-            PARAMETR.NETWORK: Client_Networks.avalanche,
-            PARAMETR.TOKEN: TOKENS.AVALANCHE.AVAX,
+            PARAMETR.NETWORK: Client_Networks.ethereum,
+            PARAMETR.TOKEN: TOKENS.ETHEREUM.ETH,
             PARAMETR.TYPE_TRANSACTION: TYPES_OF_TRANSACTION.PERCENT,
-            PARAMETR.VALUE: (20, 50),
-            PARAMETR.MIN_BALANCE: 0.0001,
+            PARAMETR.VALUE: (99.5,99.9),
+            PARAMETR.MIN_BALANCE: 0.001,
         },
     ]
 
@@ -154,20 +154,20 @@ class TRANSFERS_SETTINGS:
 
 
 class SWAP_SETTINGS:
-    SLEEP = (10, 50)
+    SLEEP = (1, 3)
     SLIPPAGE = 1
 
     PARAMS = [
         {
-            PARAMETR.NETWORK: Client_Networks.arbitrum,
+            PARAMETR.NETWORK: Client_Networks.base,
             PARAMETR.TYPE_TRANSACTION: TYPES_OF_TRANSACTION.PERCENT,
             PARAMETR.VALUE: (2, 5),
-            PARAMETR.FROM_DATA: [TOKENS.ARBITRUM.ETH],
+            PARAMETR.FROM_DATA: [TOKENS.BASE.ETH],
             PARAMETR.MIN_BALANCE: 0,
             PARAMETR.MAX_BALANCE: 1000,
             PARAMETR.TO_DATA: [
                 {
-                    PARAMETR.TO_TOKEN: TOKENS.ARBITRUM.USDT,
+                    PARAMETR.TO_TOKEN: TOKENS.BASE.USDC,
                     PARAMETR.DEXES: [DEX.ODOS],
                 },
             ],
@@ -191,30 +191,61 @@ class SWAP_SETTINGS:
 
 
 class BRIDGE_SETTINGS:
-    SLEEP = (100, 200)
+    SLEEP = (60*5, 60*20)
     SLIPPAGE = 5
 
     PARAMS = [
         {
-            PARAMETR.TYPE_TRANSACTION: TYPES_OF_TRANSACTION.PERCENT,
-            PARAMETR.VALUE: (5, 10),
+            PARAMETR.TYPE_TRANSACTION: TYPES_OF_TRANSACTION.AMOUNT,
+            PARAMETR.VALUE: (0.0005, 0.0005),
             PARAMETR.FROM_DATA: [
                 {
                     PARAMETR.NETWORK: Client_Networks.linea,
                     PARAMETR.FROM_TOKEN: TOKENS.LINEA.ETH,
                 },
+                {
+                    PARAMETR.NETWORK: Client_Networks.optimism,
+                    PARAMETR.FROM_TOKEN: TOKENS.OPTIMISM.ETH,
+                },
+                {
+                    PARAMETR.NETWORK: Client_Networks.arbitrum,
+                    PARAMETR.FROM_TOKEN: TOKENS.ARBITRUM.ETH,
+                },
+                {
+                    PARAMETR.NETWORK: Client_Networks.scroll,
+                    PARAMETR.FROM_TOKEN: TOKENS.SCROLL.ETH,
+                },
+                {
+                    PARAMETR.NETWORK: Client_Networks.zksync,
+                    PARAMETR.FROM_TOKEN: TOKENS.ZKSYNC.ETH,
+                },
             ],
-            PARAMETR.MIN_BALANCE: 0,
+            PARAMETR.MIN_BALANCE: 0.0001,
             PARAMETR.TO_DATA: [
                 {
-                    PARAMETR.NETWORK: Network.ARBITRUM,
-                    PARAMETR.TO_TOKEN: TOKENS.ARBITRUM.ETH,
+                    PARAMETR.NETWORK: Client_Networks.base,
+                    PARAMETR.TO_TOKEN: TOKENS.BASE.ETH,
                     PARAMETR.DEXES: [DEX.STARGATE],
                 },
             ],
             PARAMETR.WALLETS_FILE: "",
         },
     ]
+
+    ######### NOT CHANGE #########
+    def __init__(
+        self,
+        SLEEP: int = None,
+        SLIPPAGE: int = None,
+        PARAMS: list[dict] = None,
+    ) -> None:
+        if SLEEP is not None:
+            self.SLEEP = SLEEP
+        if SLIPPAGE is not None:
+            self.SLIPPAGE = SLIPPAGE
+        if PARAMS is not None:
+            self.PARAMS = PARAMS
+
 
     ######### NOT CHANGE #########
     def __init__(
@@ -252,7 +283,7 @@ class DEP_TO_NETWORK_SETTINGS:
                 PARAMETR.TOKEN: TOKENS.BASE.ETH,
                 PARAMETR.NETWORK: Client_Networks.base,
                 PARAMETR.DEXES: [
-                    DEX.STARGATE,
+                    # DEX.STARGATE,
                 ],
             },
             # {
@@ -357,7 +388,7 @@ class WARMUPSWAPS_SETTINGS:
         {
             PARAMETR.NETWORK: Client_Networks.zksync,
             PARAMETR.COUNT_TRANSACTION: (2, 4),
-            PARAMETR.DEXES: [DEX.XY_FINANCE_SWAP, DEX.ODOS, DEX.ZKSWAP],
+            # PARAMETR.DEXES: [DEX.XY_FINANCE_SWAP, DEX.ODOS, DEX.ZKSWAP],
             PARAMETR.TOKENS: [
                 {
                     PARAMETR.TOKEN: TOKENS.ZKSYNC.USDT,
@@ -588,62 +619,42 @@ class CHECK_BALANCES_SETTINGS:
             PARAMETR.NETWORK: Client_Networks.arbitrum,
             PARAMETR.TOKENS: [
                 TOKENS.ARBITRUM.ETH,
-                TOKENS.ARBITRUM.USDC,
-                TOKENS.ARBITRUM.USDC_BRIDGED,
-                TOKENS.ARBITRUM.USDT,
+
             ],
         },
         {
             PARAMETR.NETWORK: Client_Networks.optimism,
             PARAMETR.TOKENS: [
                 TOKENS.OPTIMISM.ETH,
-                TOKENS.OPTIMISM.USDC,
-                TOKENS.OPTIMISM.USDC_BRIDGED,
-                TOKENS.OPTIMISM.USDT,
+
             ],
         },
         {
             PARAMETR.NETWORK: Client_Networks.zksync,
             PARAMETR.TOKENS: [
                 TOKENS.ZKSYNC.ETH,
-                TOKENS.ZKSYNC.USDC,
-                TOKENS.ZKSYNC.USDT,
-                TOKENS.ZKSYNC.DAI,
+
             ],
         },
         {
             PARAMETR.NETWORK: Client_Networks.base,
-            PARAMETR.TOKENS: [TOKENS.BASE.ETH, TOKENS.BASE.USDbC],
+            PARAMETR.TOKENS: [TOKENS.BASE.ETH,],
         },
         {
             PARAMETR.NETWORK: Client_Networks.scroll,
             PARAMETR.TOKENS: [
                 TOKENS.SCROLL.ETH,
-                TOKENS.SCROLL.USDC,
-                TOKENS.SCROLL.USDT,
+
             ],
         },
         {
-            PARAMETR.NETWORK: Client_Networks.avalanche,
+            PARAMETR.NETWORK: Client_Networks.linea,
             PARAMETR.TOKENS: [
-                TOKENS.AVALANCHE.AVAX,
-                TOKENS.AVALANCHE.USDC,
-                TOKENS.AVALANCHE.USDT,
+                TOKENS.LINEA.ETH,
+
             ],
         },
-        {
-            PARAMETR.NETWORK: Client_Networks.polygon,
-            PARAMETR.TOKENS: [
-                TOKENS.POLYGON.MATIC,
-                TOKENS.POLYGON.USDC_BRIDGED,
-                TOKENS.POLYGON.USDC,
-                TOKENS.POLYGON.USDT,
-            ],
-        },
-        {
-            PARAMETR.NETWORK: Client_Networks.bsc,
-            PARAMETR.TOKENS: [TOKENS.BSC.BNB, TOKENS.BSC.USDT],
-        },
+        
     ]
 
 
@@ -673,21 +684,21 @@ class MULTITASKS_SETTINGS:
                                 PARAMETR.TO_TOKEN: TOKENS.ZKSYNC.USDC,
                                 PARAMETR.DEXES: [
                                     DEX.ODOS,
-                                    DEX.IZUMI,
-                                    DEX.SPACEFI,
-                                    DEX.MUTE,
-                                    DEX.XY_FINANCE_SWAP,
+                                    # DEX.IZUMI,
+                                    # DEX.SPACEFI,
+                                    # DEX.MUTE,
+                                    # DEX.XY_FINANCE_SWAP,
                                 ],
                             },
                             {
                                 PARAMETR.TO_TOKEN: TOKENS.ZKSYNC.USDT,
                                 PARAMETR.DEXES: [
                                     DEX.ODOS,
-                                    DEX.IZUMI,
-                                    DEX.SPACEFI,
-                                    DEX.MUTE,
-                                    DEX.XY_FINANCE_SWAP,
-                                    DEX.SYNCSWAP,
+                                    # DEX.IZUMI,
+                                    # DEX.SPACEFI,
+                                    # DEX.MUTE,
+                                    # DEX.XY_FINANCE_SWAP,
+                                    # DEX.SYNCSWAP,
                                 ],
                             },
                         ],
@@ -713,11 +724,11 @@ class MULTITASKS_SETTINGS:
                                 PARAMETR.TO_TOKEN: TOKENS.ZKSYNC.USDT,
                                 PARAMETR.DEXES: [
                                     DEX.ODOS,
-                                    DEX.IZUMI,
-                                    DEX.SPACEFI,
-                                    DEX.MUTE,
-                                    DEX.XY_FINANCE_SWAP,
-                                    DEX.SYNCSWAP,
+                                    # DEX.IZUMI,
+                                    # DEX.SPACEFI,
+                                    # DEX.MUTE,
+                                    # DEX.XY_FINANCE_SWAP,
+                                    # DEX.SYNCSWAP,
                                 ],
                             },
                         ],
@@ -735,10 +746,10 @@ class MULTITASKS_SETTINGS:
                                 PARAMETR.TO_TOKEN: TOKENS.ZKSYNC.USDC,
                                 PARAMETR.DEXES: [
                                     DEX.ODOS,
-                                    DEX.IZUMI,
-                                    DEX.SPACEFI,
-                                    DEX.MUTE,
-                                    DEX.XY_FINANCE_SWAP,
+                                    # DEX.IZUMI,
+                                    # DEX.SPACEFI,
+                                    # DEX.MUTE,
+                                    # DEX.XY_FINANCE_SWAP,
                                 ],
                             },
                         ],
@@ -764,11 +775,11 @@ class MULTITASKS_SETTINGS:
                                 PARAMETR.TO_TOKEN: TOKENS.ZKSYNC.ETH,
                                 PARAMETR.DEXES: [
                                     DEX.ODOS,
-                                    DEX.IZUMI,
-                                    DEX.SPACEFI,
-                                    DEX.MUTE,
-                                    DEX.XY_FINANCE_SWAP,
-                                    DEX.SYNCSWAP,
+                                    # DEX.IZUMI,
+                                    # DEX.SPACEFI,
+                                    # DEX.MUTE,
+                                    # DEX.XY_FINANCE_SWAP,
+                                    # DEX.SYNCSWAP,
                                 ],
                             },
                         ],
@@ -786,11 +797,11 @@ class MULTITASKS_SETTINGS:
                                 PARAMETR.TO_TOKEN: TOKENS.ZKSYNC.ETH,
                                 PARAMETR.DEXES: [
                                     DEX.ODOS,
-                                    DEX.IZUMI,
-                                    DEX.SPACEFI,
-                                    DEX.MUTE,
-                                    DEX.XY_FINANCE_SWAP,
-                                    DEX.SYNCSWAP,
+                                    # DEX.IZUMI,
+                                    # DEX.SPACEFI,
+                                    # DEX.MUTE,
+                                    # DEX.XY_FINANCE_SWAP,
+                                    # DEX.SYNCSWAP,
                                 ],
                             },
                         ],

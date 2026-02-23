@@ -7,6 +7,7 @@ from modules.account import Account
 from modules.web3Bridger import Web3Bridger
 from modules.web3Client import Web3Client
 from settings import Client_Networks
+import utils
 from utils.enums import (
     NETWORK_FIELDS,
     PARAMETR,
@@ -77,6 +78,36 @@ class Stargate(Web3Bridger):
     #     except Exception as error:
     #         return None
 
+    async def get_info_chain_by_id(self, chain_id: int):
+        url = config.STARGATE.endpoint_chains
+        response = await utils.aiohttp.get_json_aiohttp(
+            url=url,
+        )
+        if response is None:
+            return None
+        info = None
+        for chain in response["chains"]:
+            if chain_id == chain["chainId"]:
+                return chain
+        return None
+
+    async def get_quote(self, from_chain: str, to_chain: str, amount: Token_Amount):
+        url = config.STARGATE.endpoint_quotes
+        params = {
+            "srcToken": "0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE",
+            "srcChainKey": from_chain,
+            "dstToken": "0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE",
+            "dstChainKey": to_chain,
+            "srcAddress": self.acc.address,
+            "dstAddress": self.acc.address,
+            "srcAmount": amount.wei,
+            "dstAmountMin": int(amount.wei * 0.95),
+        }
+        response = await utils.aiohttp.get_json_aiohttp(url=url, params=params)
+        if response is None:
+            return None
+        return response
+
     # https://teletype.in/@cppmyk/stargate-bridger
     async def _perform_bridge(
         self,
@@ -85,47 +116,75 @@ class Stargate(Web3Bridger):
         to_chain: config.Network,
         to_token: Token_Info = None,
     ):
-        if from_token.symbol == "ETH":
-            try:
-                contract = self.acc.w3.eth.contract(
-                    config.STARGATE.ETH.get(self.acc.network.get(NETWORK_FIELDS.NAME))[
-                        PARAMETR.TOKEN_ADDRESS
-                    ],
-                    abi=config.STARGATE.ABI_POOl_ETH,
-                )
-                to_encode_id = config.STARGATE.ETH.get(to_chain)[PARAMETR.ID]
-                params = (
-                    to_encode_id,
-                    "0x" + self.acc.address[2:].zfill(64),
-                    amount_to_send.wei,
-                    int(amount_to_send.wei * (100 - self.slippage) / 100),
-                    "0x",
-                    "0x",
-                    "0x01",
-                )
-                fee_raw = await contract.functions.quoteSend(params, False).call()
-                fee = Token_Amount(amount=fee_raw[0], wei=True)
-                logger.info(f"ETH FEE: {fee.ether}")
-                amount_to_send = Token_Amount(
-                    amount=amount_to_send.wei + fee.wei, wei=True
-                )
-                data = await Web3Client.get_data(
-                    contract=contract,
-                    function_of_contract="send",
-                    args=(params, fee_raw, self.acc.address),
-                )
-                if data is None:
-                    logger.error("DON'T GET DATA FOR BRIDGE")
-                    return RESULT_TRANSACTION.FAIL
-                return await self._send_transaction(
-                    data=data,
-                    from_token=from_token,
-                    to_address=contract.address,
-                    value=amount_to_send,
-                )
-            except Exception as error:
-                logger.error(error)
-                return RESULT_TRANSACTION.FAIL
+        from_chain_id: int = int(await self.acc.w3.eth.chain_id)
+        to_chain_id: int = int(
+            config.GENERAL.CHAIN_IDS.get(to_chain.get(NETWORK_FIELDS.NAME))
+        )
+        from_chain_info = await self.get_info_chain_by_id(from_chain_id)
+        to_chain_info = await self.get_info_chain_by_id(to_chain_id)
+        if from_chain_info is None:
+            logger.error("FROM CHAIN IS NONE")
+            return RESULT_TRANSACTION.FAIL
+        if to_chain_info is None:
+            logger.error("TO CHAIN IS NONE")
+            return RESULT_TRANSACTION.FAIL
+        quote = await self.get_quote(
+            from_chain=from_chain_info["chainKey"],
+            to_chain=to_chain_info["chainKey"],
+            amount=amount_to_send,
+        )
+        if quote is None:
+            logger.error("QUOTE IS NONE")
+            return RESULT_TRANSACTION.FAIL
+        return await self.acc.send_transaction(
+            to_address=quote["quotes"][1]["steps"][0]["transaction"]["to"],
+            data=quote["quotes"][1]["steps"][0]["transaction"]["data"],
+            value=Token_Amount(
+                amount=int(quote["quotes"][1]["steps"][0]["transaction"]["value"]),
+                wei=True,
+            ),
+        )
+        # if from_token.symbol == "ETH":
+        #     try:
+        #         contract = self.acc.w3.eth.contract(
+        #             config.STARGATE.ETH.get(self.acc.network.get(NETWORK_FIELDS.NAME))[
+        #                 PARAMETR.TOKEN_ADDRESS
+        #             ],
+        #             abi=config.STARGATE.ABI_POOl_ETH,
+        #         )
+        #         to_encode_id = config.STARGATE.ETH.get(to_chain.get(NETWORK_FIELDS.NAME))[PARAMETR.ID]
+        #         params = (
+        #             to_encode_id,
+        #             "0x" + self.acc.address[2:].zfill(64),
+        #             amount_to_send.wei,
+        #             int(amount_to_send.wei * (100 - self.slippage) / 100),
+        #             "0x",
+        #             "0x",
+        #             "0x01",
+        #         )
+        #         fee_raw = await contract.functions.quoteSend(params, False).call()
+        #         fee = Token_Amount(amount=fee_raw[0], wei=True)
+        #         logger.info(f"ETH FEE: {fee.ether}")
+        #         amount_to_send = Token_Amount(
+        #             amount=amount_to_send.wei + fee.wei, wei=True
+        #         )
+        #         data = await Web3Client.get_data(
+        #             contract=contract,
+        #             function_of_contract="send",
+        #             args=(params, fee_raw, self.acc.address),
+        #         )
+        #         if data is None:
+        #             logger.error("DON'T GET DATA FOR BRIDGE")
+        #             return RESULT_TRANSACTION.FAIL
+        #         return await self._send_transaction(
+        #             data=data,
+        #             from_token=from_token,
+        #             to_address=contract.address,
+        #             value=amount_to_send,
+        #         )
+        #     except Exception as error:
+        #         logger.error(error)
+        #         return RESULT_TRANSACTION.FAIL
         # from_pool_id = await self._get_pool_id(chain=self.acc.network, token=from_token)
         # to_pool_id = await self._get_pool_id(chain=to_chain, token=to_token)
         # if any(v is None for v in (to_token, from_pool_id, to_pool_id)):
